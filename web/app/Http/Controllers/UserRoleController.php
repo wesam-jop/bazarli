@@ -20,19 +20,19 @@ class UserRoleController extends Controller
         }
 
         if ($user->isAdmin()) {
-            return back()->with('error', 'لا يمكن للمدير تغيير نوع حسابه.');
+            return back()->with('error', __('admin_cannot_change_role'));
         }
 
         if ($user->user_type === $validated['target_role']) {
             $message = $validated['target_role'] === 'store_owner'
-                ? 'حسابك مسجل بالفعل كتاجر.'
-                : 'حسابك مسجل بالفعل كمندوب توصيل.';
+                ? __('already_store_owner')
+                : __('already_driver');
 
             return back()->with('success', $message);
         }
 
         if ($validated['target_role'] === 'driver' && !$user->isCustomer()) {
-            return back()->with('error', 'يمكن فقط للمستخدمين العاديين ترقية حسابهم من هنا.');
+            return back()->with('error', __('only_customers_can_upgrade'));
         }
 
         if ($validated['target_role'] === 'store_owner') {

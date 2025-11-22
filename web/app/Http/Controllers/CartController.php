@@ -51,7 +51,7 @@ class CartController extends Controller
         $product = Product::findOrFail($request->product_id);
         
         if (!$product->is_available) {
-            return back()->with('error', 'المنتج غير متوفر حالياً');
+            return back()->with('error', __('product_not_available'));
         }
 
         $cart = $request->session()->get('cart', []);
@@ -59,13 +59,13 @@ class CartController extends Controller
         $newQuantity = $currentQuantity + $request->quantity;
 
         if ($newQuantity > $product->stock_quantity) {
-            return back()->with('error', 'الكمية المطلوبة غير متوفرة في المخزون');
+            return back()->with('error', __('insufficient_stock'));
         }
 
         $cart[$product->id] = $newQuantity;
         $request->session()->put('cart', $cart);
 
-        return back()->with('success', 'تم إضافة المنتج إلى السلة بنجاح');
+        return back()->with('success', __('product_added_to_cart'));
     }
 
     public function update(Request $request)
@@ -89,7 +89,7 @@ class CartController extends Controller
 
         $request->session()->put('cart', $cart);
 
-        return back()->with('success', 'تم تحديث السلة بنجاح');
+        return back()->with('success', __('cart_updated_successfully'));
     }
 
     public function remove(Request $request, $productId)
@@ -98,12 +98,12 @@ class CartController extends Controller
         unset($cart[$productId]);
         $request->session()->put('cart', $cart);
 
-        return back()->with('success', 'تم حذف المنتج من السلة');
+        return back()->with('success', __('product_removed_from_cart'));
     }
 
     public function clear(Request $request)
     {
         $request->session()->forget('cart');
-        return back()->with('success', 'تم مسح السلة بنجاح');
+        return back()->with('success', __('cart_cleared_successfully'));
     }
 }

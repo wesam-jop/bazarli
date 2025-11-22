@@ -132,6 +132,16 @@ export default function AdminLayout({ children, title = "Admin Dashboard" }) {
             color: 'text-green-600'
         },
         {
+            group: 'locations',
+            label: t('locations_management') || 'إدارة المناطق',
+            icon: MapPin,
+            items: [
+                { label: t('governorates') || 'المحافظات', href: '/admin/governorates', icon: MapPin },
+                { label: t('cities') || 'المناطق', href: '/admin/cities', icon: MapPin },
+            ],
+            color: 'text-indigo-600'
+        },
+        {
             group: 'analytics',
             label: t('reports_and_statistics'),
             icon: BarChart3,

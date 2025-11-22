@@ -17,6 +17,7 @@ use App\Http\Controllers\StorefrontController;
 use App\Http\Controllers\StoreSetupController;
 use App\Http\Controllers\DriverApplicationController;
 use App\Http\Controllers\DriverOrderController;
+use App\Http\Controllers\StoreOrderController;
 use App\Http\Controllers\Admin\StoreTypeController;
 use App\Http\Controllers\Admin\DriverApplicationController as AdminDriverApplicationController;
 use App\Models\Setting;
@@ -183,6 +184,7 @@ Route::get('/services/pharmacy', function () {
 })->name('services.pharmacy');
 
 Route::get('/stores', [StorefrontController::class, 'index'])->name('stores.index');
+Route::get('/stores/{store}', [StorefrontController::class, 'show'])->name('stores.show');
 
 Route::get('/services/pet-supplies', function () {
     $categories = \App\Models\Category::active()->orderBy('sort_order')->get();
@@ -309,6 +311,26 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::delete('/categories/{category}', [App\Http\Controllers\Admin\CategoryController::class, 'destroy'])->name('categories.destroy');
     Route::post('/categories/{category}/toggle-active', [App\Http\Controllers\Admin\CategoryController::class, 'toggleActive'])->name('categories.toggle-active');
     
+    // Governorates Management
+    Route::get('/governorates', [App\Http\Controllers\Admin\GovernorateController::class, 'index'])->name('governorates.index');
+    Route::get('/governorates/create', [App\Http\Controllers\Admin\GovernorateController::class, 'create'])->name('governorates.create');
+    Route::post('/governorates', [App\Http\Controllers\Admin\GovernorateController::class, 'store'])->name('governorates.store');
+    Route::get('/governorates/{governorate}', [App\Http\Controllers\Admin\GovernorateController::class, 'show'])->name('governorates.show');
+    Route::get('/governorates/{governorate}/edit', [App\Http\Controllers\Admin\GovernorateController::class, 'edit'])->name('governorates.edit');
+    Route::put('/governorates/{governorate}', [App\Http\Controllers\Admin\GovernorateController::class, 'update'])->name('governorates.update');
+    Route::delete('/governorates/{governorate}', [App\Http\Controllers\Admin\GovernorateController::class, 'destroy'])->name('governorates.destroy');
+    Route::post('/governorates/{governorate}/toggle-active', [App\Http\Controllers\Admin\GovernorateController::class, 'toggleActive'])->name('governorates.toggle-active');
+    
+    // Cities Management
+    Route::get('/cities', [App\Http\Controllers\Admin\CityController::class, 'index'])->name('cities.index');
+    Route::get('/cities/create', [App\Http\Controllers\Admin\CityController::class, 'create'])->name('cities.create');
+    Route::post('/cities', [App\Http\Controllers\Admin\CityController::class, 'store'])->name('cities.store');
+    Route::get('/cities/{city}', [App\Http\Controllers\Admin\CityController::class, 'show'])->name('cities.show');
+    Route::get('/cities/{city}/edit', [App\Http\Controllers\Admin\CityController::class, 'edit'])->name('cities.edit');
+    Route::put('/cities/{city}', [App\Http\Controllers\Admin\CityController::class, 'update'])->name('cities.update');
+    Route::delete('/cities/{city}', [App\Http\Controllers\Admin\CityController::class, 'destroy'])->name('cities.destroy');
+    Route::post('/cities/{city}/toggle-active', [App\Http\Controllers\Admin\CityController::class, 'toggleActive'])->name('cities.toggle-active');
+    
     // Inventory Management
     Route::get('/inventory', [App\Http\Controllers\Admin\InventoryController::class, 'index'])->name('inventory.index');
     Route::put('/inventory/{product}/stock', [App\Http\Controllers\Admin\InventoryController::class, 'updateStock'])->name('inventory.update-stock');
@@ -331,7 +353,12 @@ Route::get('/download-app', function () {
 Route::get('/', function () {
     $categories = \App\Models\Category::active()->orderBy('sort_order')->limit(6)->get();
 
-    $featuredProducts = \App\Models\Product::with('category')
+    $featuredProducts = \App\Models\Product::with([
+        'category',
+        'store' => function($q) {
+            $q->with(['governorate:id,name_ar,name_en', 'city:id,name_ar,name_en']);
+        }
+    ])
         ->available()
         ->orderBy('sales_count', 'desc')
         ->limit(4)
@@ -411,6 +438,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/dashboard/customer/profile', [DashboardController::class, 'updateCustomerProfile'])->name('dashboard.customer.profile.update');
     Route::get('/dashboard/store', [DashboardController::class, 'store'])->name('dashboard.store');
     Route::get('/dashboard/store/orders', [DashboardController::class, 'storeOrders'])->name('dashboard.store.orders');
+    Route::get('/dashboard/store/orders/{order}', [DashboardController::class, 'storeOrderShow'])->name('dashboard.store.orders.show');
     Route::get('/dashboard/store/products/manage', [DashboardController::class, 'storeProducts'])->name('dashboard.store.products');
     Route::get('/dashboard/store/my-orders', [DashboardController::class, 'storeMyOrders'])->name('dashboard.store.my-orders');
     Route::get('/dashboard/store/favorites', [DashboardController::class, 'storeFavorites'])->name('dashboard.store.favorites');
@@ -422,6 +450,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/driver/apply', [DriverApplicationController::class, 'create'])->name('dashboard.driver.apply');
     Route::post('/dashboard/driver/apply', [DriverApplicationController::class, 'store'])->name('dashboard.driver.apply.store');
     Route::get('/dashboard/driver/orders', [DriverOrderController::class, 'index'])->name('dashboard.driver.orders');
+    Route::post('/dashboard/driver/orders/{order}/accept', [DriverOrderController::class, 'accept'])->name('dashboard.driver.orders.accept');
+    Route::post('/dashboard/driver/orders/{order}/reject', [DriverOrderController::class, 'reject'])->name('dashboard.driver.orders.reject');
     Route::post('/dashboard/driver/orders/{order}/claim', [DriverOrderController::class, 'claim'])->name('dashboard.driver.orders.claim');
     Route::post('/dashboard/driver/orders/{order}/complete', [DriverOrderController::class, 'complete'])->name('dashboard.driver.orders.complete');
     Route::get('/dashboard/driver/profile', [DashboardController::class, 'editDriverProfile'])->name('dashboard.driver.profile');
@@ -430,4 +460,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/store/setup', [StoreSetupController::class, 'create'])->name('dashboard.store.setup');
     Route::post('/dashboard/store/setup', [StoreSetupController::class, 'store'])->name('dashboard.store.setup.store');
     Route::post('/dashboard/store/products', [StoreProductController::class, 'store'])->name('dashboard.store.products.store');
+    Route::post('/store-orders/{orderStore}/start-preparing', [StoreOrderController::class, 'startPreparing'])->name('store-orders.start-preparing');
+    Route::post('/store-orders/{orderStore}/finish-preparing', [StoreOrderController::class, 'finishPreparing'])->name('store-orders.finish-preparing');
+    Route::post('/store-orders/{orderStore}/approve', [StoreOrderController::class, 'approve'])->name('store-orders.approve');
+    Route::post('/store-orders/{orderStore}/reject', [StoreOrderController::class, 'reject'])->name('store-orders.reject');
 });

@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -29,6 +30,8 @@ class User extends Authenticatable
         'address',
         'latitude',
         'longitude',
+        'governorate_id',
+        'city_id',
         'user_type',
         'is_verified',
         'verification_code',
@@ -98,6 +101,16 @@ class User extends Authenticatable
     public function adminAccess()
     {
         return $this->hasOne(AdminAccess::class);
+    }
+
+    public function governorate(): BelongsTo
+    {
+        return $this->belongsTo(Governorate::class);
+    }
+
+    public function city(): BelongsTo
+    {
+        return $this->belongsTo(City::class);
     }
 
     // Scopes

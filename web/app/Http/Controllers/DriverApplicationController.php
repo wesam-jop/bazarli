@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\DriverApplication;
+use App\Models\Governorate;
+use App\Models\City;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -24,12 +26,37 @@ class DriverApplicationController extends Controller
 
         $application = $user->driverApplication;
 
+        // جلب المحافظات والمناطق
+        $governorates = Governorate::active()
+            ->orderBy('display_order')
+            ->get()
+            ->map(fn ($gov) => [
+                'id' => $gov->id,
+                'name' => app()->getLocale() === 'ar' ? $gov->name_ar : $gov->name_en,
+            ]);
+
+        $cities = [];
+        if ($user->governorate_id) {
+            $cities = City::active()
+                ->where('governorate_id', $user->governorate_id)
+                ->orderBy('display_order')
+                ->get()
+                ->map(fn ($city) => [
+                    'id' => $city->id,
+                    'name' => app()->getLocale() === 'ar' ? $city->name_ar : $city->name_en,
+                ]);
+        }
+
         return Inertia::render('Dashboard/DriverApplication', [
             'application' => $application ? $this->formatApplication($application) : null,
+            'governorates' => $governorates,
+            'cities' => $cities,
             'profile' => [
                 'name' => $user->name,
                 'phone' => $user->phone,
                 'address' => $user->address,
+                'governorate_id' => $user->governorate_id,
+                'city_id' => $user->city_id,
                 'birth_date' => $application?->birth_date?->toDateString(),
             ],
         ]);
@@ -54,6 +81,8 @@ class DriverApplicationController extends Controller
             'phone' => ['required', 'string', 'max:25'],
             'address' => ['required', 'string', 'max:500'],
             'birth_date' => ['required', 'date', 'before:today'],
+            'governorate_id' => ['required', 'exists:governorates,id'],
+            'city_id' => ['required', 'exists:cities,id'],
             'vehicle_type' => ['nullable', 'string', 'max:100'],
             'personal_photo' => $application ? $optionalImageRule : $requiredImageRule,
             'vehicle_photo' => $application ? $optionalImageRule : $requiredImageRule,
@@ -81,11 +110,13 @@ class DriverApplicationController extends Controller
             $user->driverApplication()->create($data);
         }
 
-        // Sync basic user data
+        // Sync basic user data including governorate and city
         $user->update([
             'name' => $validated['full_name'],
             'phone' => preg_replace('/\D/', '', $validated['phone']),
             'address' => $validated['address'],
+            'governorate_id' => $validated['governorate_id'],
+            'city_id' => $validated['city_id'],
         ]);
 
         return redirect()->route('dashboard.driver.apply')->with('success', __('driver_application_submitted'));

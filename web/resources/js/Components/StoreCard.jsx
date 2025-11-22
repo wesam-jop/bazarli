@@ -1,73 +1,72 @@
 import React from 'react';
 import { Link } from '@inertiajs/react';
-import { Store, MapPin, ShoppingBag, Package } from 'lucide-react';
+import { useTranslation } from '../hooks/useTranslation';
+import { Store, MapPin, ShoppingBag, Package, ArrowRight } from 'lucide-react';
 
-export default function StoreCard({ store, t }) {
+export default function StoreCard({ store }) {
+    const { t, locale } = useTranslation();
+
     return (
-        <div className="bg-white rounded-3xl border border-white/40 shadow-xl p-6 flex flex-wrap gap-4 justify-between items-center">
-            {/* <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-gradient-to-r from-purple-600/10 to-indigo-600/10 pointer-events-none" /> */}
-
-            <div className="">
-                <div className="flex items-center gap-4">
-                    <div className="p-4 rounded-2xl bg-gradient-to-br from-purple-100 to-purple-50 text-purple-600 shadow-inner">
-                        <Store className="w-6 h-6" />
-                    </div>
-                    <div>
-                        <h2 className="text-xl font-bold text-slate-900">{store.name}</h2>
-                        <p className="text-sm text-slate-500 capitalize">
-                            {store.store_type_label || store.store_type}
-                        </p>
-                    </div>
+        <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden group relative">
+            <Link href={`/stores/${store.id}`}>
+                <div className="aspect-square bg-gradient-to-br from-purple-50 to-indigo-50 flex items-center justify-center p-4">
+                    <Store className="w-16 h-16 text-purple-600 group-hover:scale-110 transition-transform duration-200" />
                 </div>
-                <span
-                    className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${
-                        store.is_active ? 'bg-emerald-100 text-emerald-700' : 'bg-rose-100 text-rose-700'
-                    }`}
-                >
-                    {store.is_active ? t('store_products_available') : t('store_products_unavailable')}
-                </span>
-            </div>
-
-            {store.address && (
-                <p className="text-sm text-slate-600 flex items-center gap-2 leading-relaxed">
-                    <MapPin className="w-4 h-4 text-purple-500" />
-                    {store.address}
-                </p>
-            )}
-
-            <div className="grid grid-cols-2 gap-3 text-sm">
-                <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm">
-                    <p className="text-xs uppercase tracking-wide text-slate-400 mb-1">{t('orders')}</p>
-                    <div className="flex items-center gap-2">
-                        <ShoppingBag className="w-4 h-4 text-purple-500" />
-                        <span className="text-xl font-semibold text-slate-900">{store.orders_count}</span>
-                    </div>
-                    <p className="text-xs text-slate-500 mt-1">
-                        {t('stores_orders_count', { count: store.orders_count })}
+                <div className="p-4">
+                    <h3 className="font-semibold text-slate-900 mb-1 group-hover:text-purple-600 transition-colors">
+                        {store.name}
+                    </h3>
+                    <p className="text-sm text-slate-500 mb-2">
+                        {store.store_type_label || store.store_type}
                     </p>
-                </div>
-                <div className="rounded-2xl border border-slate-100 bg-white p-4 shadow-sm">
-                    <p className="text-xs uppercase tracking-wide text-slate-400 mb-1">{t('store_products_section_title')}</p>
-                    <div className="flex items-center gap-2">
-                        <Package className="w-4 h-4 text-purple-500" />
-                        <span className="text-xl font-semibold text-slate-900">{store.products_count}</span>
-                    </div>
-                    <p className="text-xs text-slate-500 mt-1">
-                        {t('stores_products_count', { count: store.products_count })}
-                    </p>
-                </div>
-            </div>
+                    
+                    {/* Location Information */}
+                    {store.governorate && store.city && (
+                        <div className="mb-2 pt-2 border-t border-slate-100">
+                            <div className="flex items-center gap-1.5 text-xs text-slate-500">
+                                <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                                <span>
+                                    {locale === 'ar' 
+                                        ? `${store.city.name_ar}، ${store.governorate.name_ar}`
+                                        : `${store.city.name_en}, ${store.governorate.name_en}`
+                                    }
+                                </span>
+                            </div>
+                        </div>
+                    )}
+                    
+                    {store.address && (
+                        <div className="mb-2">
+                            <div className="flex items-center gap-1.5 text-xs text-slate-500">
+                                <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                                <span className="line-clamp-1">{store.address}</span>
+                            </div>
+                        </div>
+                    )}
 
-            <div className="flex flex-wrap gap-3">
+                    {/* Stats */}
+                    <div className="flex items-center gap-4 text-xs text-slate-600 mb-2">
+                        <div className="flex items-center gap-1">
+                            <Package className="w-3.5 h-3.5 text-purple-500" />
+                            <span>{store.products_count || 0} {t('products') || 'منتج'}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                            <ShoppingBag className="w-3.5 h-3.5 text-indigo-500" />
+                            <span>{store.orders_count || 0} {t('orders') || 'طلب'}</span>
+                        </div>
+                    </div>
+                </div>
+            </Link>
+            
+            <div className="px-4 pb-4">
                 <Link
-                    href={`/products?store=${store.id}`}
-                    className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-500 px-5 py-2 text-sm font-semibold text-white shadow-lg hover:shadow-purple-500/40 transition"
+                    href={`/stores/${store.id}`}
+                    className="w-full flex items-center justify-center gap-2 bg-purple-600 text-white py-2 px-4 rounded-lg hover:bg-purple-700 transition-colors"
                 >
-                    {t('stores_view_store')}
+                    <span>{t('stores_view_store') || 'عرض المتجر'}</span>
+                    <ArrowRight className="w-4 h-4" />
                 </Link>
             </div>
         </div>
     );
 }
-
-

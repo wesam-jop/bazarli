@@ -3,7 +3,7 @@ import { Head, Link, router } from '@inertiajs/react';
 import StoreLayout from './StoreLayout';
 import { useTranslation } from '../../hooks/useTranslation';
 import { useGeneralSettings } from '../../hooks/useGeneralSettings';
-import { ShoppingBag, User, Calendar, DollarSign } from 'lucide-react';
+import { ShoppingBag, User, Calendar, DollarSign, Eye } from 'lucide-react';
 
 export default function StoreOrders({ store, orders, stats, filters }) {
     const { t } = useTranslation();
@@ -78,13 +78,14 @@ export default function StoreOrders({ store, orders, stats, filters }) {
 
                 <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
                     <table className="min-w-full divide-y divide-slate-100">
-                        <thead className="bg-slate-50">
+                                <thead className="bg-slate-50">
                             <tr>
                                 <Th>{t('order_number')}</Th>
                                 <Th>{t('customer') || 'Customer'}</Th>
                                 <Th>{t('status')}</Th>
                                 <Th>{t('total')}</Th>
                                 <Th>{t('created_at')}</Th>
+                                <Th>{t('actions') || 'الإجراءات'}</Th>
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-slate-100 bg-white">
@@ -120,11 +121,20 @@ export default function StoreOrders({ store, orders, stats, filters }) {
                                                 <p className="text-xs">{formatTime(order.created_at)}</p>
                                             </div>
                                         </Td>
+                                        <Td>
+                                            <Link
+                                                href={`/dashboard/store/orders/${order.id}`}
+                                                className="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-purple-600 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors"
+                                            >
+                                                <Eye className="w-4 h-4" />
+                                                {t('view_details') || 'عرض التفاصيل'}
+                                            </Link>
+                                        </Td>
                                     </tr>
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan="5" className="px-6 py-10 text-center text-slate-500">
+                                    <td colSpan="6" className="px-6 py-10 text-center text-slate-500">
                                         {t('store_orders_empty') || 'No orders for your store yet.'}
                                     </td>
                                 </tr>

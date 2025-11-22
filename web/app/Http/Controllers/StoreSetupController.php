@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Store;
 use App\Models\StoreType;
+use App\Models\Governorate;
+use App\Models\City;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -33,9 +35,34 @@ class StoreSetupController extends Controller
                 'icon' => $type->icon,
             ]);
 
+        // جلب المحافظات والمناطق
+        $governorates = Governorate::active()
+            ->orderBy('display_order')
+            ->get()
+            ->map(fn ($gov) => [
+                'id' => $gov->id,
+                'name' => app()->getLocale() === 'ar' ? $gov->name_ar : $gov->name_en,
+            ]);
+
+        $cities = [];
+        if ($user->governorate_id) {
+            $cities = City::active()
+                ->where('governorate_id', $user->governorate_id)
+                ->orderBy('display_order')
+                ->get()
+                ->map(fn ($city) => [
+                    'id' => $city->id,
+                    'name' => app()->getLocale() === 'ar' ? $city->name_ar : $city->name_en,
+                ]);
+        }
+
         return Inertia::render('Dashboard/Store/Setup', [
             'storeTypes' => $storeTypes,
+            'governorates' => $governorates,
+            'cities' => $cities,
             'userPhone' => $user->phone,
+            'userGovernorateId' => $user->governorate_id,
+            'userCityId' => $user->city_id,
         ]);
     }
 
@@ -60,6 +87,8 @@ class StoreSetupController extends Controller
             'address' => ['required', 'string', 'max:500'],
             'latitude' => ['required', 'numeric', 'between:-90,90'],
             'longitude' => ['required', 'numeric', 'between:-180,180'],
+            'governorate_id' => ['required', 'exists:governorates,id'],
+            'city_id' => ['required', 'exists:cities,id'],
             'phone' => ['nullable', 'string', 'max:25'],
             'logo' => ['nullable', 'image', 'max:2048'],
         ]);
@@ -78,6 +107,8 @@ class StoreSetupController extends Controller
             'address' => $validated['address'],
             'latitude' => $validated['latitude'],
             'longitude' => $validated['longitude'],
+            'governorate_id' => $validated['governorate_id'],
+            'city_id' => $validated['city_id'],
             'phone' => $validated['phone'] ?? $user->phone,
             'email' => $user->email,
             'opening_time' => '08:00:00',
@@ -88,7 +119,10 @@ class StoreSetupController extends Controller
             'estimated_delivery_time' => 15,
         ]);
 
+        // تحديث نوع المستخدم والمحافظة والمنطقة
         $user->user_type = 'store_owner';
+        $user->governorate_id = $validated['governorate_id'];
+        $user->city_id = $validated['city_id'];
         $user->save();
 
         return redirect()->route('dashboard.store')->with('success', __('store_setup_success'));

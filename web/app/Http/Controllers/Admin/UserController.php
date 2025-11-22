@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use App\Models\Governorate;
+use App\Models\City;
 use Inertia\Inertia;
 
 class UserController extends Controller
@@ -22,7 +24,17 @@ class UserController extends Controller
 
     public function create()
     {
-        return Inertia::render('Admin/Users/Create');
+        $governorates = Governorate::active()
+            ->orderBy('display_order')
+            ->get()
+            ->map(fn ($gov) => [
+                'id' => $gov->id,
+                'name' => app()->getLocale() === 'ar' ? $gov->name_ar : $gov->name_en,
+            ]);
+
+        return Inertia::render('Admin/Users/Create', [
+            'governorates' => $governorates,
+        ]);
     }
 
     public function store(Request $request)
@@ -32,6 +44,8 @@ class UserController extends Controller
             'phone' => 'required|string|unique:users',
             'user_type' => 'required|in:customer,store_owner,driver,admin',
             'is_verified' => 'boolean',
+            'governorate_id' => 'required_if:user_type,store_owner,driver|nullable|exists:governorates,id',
+            'city_id' => 'required_if:user_type,store_owner,driver|nullable|exists:cities,id',
         ]);
 
         if ($validator->fails()) {
@@ -41,13 +55,21 @@ class UserController extends Controller
         // Clean phone number
         $cleanedPhone = preg_replace('/\D/', '', $request->phone);
 
-        $user = User::create([
+        $userData = [
             'name' => $request->name,
             'phone' => $cleanedPhone,
             'password' => Hash::make('default'), // كلمة مرور افتراضية غير مستخدمة
             'user_type' => $request->user_type,
             'is_verified' => $request->is_verified ?? false,
-        ]);
+        ];
+
+        // إضافة المحافظة والمنطقة للمتاجر والعاملين
+        if (in_array($request->user_type, ['store_owner', 'driver'])) {
+            $userData['governorate_id'] = $request->governorate_id;
+            $userData['city_id'] = $request->city_id;
+        }
+
+        $user = User::create($userData);
 
         return redirect()->route('admin.users.index')->with('success', 'User created successfully!');
     }
@@ -69,8 +91,30 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
+        $governorates = Governorate::active()
+            ->orderBy('display_order')
+            ->get()
+            ->map(fn ($gov) => [
+                'id' => $gov->id,
+                'name' => app()->getLocale() === 'ar' ? $gov->name_ar : $gov->name_en,
+            ]);
+
+        $cities = [];
+        if ($user->governorate_id) {
+            $cities = City::active()
+                ->where('governorate_id', $user->governorate_id)
+                ->orderBy('display_order')
+                ->get()
+                ->map(fn ($city) => [
+                    'id' => $city->id,
+                    'name' => app()->getLocale() === 'ar' ? $city->name_ar : $city->name_en,
+                ]);
+        }
+
         return Inertia::render('Admin/Users/Edit', [
             'user' => $user,
+            'governorates' => $governorates,
+            'cities' => $cities,
         ]);
     }
 
@@ -81,6 +125,8 @@ class UserController extends Controller
             'phone' => 'required|string|unique:users,phone,' . $user->id,
             'user_type' => 'required|in:customer,store_owner,driver,admin',
             'is_verified' => 'boolean',
+            'governorate_id' => 'required_if:user_type,store_owner,driver|nullable|exists:governorates,id',
+            'city_id' => 'required_if:user_type,store_owner,driver|nullable|exists:cities,id',
         ]);
 
         if ($validator->fails()) {
@@ -96,6 +142,16 @@ class UserController extends Controller
             'user_type' => $request->user_type,
             'is_verified' => $request->is_verified ?? false,
         ];
+
+        // إضافة/تحديث المحافظة والمنطقة للمتاجر والعاملين
+        if (in_array($request->user_type, ['store_owner', 'driver'])) {
+            $updateData['governorate_id'] = $request->governorate_id;
+            $updateData['city_id'] = $request->city_id;
+        } else {
+            // إزالة المحافظة والمنطقة للعملاء
+            $updateData['governorate_id'] = null;
+            $updateData['city_id'] = null;
+        }
 
         $user->update($updateData);
 

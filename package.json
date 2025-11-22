@@ -4,7 +4,6 @@
   "description": "bazarli",
   "main": "index.js",
   "scripts": {
-    "dev:install": "cd web && npm install && composer install && php -r \"file_exists('.env') || copy('.env.example', '.env');\" && php artisan migrate && php artisan migrate:f --seed",
     "dev:web": "cd web && npx concurrently \"npm run dev\" \"php artisan serve\""
   },
   "repository": {

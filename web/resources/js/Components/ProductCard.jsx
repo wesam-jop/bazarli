@@ -2,7 +2,7 @@ import React from 'react';
 import { Link, router } from '@inertiajs/react';
 import { useTranslation } from '../hooks/useTranslation';
 import FavoriteToggleButton from './FavoriteToggleButton';
-import { Package, Plus, DollarSign } from 'lucide-react';
+import { Package, Plus, DollarSign, Store, MapPin } from 'lucide-react';
 
 export default function ProductCard({ product, showAddToCart = true }) {
     const { t, locale } = useTranslation();
@@ -47,6 +47,28 @@ export default function ProductCard({ product, showAddToCart = true }) {
                     <p className="text-sm text-slate-600 mb-2 line-clamp-2">
                         {product.description}
                     </p>
+                    
+                    {/* Store Information */}
+                    {product.store && (
+                        <div className="mb-2 pt-2 border-t border-slate-100">
+                            <div className="flex items-center gap-1.5 text-xs text-slate-600 mb-1">
+                                <Store className="w-3.5 h-3.5 text-purple-500" />
+                                <span className="font-medium text-slate-700">{product.store.name}</span>
+                            </div>
+                            {product.store.governorate && product.store.city && (
+                                <div className="flex items-center gap-1.5 text-xs text-slate-500">
+                                    <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                                    <span>
+                                        {locale === 'ar' 
+                                            ? `${product.store.city.name_ar}، ${product.store.governorate.name_ar}`
+                                            : `${product.store.city.name_en}, ${product.store.governorate.name_en}`
+                                        }
+                                    </span>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                    
                     <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-1">
                             <DollarSign className="w-4 h-4 text-green-600" />

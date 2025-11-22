@@ -396,12 +396,27 @@ class DashboardController extends Controller
 
         $status = $request->get('status');
 
-        $ordersQuery = $store->orders()
+        // البحث عن الطلبات التي تحتوي على منتجات من هذا المتجر
+        // المهم: المتجر لا يرى الطلبات إلا بعد موافقة الديلفري
+        $ordersQuery = Order::query()
+            ->whereHas('orderItems', function ($query) use ($store) {
+                $query->where('store_id', $store->id);
+            })
+            ->whereHas('orderStores', function ($query) use ($store) {
+                $query->where('store_id', $store->id);
+            })
+            // فقط الطلبات التي تم قبولها من الديلفري أو بعدها
+            ->whereNotIn('status', ['pending_driver_approval', 'driver_rejected'])
             ->with(['user'])
             ->latest();
 
         if ($status && $status !== 'all') {
-            $ordersQuery->where('status', $status);
+            // إذا كان الفلتر "all"، نعرض كل شيء ما عدا pending_driver_approval
+            if ($status === 'all') {
+                $ordersQuery->whereNotIn('status', ['pending_driver_approval', 'driver_rejected']);
+            } else {
+                $ordersQuery->where('status', $status);
+            }
         }
 
         $orders = $ordersQuery
@@ -417,13 +432,22 @@ class DashboardController extends Controller
                 ];
             });
 
+        // الإحصائيات - فقط الطلبات التي تم قبولها من الديلفري
+        $baseQuery = Order::whereHas('orderItems', function ($query) use ($store) {
+                $query->where('store_id', $store->id);
+            })
+            ->whereHas('orderStores', function ($query) use ($store) {
+                $query->where('store_id', $store->id);
+            })
+            ->whereNotIn('status', ['pending_driver_approval', 'driver_rejected']);
+
         $stats = [
-            'total' => $store->orders()->count(),
-            'pending' => $store->orders()->where('status', 'pending')->count(),
-            'preparing' => $store->orders()->where('status', 'preparing')->count(),
-            'on_delivery' => $store->orders()->whereIn('status', ['on_delivery', 'out_for_delivery'])->count(),
-            'delivered' => $store->orders()->where('status', 'delivered')->count(),
-            'cancelled' => $store->orders()->where('status', 'cancelled')->count(),
+            'total' => (clone $baseQuery)->count(),
+            'pending' => (clone $baseQuery)->whereIn('status', ['driver_accepted', 'pending_store_approval'])->count(),
+            'preparing' => (clone $baseQuery)->whereIn('status', ['store_preparing'])->count(),
+            'on_delivery' => (clone $baseQuery)->whereIn('status', ['driver_picked_up', 'out_for_delivery', 'on_delivery'])->count(),
+            'delivered' => (clone $baseQuery)->where('status', 'delivered')->count(),
+            'cancelled' => (clone $baseQuery)->whereIn('status', ['cancelled', 'store_rejected'])->count(),
         ];
 
         return Inertia::render('Dashboard/StoreOrders', [
@@ -435,6 +459,105 @@ class DashboardController extends Controller
             'stats' => $stats,
             'filters' => [
                 'status' => $status ?? 'all',
+            ],
+        ]);
+    }
+
+    public function storeOrderShow(Order $order)
+    {
+        $user = Auth::user();
+
+        if (!$user->isStoreOwner()) {
+            abort(403);
+        }
+
+        $store = $user->stores()->first();
+
+        if (!$store) {
+            abort(403, __('no_store_found'));
+        }
+
+        // التحقق من أن الطلب يحتوي على منتجات من هذا المتجر
+        $orderStore = \App\Models\OrderStore::where('order_id', $order->id)
+            ->where('store_id', $store->id)
+            ->first();
+
+        if (!$orderStore) {
+            abort(403, 'ليس لديك صلاحية للوصول إلى هذا الطلب');
+        }
+
+        // التحقق من أن الطلب تم قبوله من الديلفري (المتجر لا يرى الطلبات قبل موافقة الديلفري)
+        if (in_array($order->status, ['pending_driver_approval', 'driver_rejected'])) {
+            abort(403, __('order_not_accepted_by_driver_yet'));
+        }
+
+        // تحميل فقط المنتجات الخاصة بهذا المتجر
+        $order->load([
+            'user',
+            'store',
+            'orderItems' => function ($query) use ($store) {
+                $query->where('store_id', $store->id)->with('product');
+            },
+            'deliveryDriver',
+            'orderStores.store',
+        ]);
+
+        return Inertia::render('Dashboard/StoreOrderShow', [
+            'order' => [
+                'id' => $order->id,
+                'order_number' => $order->order_number ?? ('#' . $order->id),
+                'status' => $orderStore->status, // استخدام حالة orderStore بدلاً من order
+                'total_amount' => $order->total_amount,
+                'subtotal' => $order->subtotal,
+                'delivery_fee' => $order->delivery_fee,
+                'created_at' => $order->created_at,
+                'delivery_address' => $order->delivery_address,
+                'delivery_latitude' => $order->delivery_latitude,
+                'delivery_longitude' => $order->delivery_longitude,
+                'customer_phone' => $order->customer_phone,
+                'notes' => $order->notes,
+                'user' => $order->user ? [
+                    'id' => $order->user->id,
+                    'name' => $order->user->name,
+                    'phone' => $order->user->phone,
+                ] : null,
+                'store' => $order->store ? [
+                    'id' => $order->store->id,
+                    'name' => $order->store->name,
+                    'phone' => $order->store->phone,
+                ] : null,
+                'delivery_driver' => $order->deliveryDriver ? [
+                    'id' => $order->deliveryDriver->id,
+                    'name' => $order->deliveryDriver->name,
+                    'phone' => $order->deliveryDriver->phone,
+                ] : null,
+                'order_items' => $order->orderItems->filter(function ($item) use ($store) {
+                    return $item->store_id === $store->id;
+                })->map(function ($item) {
+                    return [
+                        'id' => $item->id,
+                        'product_id' => $item->product_id,
+                        'product_name' => $item->product_name,
+                        'product_price' => $item->product_price,
+                        'quantity' => $item->quantity,
+                        'total_price' => $item->total_price,
+                        'product' => $item->product ? [
+                            'id' => $item->product->id,
+                            'name' => $item->product->name,
+                            'icon' => $item->product->icon,
+                        ] : null,
+                    ];
+                }),
+            ],
+            'store' => [
+                'id' => $store->id,
+                'name' => $store->name,
+            ],
+            'orderStore' => [
+                'id' => $orderStore->id,
+                'status' => $orderStore->status,
+                'subtotal' => $orderStore->subtotal,
+                'delivery_fee' => $orderStore->delivery_fee,
             ],
         ]);
     }
@@ -593,13 +716,43 @@ class DashboardController extends Controller
             ->limit(10)
             ->get();
 
-        // الطلبات المتاحة للتوصيل
-        $availableOrders = Order::where('status', 'ready')
+        // الطلبات في انتظار موافقة عامل التوصيل - فقط من نفس المنطقة
+        $availableOrders = Order::where('status', 'pending_driver_approval')
             ->whereNull('delivery_driver_id')
-            ->with(['user', 'store', 'orderItems.product'])
+            ->whereHas('orderStores.store', function ($query) use ($user) {
+                // البحث عن طلبات من متاجر في نفس المنطقة
+                if ($user->city_id) {
+                    $query->where('city_id', $user->city_id);
+                } elseif ($user->governorate_id) {
+                    // إذا لم يكن له منطقة محددة، ابحث في نفس المحافظة
+                    $query->where('governorate_id', $user->governorate_id);
+                }
+            })
+            ->with([
+                'user:id,name,phone',
+                'orderStores.store:id,name,address',
+                'orderItems.store:id,name',
+                'orderItems.product:id,name'
+            ])
             ->orderBy('created_at', 'asc')
             ->limit(5)
-            ->get();
+            ->get()
+            ->map(function ($order) {
+                return [
+                    'id' => $order->id,
+                    'order_number' => $order->order_number ?? ('#' . $order->id),
+                    'status' => $order->status,
+                    'total_amount' => $order->total_amount,
+                    'delivery_address' => $order->delivery_address,
+                    'customer_phone' => $order->customer_phone,
+                    'created_at' => $order->created_at,
+                    'store' => $order->orderStores->first()?->store ? [
+                        'name' => $order->orderStores->first()->store->name,
+                        'address' => $order->orderStores->first()->store->address,
+                    ] : null,
+                    'stores_count' => $order->orderStores->count(),
+                ];
+            });
 
         return Inertia::render('Dashboard/Driver', [
             'stats' => $stats,

@@ -4,41 +4,71 @@ namespace Database\Seeders;
 
 use App\Models\DeliveryLocation;
 use App\Models\User;
+use App\Models\City;
+use App\Models\Governorate;
 use Illuminate\Database\Seeder;
 
 class DeliveryLocationSeeder extends Seeder
 {
     public function run(): void
     {
-        $customers = User::where('user_type', 'customer')->take(5)->get();
+        // الحصول على محافظة إدلب ومدينة إدلب
+        $idlibGovernorate = Governorate::where('name_ar', 'إدلب')->first();
+        $idlibCity = null;
+        if ($idlibGovernorate) {
+            $idlibCity = City::where('governorate_id', $idlibGovernorate->id)
+                ->where('name_ar', 'مدينة إدلب')
+                ->first();
+        }
+
+        if (!$idlibGovernorate || !$idlibCity) {
+            $this->command->warn('⚠️  يجب تشغيل GovernorateCitySeeder أولاً!');
+            return;
+        }
+
+        // الحصول على العملاء في نفس المنطقة
+        $customers = User::where('user_type', 'customer')
+            ->where('governorate_id', $idlibGovernorate->id)
+            ->where('city_id', $idlibCity->id)
+            ->take(5)
+            ->get();
+
+        if ($customers->isEmpty()) {
+            $this->command->warn('⚠️  يجب تشغيل UserSeeder أولاً!');
+            return;
+        }
+
+        // إحداثيات مدينة إدلب
+        $defaultLat = $idlibCity->center_latitude ?? 35.9333;
+        $defaultLng = $idlibCity->center_longitude ?? 36.6333;
 
         $defaultLocations = [
             [
                 'label' => 'المنزل',
-                'address' => 'دمشق، المزة، جانب جامع الأكرم',
-                'latitude' => 33.5090,
-                'longitude' => 36.2789,
+                'address' => 'مدينة إدلب، شارع الرئيسي',
+                'latitude' => $defaultLat + 0.001,
+                'longitude' => $defaultLng + 0.001,
                 'notes' => 'الباب البني، الطابق الثالث',
             ],
             [
                 'label' => 'مكان العمل',
-                'address' => 'دمشق، ساحة الأمويين، بناء الهيئة',
-                'latitude' => 33.5175,
-                'longitude' => 36.2816,
+                'address' => 'مدينة إدلب، ساحة المدينة',
+                'latitude' => $defaultLat + 0.002,
+                'longitude' => $defaultLng + 0.002,
                 'notes' => 'استقبال الطابق الأرضي',
             ],
             [
                 'label' => 'بيت العائلة',
-                'address' => 'حلب، الجميلية، شارع الكنيسة',
-                'latitude' => 36.2045,
-                'longitude' => 37.1516,
+                'address' => 'مدينة إدلب، حي الشمال',
+                'latitude' => $defaultLat - 0.001,
+                'longitude' => $defaultLng - 0.001,
                 'notes' => '',
             ],
             [
                 'label' => 'المزرعة',
-                'address' => 'ريف دمشق، جديدة عرطوز',
-                'latitude' => 33.4284,
-                'longitude' => 36.1811,
+                'address' => 'مدينة إدلب، المنطقة الشرقية',
+                'latitude' => $defaultLat + 0.003,
+                'longitude' => $defaultLng + 0.003,
                 'notes' => 'باب خشبي أخضر',
             ],
         ];

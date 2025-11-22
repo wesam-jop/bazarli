@@ -1,102 +1,36 @@
 import React, { useState } from 'react';
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, Link, router, usePage } from '@inertiajs/react';
 import Layout from '../Layout';
 import { useTranslation } from '../../hooks/useTranslation';
 import ProductCard from '../../Components/ProductCard';
-import AppDownloadSection from '../../Components/AppDownloadSection';
 import { 
-    Plus, 
-    Minus, 
-    ShoppingCart, 
+    Store, 
+    MapPin, 
     Search,
     Package,
-    Apple,
-    Utensils,
-    Milk,
-    Coffee,
-    Cookie,
-    Sparkles,
-    Heart,
-    Baby,
-    Shirt,
-    Home,
-    Wine,
     DollarSign,
-    MapPin,
-    Filter
+    ArrowLeft,
+    Phone,
+    Clock
 } from 'lucide-react';
 
-export default function ProductsIndex({ products, categories, governorates, cities, filters }) {
+export default function StoreShow({ store, products, categories, filters }) {
     const { t, locale } = useTranslation();
     
-    // حماية من البيانات غير المحددة
     const safeFilters = filters || {};
     const safeProducts = products || { data: [], total: 0, links: [] };
     const safeCategories = categories || [];
-    const safeGovernorates = governorates || [];
-    const safeCities = cities || [];
 
     const [search, setSearch] = useState(() => safeFilters?.search || '');
     const [selectedCategory, setSelectedCategory] = useState(() => safeFilters?.category || '');
-    const [selectedGovernorate, setSelectedGovernorate] = useState(() => safeFilters?.governorate_id || '');
-    const [selectedCity, setSelectedCity] = useState(() => safeFilters?.city_id || '');
     const [sortBy, setSortBy] = useState(() => safeFilters?.sort || 'sort_order');
     const [sortDirection, setSortDirection] = useState(() => safeFilters?.direction || 'asc');
 
-    // دالة لتحويل أسماء الفئات إلى أيقونات
-    const getCategoryIcon = (categoryName) => {
-        const iconMap = {
-            'grocery': <Package className="w-4 h-4" />,
-            'fruits_vegetables': <Apple className="w-4 h-4" />,
-            'meat_fish': <Utensils className="w-4 h-4" />,
-            'dairy': <Milk className="w-4 h-4" />,
-            'beverages': <Coffee className="w-4 h-4" />,
-            'sweets': <Cookie className="w-4 h-4" />,
-            'cleaning': <Sparkles className="w-4 h-4" />,
-            'personal_care': <Heart className="w-4 h-4" />,
-            'baby_supplies': <Baby className="w-4 h-4" />,
-            'clothing': <Shirt className="w-4 h-4" />,
-            'home_garden': <Home className="w-4 h-4" />,
-            'alcohol': <Wine className="w-4 h-4" />,
-        };
-        return iconMap[categoryName] || <Package className="w-4 h-4" />;
-    };
-
-    // دوال إدارة السلة
-    const addToCart = (productId) => {
-        router.post('/cart/add', {
-            product_id: productId,
-            quantity: 1
-        }, {
-            preserveState: true,
-            preserveScroll: true,
-        });
-    };
-
-    const updateCartQuantity = (productId, quantity) => {
-        if (quantity <= 0) {
-            router.delete(`/cart/remove/${productId}`, {
-                preserveState: true,
-                preserveScroll: true,
-            });
-        } else {
-            router.post('/cart/update', {
-                product_id: productId,
-                quantity: quantity
-            }, {
-                preserveState: true,
-                preserveScroll: true,
-            });
-        }
-    };
-
     const handleSearch = (e) => {
         e.preventDefault();
-        router.get('/products', {
+        router.get(`/stores/${store.id}`, {
             search,
             category: selectedCategory,
-            governorate_id: selectedGovernorate,
-            city_id: selectedCity,
             sort: sortBy,
             direction: sortDirection,
         }, {
@@ -107,56 +41,9 @@ export default function ProductsIndex({ products, categories, governorates, citi
 
     const handleCategoryChange = (categoryId) => {
         setSelectedCategory(categoryId);
-        router.get('/products', {
+        router.get(`/stores/${store.id}`, {
             search,
             category: categoryId,
-            governorate_id: selectedGovernorate,
-            city_id: selectedCity,
-            sort: sortBy,
-            direction: sortDirection,
-        }, {
-            preserveState: true,
-            replace: true,
-        });
-    };
-
-    const handleGovernorateChange = async (governorateId) => {
-        setSelectedGovernorate(governorateId);
-        setSelectedCity(''); // إعادة تعيين المدينة عند تغيير المحافظة
-        
-        // جلب المناطق للمحافظة المختارة
-        if (governorateId) {
-            try {
-                const response = await fetch(`/api/v1/cities?governorate_id=${governorateId}`);
-                const result = await response.json();
-                if (result.success) {
-                    // سيتم تحديث cities تلقائياً من الـ props عند إعادة تحميل الصفحة
-                }
-            } catch (error) {
-                console.error('Error fetching cities:', error);
-            }
-        }
-        
-        router.get('/products', {
-            search,
-            category: selectedCategory,
-            governorate_id: governorateId,
-            city_id: '',
-            sort: sortBy,
-            direction: sortDirection,
-        }, {
-            preserveState: true,
-            replace: true,
-        });
-    };
-
-    const handleCityChange = (cityId) => {
-        setSelectedCity(cityId);
-        router.get('/products', {
-            search,
-            category: selectedCategory,
-            governorate_id: selectedGovernorate,
-            city_id: cityId,
             sort: sortBy,
             direction: sortDirection,
         }, {
@@ -169,11 +56,9 @@ export default function ProductsIndex({ products, categories, governorates, citi
         const newDirection = sortBy === newSortBy && sortDirection === 'asc' ? 'desc' : 'asc';
         setSortBy(newSortBy);
         setSortDirection(newDirection);
-        router.get('/products', {
+        router.get(`/stores/${store.id}`, {
             search,
             category: selectedCategory,
-            governorate_id: selectedGovernorate,
-            city_id: selectedCity,
             sort: newSortBy,
             direction: newDirection,
         }, {
@@ -184,14 +69,74 @@ export default function ProductsIndex({ products, categories, governorates, citi
 
     return (
         <Layout>
-            <Head title={t('products')} />
+            <Head title={store.name} />
             
             <div className="min-h-screen bg-slate-50">
-                {/* Header */}
-                <div className="bg-white shadow-sm border-b">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-                        <h1 className="text-2xl font-bold text-slate-900">{t('products')}</h1>
-                        <p className="text-slate-600 mt-1">{t('browse_all_products')}</p>
+                {/* Store Header */}
+                <div className="bg-gradient-to-r from-purple-600 via-indigo-500 to-blue-500 text-white">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                        <Link 
+                            href="/stores"
+                            className="inline-flex items-center gap-2 text-white/80 hover:text-white mb-4 transition"
+                        >
+                            <ArrowLeft className="w-4 h-4" />
+                            <span>العودة إلى المتاجر</span>
+                        </Link>
+                        
+                        <div className="flex flex-col md:flex-row gap-6 items-start md:items-center">
+                            <div className="p-6 rounded-2xl bg-white/10 backdrop-blur-sm">
+                                <Store className="w-12 h-12" />
+                            </div>
+                            
+                            <div className="flex-1">
+                                <h1 className="text-3xl font-bold mb-2">{store.name}</h1>
+                                <p className="text-white/80 text-lg mb-4">
+                                    {store.store_type_label || store.store_type}
+                                </p>
+                                
+                                <div className="flex flex-wrap gap-4 text-sm">
+                                    {store.address && (
+                                        <div className="flex items-center gap-2">
+                                            <MapPin className="w-4 h-4" />
+                                            <span>{store.address}</span>
+                                        </div>
+                                    )}
+                                    
+                                    {store.governorate && store.city && (
+                                        <div className="flex items-center gap-2">
+                                            <MapPin className="w-4 h-4" />
+                                            <span>
+                                                {locale === 'ar' 
+                                                    ? `${store.city.name_ar}، ${store.governorate.name_ar}`
+                                                    : `${store.city.name_en}, ${store.governorate.name_en}`
+                                                }
+                                            </span>
+                                        </div>
+                                    )}
+                                    
+                                    {store.phone && (
+                                        <div className="flex items-center gap-2">
+                                            <Phone className="w-4 h-4" />
+                                            <span>{store.phone}</span>
+                                        </div>
+                                    )}
+                                    
+                                    {store.opening_time && store.closing_time && (
+                                        <div className="flex items-center gap-2">
+                                            <Clock className="w-4 h-4" />
+                                            <span>
+                                                {store.opening_time} - {store.closing_time}
+                                            </span>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                            
+                            <div className="text-center">
+                                <div className="text-3xl font-bold">{safeProducts.total}</div>
+                                <div className="text-white/80 text-sm">منتج متاح</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -199,8 +144,8 @@ export default function ProductsIndex({ products, categories, governorates, citi
                     <div className="flex flex-col lg:flex-row gap-6">
                         {/* Sidebar - Filters */}
                         <div className="lg:w-1/4">
-                            <div className="bg-white rounded-lg shadow-sm p-6">
-                                <h3 className="text-lg font-semibold text-slate-900 mb-4">{t('search_filter')}</h3>
+                            <div className="bg-white rounded-lg shadow-sm p-6 sticky top-4">
+                                <h3 className="text-lg font-semibold text-slate-900 mb-4">البحث والفلترة</h3>
                                 
                                 {/* Search */}
                                 <form onSubmit={handleSearch} className="mb-6">
@@ -209,7 +154,7 @@ export default function ProductsIndex({ products, categories, governorates, citi
                                             type="text"
                                             value={search}
                                             onChange={(e) => setSearch(e.target.value)}
-                                            placeholder={t('search_products')}
+                                            placeholder="ابحث عن منتج..."
                                             className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                                         />
                                         <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -218,60 +163,11 @@ export default function ProductsIndex({ products, categories, governorates, citi
                                     </div>
                                 </form>
 
-                                {/* Location Filters */}
-                                <div className="mb-6">
-                                    <h4 className="font-medium text-slate-900 mb-3 flex items-center gap-2">
-                                        <MapPin className="w-4 h-4 text-purple-600" />
-                                        {t('location') || 'الموقع'}
-                                    </h4>
-                                    <div className="space-y-3">
-                                        {/* Governorate */}
-                                        <div>
-                                            <label className="block text-xs font-medium text-slate-700 mb-1.5">
-                                                {t('governorate')}
-                                            </label>
-                                            <select
-                                                value={selectedGovernorate}
-                                                onChange={(e) => handleGovernorateChange(e.target.value)}
-                                                className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                                            >
-                                                <option value="">{t('all_governorates')}</option>
-                                                {safeGovernorates.map((gov) => (
-                                                    <option key={gov.id} value={gov.id}>
-                                                        {gov.name}
-                                                    </option>
-                                                ))}
-                                            </select>
-                                        </div>
-
-                                        {/* City */}
-                                        {selectedGovernorate && (
-                                            <div>
-                                                <label className="block text-xs font-medium text-slate-700 mb-1.5">
-                                                    {t('city')}
-                                                </label>
-                                                <select
-                                                    value={selectedCity}
-                                                    onChange={(e) => handleCityChange(e.target.value)}
-                                                    className="w-full px-3 py-2 text-sm border border-slate-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                                                >
-                                                    <option value="">{t('all_cities') || 'جميع المناطق'}</option>
-                                                    {safeCities.map((city) => (
-                                                        <option key={city.id} value={city.id}>
-                                                            {city.name}
-                                                        </option>
-                                                    ))}
-                                                </select>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-
                                 {/* Categories */}
                                 <div className="mb-6">
                                     <h4 className="font-medium text-slate-900 mb-3 flex items-center gap-2">
                                         <Package className="w-4 h-4 text-purple-600" />
-                                        {t('categories')}
+                                        الفئات
                                     </h4>
                                     <div className="space-y-2">
                                         <button
@@ -284,7 +180,7 @@ export default function ProductsIndex({ products, categories, governorates, citi
                                         >
                                             <span className="flex items-center gap-2">
                                                 <Package className="w-4 h-4" />
-                                                {t('all_categories')}
+                                                جميع الفئات
                                             </span>
                                             <span className="text-xs bg-slate-200 text-slate-600 px-2 py-1 rounded-full">
                                                 {safeProducts.total}
@@ -300,15 +196,7 @@ export default function ProductsIndex({ products, categories, governorates, citi
                                                         : 'text-slate-600 hover:bg-slate-100 border border-transparent'
                                                 }`}
                                             >
-                                                <span className="flex items-center gap-2">
-                                                    <span className="text-purple-600">
-                                                        {getCategoryIcon(category.name)}
-                                                    </span>
-                                                    {category.name}
-                                                </span>
-                                                <span className="text-xs bg-slate-200 text-slate-600 px-2 py-1 rounded-full">
-                                                    {category.products_count}
-                                                </span>
+                                                <span>{category.name_ar || category.name_en || category.name}</span>
                                             </button>
                                         ))}
                                     </div>
@@ -318,13 +206,13 @@ export default function ProductsIndex({ products, categories, governorates, citi
                                 <div>
                                     <h4 className="font-medium text-slate-900 mb-3 flex items-center gap-2">
                                         <DollarSign className="w-4 h-4 text-purple-600" />
-                                        {t('sort_by')}
+                                        الترتيب
                                     </h4>
                                     <div className="space-y-2">
                                         {[
-                                            { value: 'sort_order', label: t('default_sort') },
-                                            { value: 'name', label: t('sort_by_name') },
-                                            { value: 'price', label: t('sort_by_price') },
+                                            { value: 'sort_order', label: 'الافتراضي' },
+                                            { value: 'name', label: 'حسب الاسم' },
+                                            { value: 'price', label: 'حسب السعر' },
                                         ].map((option) => (
                                             <button
                                                 key={option.value}
@@ -363,7 +251,7 @@ export default function ProductsIndex({ products, categories, governorates, citi
                                     ))}
                                 </div>
                             ) : (
-                                <div className="text-center py-12">
+                                <div className="text-center py-12 bg-white rounded-lg shadow-sm">
                                     <div className="text-6xl mb-4">🔍</div>
                                     <h3 className="text-lg font-medium text-slate-900 mb-2">لم يتم العثور على منتجات</h3>
                                     <p className="text-slate-600">جرب تغيير معايير البحث أو التصفية</p>
@@ -393,9 +281,7 @@ export default function ProductsIndex({ products, categories, governorates, citi
                     </div>
                 </div>
             </div>
-
-            {/* App Download Section */}
-            <AppDownloadSection />
         </Layout>
     );
 }
+

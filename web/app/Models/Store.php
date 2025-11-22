@@ -17,6 +17,8 @@ class Store extends Model
         'address',
         'latitude',
         'longitude',
+        'governorate_id',
+        'city_id',
         'phone',
         'email',
         'opening_time',
@@ -45,6 +47,14 @@ class Store extends Model
         return $this->hasMany(Order::class);
     }
 
+    /**
+     * علاقة many-to-many مع الطلبات (للطلبات متعددة المتاجر)
+     */
+    public function orderStores(): HasMany
+    {
+        return $this->hasMany(OrderStore::class);
+    }
+
     public function owner(): BelongsTo
     {
         return $this->belongsTo(User::class, 'owner_id');
@@ -58,6 +68,16 @@ class Store extends Model
     public function products(): HasMany
     {
         return $this->hasMany(Product::class);
+    }
+
+    public function governorate(): BelongsTo
+    {
+        return $this->belongsTo(Governorate::class);
+    }
+
+    public function city(): BelongsTo
+    {
+        return $this->belongsTo(City::class);
     }
 
     public function scopeActive($query)

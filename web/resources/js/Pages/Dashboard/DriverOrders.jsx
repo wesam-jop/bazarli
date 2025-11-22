@@ -14,14 +14,10 @@ import {
     ClipboardList,
 } from 'lucide-react';
 
-export default function DriverOrders({ availableOrders, activeOrders, recentCompletedOrders }) {
+export default function DriverOrders({ pendingApprovalOrders = [], acceptedOrders = [], activeOrders = [], recentCompletedOrders = [] }) {
     const { t } = useTranslation();
     const { flash } = usePage().props;
     const { formatCurrency, formatDateTime } = useGeneralSettings();
-
-    const handleClaim = (orderId) => {
-        router.post(`/dashboard/driver/orders/${orderId}/claim`, {}, { preserveScroll: true });
-    };
 
     const handleComplete = (orderId) => {
         router.post(`/dashboard/driver/orders/${orderId}/complete`, {}, { preserveScroll: true });
@@ -48,10 +44,10 @@ export default function DriverOrders({ availableOrders, activeOrders, recentComp
                 )}
 
                 <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-                    <Card title={t('available_orders')} count={availableOrders.length} icon={ClipboardList}>
-                        {availableOrders.length ? (
+                    <Card title={t('available_orders')} count={pendingApprovalOrders.length} icon={ClipboardList}>
+                        {pendingApprovalOrders.length ? (
                             <div className="space-y-4">
-                                {availableOrders.map((order) => (
+                                {pendingApprovalOrders.map((order) => (
                                     <OrderCard
                                         key={order.id}
                                         order={order}
@@ -60,7 +56,7 @@ export default function DriverOrders({ availableOrders, activeOrders, recentComp
                                         t={t}
                                         primaryActionLabel={t('accept_order')}
                                         primaryActionVariant="primary"
-                                        onPrimaryAction={() => handleClaim(order.id)}
+                                        onPrimaryAction={() => router.post(`/dashboard/driver/orders/${order.id}/accept`, {}, { preserveScroll: true })}
                                         showSecondary={false}
                                     />
                                 ))}
@@ -101,6 +97,34 @@ export default function DriverOrders({ availableOrders, activeOrders, recentComp
                         )}
                     </Card>
                 </div>
+
+                {acceptedOrders.length > 0 && (
+                    <Card title={t('accepted_orders') || 'الطلبات المقبولة'} count={acceptedOrders.length} icon={CheckCircle}>
+                        <div className="space-y-4">
+                            {acceptedOrders.map((order) => {
+                                // عرض زر إنهاء الطلب فقط للطلبات الجاهزة للتسليم
+                                const canComplete = ['store_approved', 'ready_for_delivery'].includes(order.status);
+                                return (
+                                    <OrderCard
+                                        key={order.id}
+                                        order={order}
+                                        formatCurrency={formatCurrency}
+                                        formatDateTime={formatDateTime}
+                                        t={t}
+                                        badge={{
+                                            label: t(order.status) || order.status,
+                                            tone: 'info',
+                                        }}
+                                        primaryActionLabel={canComplete ? (t('complete_order') || 'إنهاء الطلب') : undefined}
+                                        primaryActionVariant={canComplete ? 'success' : undefined}
+                                        onPrimaryAction={canComplete ? () => handleComplete(order.id) : undefined}
+                                        showSecondary={true}
+                                    />
+                                );
+                            })}
+                        </div>
+                    </Card>
+                )}
 
                 <Card title={t('driver_recent_deliveries')} count={recentCompletedOrders.length} icon={CheckCircle}>
                     {recentCompletedOrders.length ? (
@@ -195,23 +219,27 @@ function OrderCard({
                 )}
             </div>
 
-            <div className="flex flex-col gap-2 sm:flex-row">
-                <button
-                    type="button"
-                    onClick={onPrimaryAction}
-                    className={`flex-1 rounded-xl px-4 py-2 text-sm font-semibold shadow ${buttonClass}`}
-                >
-                    {primaryActionLabel}
-                </button>
-                {showSecondary && (
-                    <button
-                        type="button"
-                        className="flex-1 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50"
-                    >
-                        {t('view_details')}
-                    </button>
-                )}
-            </div>
+            {(onPrimaryAction || showSecondary) && (
+                <div className="flex flex-col gap-2 sm:flex-row">
+                    {onPrimaryAction && primaryActionLabel && (
+                        <button
+                            type="button"
+                            onClick={onPrimaryAction}
+                            className={`flex-1 rounded-xl px-4 py-2 text-sm font-semibold shadow ${buttonClass}`}
+                        >
+                            {primaryActionLabel}
+                        </button>
+                    )}
+                    {showSecondary && (
+                        <button
+                            type="button"
+                            className="flex-1 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50"
+                        >
+                            {t('view_details')}
+                        </button>
+                    )}
+                </div>
+            )}
         </div>
     );
 }

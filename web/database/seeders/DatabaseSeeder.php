@@ -15,16 +15,24 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // تشغيل جميع الـ Seeders
+        // تشغيل جميع الـ Seeders بالترتيب الصحيح
         $this->call([
-            SettingSeeder::class,
-            StoreTypeSeeder::class,
-            UserSeeder::class,
-            CategorySeeder::class,
-            StoreSeeder::class,
-            ProductSeeder::class,
-            DeliveryLocationSeeder::class,
-            OrderSeeder::class,
+            // 1. الأساسيات
+            GovernorateCitySeeder::class, // المناطق والمحافظات (يجب أن يكون أولاً)
+            SettingSeeder::class,        // الإعدادات
+            StoreTypeSeeder::class,      // أنواع المتاجر
+            
+            // 2. المستخدمين والصلاحيات
+            UserSeeder::class,           // المستخدمين (admin, customers, drivers, store owners)
+            AdminAccessSeeder::class,    // صلاحيات Admin (يجب أن يكون بعد UserSeeder)
+            
+            // 3. المتاجر والمنتجات
+            CategorySeeder::class,       // الفئات
+            StoreSeeder::class,          // المتاجر (يعتمد على UserSeeder)
+            ProductSeeder::class,        // المنتجات (يعتمد على StoreSeeder و CategorySeeder)
+            
+            // 4. البيانات الإضافية
+            DeliveryLocationSeeder::class, // مواقع التوصيل (يعتمد على UserSeeder)
         ]);
     }
 }

@@ -2,106 +2,176 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\User;
-use App\Models\AdminAccess;
+use App\Models\Governorate;
+use App\Models\City;
+use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
     /**
-     * Clean phone number - remove all non-digit characters
-     */
-    private function cleanPhoneNumber($phone)
-    {
-        return preg_replace('/\D/', '', $phone);
-    }
-
-    /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        // إنشاء حساب إدمن
-        $adminUser = User::create([
-            'name' => 'Admin User',
-            'phone' => '963111111111', // رقم هاتف بسيط للإدمن
-            'password' => Hash::make('default'), // كلمة مرور افتراضية غير مستخدمة
-            'user_type' => 'admin',
-            'is_verified' => true,
-        ]);
+        // الحصول على محافظة إدلب ومدينة إدلب
+        $idlibGovernorate = Governorate::where('name_ar', 'إدلب')->first();
+        $idlibCity = null;
+        if ($idlibGovernorate) {
+            $idlibCity = City::where('governorate_id', $idlibGovernorate->id)
+                ->where('name_ar', 'مدينة إدلب')
+                ->first();
+        }
 
-        // إضافة صلاحية الدخول للإدمن
-        AdminAccess::create([
-            'user_id' => $adminUser->id,
-            'phone' => '963111111111',
-            'is_active' => true,
-            'notes' => 'حساب الإدمن الافتراضي',
-        ]);
+        if (!$idlibGovernorate || !$idlibCity) {
+            $this->command->warn('⚠️  يجب تشغيل GovernorateCitySeeder أولاً!');
+            return;
+        }
 
-        // إنشاء صاحب متجر
-        User::create([
-            'name' => 'Store Owner',
-            'phone' => $this->cleanPhoneNumber('+963-11-9876543'), // 963119876543
-            'password' => Hash::make('default'), // كلمة مرور افتراضية غير مستخدمة
-            'user_type' => 'store_owner',
-            'is_verified' => true,
-        ]);
+        // 1. إنشاء مستخدم Admin
+        $admin = User::updateOrCreate(
+            ['email' => 'admin@bazarli.com'],
+            [
+                'name' => 'مدير النظام',
+                'password' => Hash::make('password'),
+                'phone' => '963111111111',
+                'user_type' => 'admin',
+                'is_verified' => true,
+                'governorate_id' => $idlibGovernorate->id,
+                'city_id' => $idlibCity->id,
+            ]
+        );
 
-        // إنشاء سائق توصيل
-        User::create([
-            'name' => 'Delivery Driver',
-            'phone' => $this->cleanPhoneNumber('+963-11-5555555'), // 963115555555
-            'password' => Hash::make('default'), // كلمة مرور افتراضية غير مستخدمة
-            'user_type' => 'driver',
-            'is_verified' => true,
-        ]);
+        // إنشاء AdminAccess للـ admin مباشرة
+        \App\Models\AdminAccess::updateOrCreate(
+            ['user_id' => $admin->id],
+            [
+                'phone' => $admin->phone,
+                'is_active' => true,
+                'notes' => 'حساب الإدمن الافتراضي - تم إنشاؤه تلقائياً',
+            ]
+        );
 
-        // إنشاء عملاء تجريبيين
-        User::create([
-            'name' => 'Ahmed Ali',
-            'phone' => $this->cleanPhoneNumber('+963-11-1234567'), // 963111234567
-            'password' => Hash::make('default'), // كلمة مرور افتراضية غير مستخدمة
-            'user_type' => 'customer',
-            'is_verified' => true,
-        ]);
+        $this->command->info('✅ تم إنشاء مستخدم Admin مع الصلاحيات');
 
-        User::create([
-            'name' => 'Fatima Hassan',
-            'phone' => $this->cleanPhoneNumber('+963-11-2345678'), // 963112345678
-            'password' => Hash::make('default'), // كلمة مرور افتراضية غير مستخدمة
-            'user_type' => 'customer',
-            'is_verified' => true,
-        ]);
+        // 2. إنشاء أصحاب متاجر
+        $storeOwners = [
+            [
+                'name' => 'صاحب متجر البقالة',
+                'email' => 'store1@bazarli.com',
+                'phone' => '963222222222',
+            ],
+            [
+                'name' => 'صاحب متجر الصيدلية',
+                'email' => 'store2@bazarli.com',
+                'phone' => '963333333333',
+            ],
+            [
+                'name' => 'صاحب متجر المطعم',
+                'email' => 'store3@bazarli.com',
+                'phone' => '963444444444',
+            ],
+        ];
 
-        User::create([
-            'name' => 'Omar Khaled',
-            'phone' => $this->cleanPhoneNumber('+963-11-3456789'), // 963113456789
-            'password' => Hash::make('default'), // كلمة مرور افتراضية غير مستخدمة
-            'user_type' => 'customer',
-            'is_verified' => false, // غير محقق للاختبار
-        ]);
+        foreach ($storeOwners as $index => $ownerData) {
+            $storeOwner = User::updateOrCreate(
+                ['email' => $ownerData['email']],
+                [
+                    'name' => $ownerData['name'],
+                    'password' => Hash::make('password'),
+                    'phone' => $ownerData['phone'],
+                    'user_type' => 'store_owner',
+                    'is_verified' => true,
+                    'governorate_id' => $idlibGovernorate->id,
+                    'city_id' => $idlibCity->id,
+                ]
+            );
+        }
 
-        // إنشاء عملاء إضافيين باستخدام Factory
-        User::factory(10)->create([
-            'user_type' => 'customer',
-            'is_verified' => true,
-        ]);
+        $this->command->info('✅ تم إنشاء ' . count($storeOwners) . ' صاحب متجر');
 
-        User::factory(5)->create([
-            'user_type' => 'customer',
-            'is_verified' => false,
-        ]);
+        // 3. إنشاء عمال توصيل
+        $drivers = [
+            [
+                'name' => 'عامل التوصيل 1',
+                'email' => 'driver1@bazarli.com',
+                'phone' => '963555555555',
+            ],
+            [
+                'name' => 'عامل التوصيل 2',
+                'email' => 'driver2@bazarli.com',
+                'phone' => '963666666666',
+            ],
+            [
+                'name' => 'عامل التوصيل 3',
+                'email' => 'driver3@bazarli.com',
+                'phone' => '963777777777',
+            ],
+        ];
 
-        User::factory(3)->create([
-            'user_type' => 'store_owner',
-            'is_verified' => true,
-        ]);
+        foreach ($drivers as $driverData) {
+            $driver = User::updateOrCreate(
+                ['email' => $driverData['email']],
+                [
+                    'name' => $driverData['name'],
+                    'password' => Hash::make('password'),
+                    'phone' => $driverData['phone'],
+                    'user_type' => 'driver',
+                    'is_verified' => true,
+                    'governorate_id' => $idlibGovernorate->id,
+                    'city_id' => $idlibCity->id,
+                ]
+            );
+        }
 
-        User::factory(5)->create([
-            'user_type' => 'driver',
-            'is_verified' => true,
-        ]);
+        $this->command->info('✅ تم إنشاء ' . count($drivers) . ' عامل توصيل');
+
+        // 4. إنشاء عملاء
+        $customers = [
+            [
+                'name' => 'عميل 1',
+                'email' => 'customer1@bazarli.com',
+                'phone' => '963888888888',
+            ],
+            [
+                'name' => 'عميل 2',
+                'email' => 'customer2@bazarli.com',
+                'phone' => '963999999999',
+            ],
+            [
+                'name' => 'عميل 3',
+                'email' => 'customer3@bazarli.com',
+                'phone' => '963101010101',
+            ],
+            [
+                'name' => 'عميل 4',
+                'email' => 'customer4@bazarli.com',
+                'phone' => '963202020202',
+            ],
+            [
+                'name' => 'عميل 5',
+                'email' => 'customer5@bazarli.com',
+                'phone' => '963303030303',
+            ],
+        ];
+
+        foreach ($customers as $customerData) {
+            $customer = User::updateOrCreate(
+                ['email' => $customerData['email']],
+                [
+                    'name' => $customerData['name'],
+                    'password' => Hash::make('password'),
+                    'phone' => $customerData['phone'],
+                    'user_type' => 'customer',
+                    'is_verified' => true,
+                    'governorate_id' => $idlibGovernorate->id,
+                    'city_id' => $idlibCity->id,
+                ]
+            );
+        }
+
+        $this->command->info('✅ تم إنشاء ' . count($customers) . ' عميل');
     }
 }
+

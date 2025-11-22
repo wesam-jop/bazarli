@@ -1,5 +1,5 @@
 import React from 'react';
-import { Head, Link } from '@inertiajs/react';
+import { Head, Link, router } from '@inertiajs/react';
 import { 
     Truck, 
     Package, 
@@ -64,8 +64,8 @@ export default function DriverDashboard({ stats, assignedOrders, availableOrders
                                                 <h4 className="font-semibold text-slate-900">#{order.order_number}</h4>
                                                 <p className="text-sm text-slate-500">{order.store?.name}</p>
                                             </div>
-                                            <span className="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
-                                                {t('ready_for_delivery') || 'Ready'}
+                                            <span className="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">
+                                                {t('pending_driver_approval') || 'في انتظار الموافقة'}
                                             </span>
                                         </div>
                                         <div className="space-y-2 text-sm text-slate-600">
@@ -82,12 +82,24 @@ export default function DriverDashboard({ stats, assignedOrders, availableOrders
                                                 {order.total_amount}
                                             </div>
                                         </div>
+                                        {order.stores_count > 1 && (
+                                            <div className="text-xs text-blue-600 mb-2 flex items-center gap-1">
+                                                <Package className="w-3 h-3" />
+                                                {t('multiple_stores_order', { count: order.stores_count }) || `${order.stores_count} متاجر`}
+                                            </div>
+                                        )}
                                         <div className="mt-4 flex gap-2">
-                                            <button className="flex-1 rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700">
-                                                {t('accept_order') || 'Accept'}
+                                            <button
+                                                onClick={() => router.post(`/dashboard/driver/orders/${order.id}/accept`, {}, { preserveScroll: true })}
+                                                className="flex-1 rounded-xl bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
+                                            >
+                                                {t('accept_order') || 'قبول الطلب'}
                                             </button>
-                                            <button className="flex-1 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50">
-                                                {t('view_details')}
+                                            <button
+                                                onClick={() => router.post(`/dashboard/driver/orders/${order.id}/reject`, {}, { preserveScroll: true })}
+                                                className="flex-1 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-600 hover:bg-slate-50"
+                                            >
+                                                {t('reject_order') || 'رفض'}
                                             </button>
                                         </div>
                                     </div>

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Order extends Model
@@ -73,6 +74,24 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
+    /**
+     * علاقة many-to-many مع المتاجر (للطلبات متعددة المتاجر)
+     */
+    public function stores(): BelongsToMany
+    {
+        return $this->belongsToMany(Store::class, 'order_stores')
+            ->withPivot(['status', 'subtotal', 'delivery_fee'])
+            ->withTimestamps();
+    }
+
+    /**
+     * علاقة مباشرة مع order_stores pivot table
+     */
+    public function orderStores(): HasMany
+    {
+        return $this->hasMany(OrderStore::class);
+    }
+
     public function scopeByStatus($query, $status)
     {
         return $query->where('status', $status);
@@ -95,6 +114,79 @@ class Order extends Model
 
     public function canBeCancelled()
     {
-        return in_array($this->status, ['pending', 'confirmed', 'preparing']);
+        return in_array($this->status, [
+            'pending',
+            'pending_driver_approval',
+            'driver_accepted',
+            'store_preparing',
+            'ready_for_delivery',
+            'pending_store_approval',
+            'confirmed',
+            'preparing'
+        ]);
+    }
+
+    /**
+     * التحقق من أن الطلب في انتظار موافقة عامل التوصيل
+     */
+    public function isPendingDriverApproval()
+    {
+        return $this->status === 'pending_driver_approval';
+    }
+
+    /**
+     * التحقق من أن عامل التوصيل قبل الطلب
+     */
+    public function isDriverAccepted()
+    {
+        return $this->status === 'driver_accepted';
+    }
+
+    /**
+     * التحقق من أن المتجر يقوم بالتحضير
+     */
+    public function isStorePreparing()
+    {
+        return $this->status === 'store_preparing';
+    }
+
+    /**
+     * التحقق من أن الطلب جاهز للتوصيل
+     */
+    public function isReadyForDelivery()
+    {
+        return $this->status === 'ready_for_delivery';
+    }
+
+    /**
+     * التحقق من أن صاحب المتجر وافق على الطلب
+     */
+    public function isStoreApproved()
+    {
+        return $this->status === 'store_approved';
+    }
+
+    /**
+     * التحقق من أن عامل التوصيل أخذ الطلب
+     */
+    public function isDriverPickedUp()
+    {
+        return $this->status === 'driver_picked_up';
+    }
+
+    /**
+     * التحقق من أن الطلب مرفوض من قبل عامل التوصيل
+     */
+    public function isDriverRejected()
+    {
+        return $this->status === 'driver_rejected';
+    }
+
+    /**
+     * التحقق من أن الطلب مرفوض من قبل المتجر
+     */
+    public function isStoreRejected()
+    {
+        return $this->status === 'store_rejected';
     }
 }
