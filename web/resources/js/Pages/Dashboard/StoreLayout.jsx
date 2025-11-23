@@ -24,6 +24,7 @@ export default function StoreLayout({ children, title, subtitle }) {
     const { props, url } = usePage();
     const user = props?.auth?.user;
     const { t } = useTranslation();
+    const settings = props?.settings || {};
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -62,7 +63,7 @@ export default function StoreLayout({ children, title, subtitle }) {
                 <div className="flex items-center justify-between h-16 px-4 border-b border-slate-200">
                     <div className="flex items-center gap-3">
                         <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-500 text-white font-semibold flex items-center justify-center">GC</div>
-                        <span className="font-semibold text-slate-900">Getir Clone</span>
+                        <span className="font-semibold text-slate-900">{settings?.site_name || 'Getir Clone'}</span>
                     </div>
                     <button className="lg:hidden p-2 text-slate-500 hover:text-slate-700" onClick={() => setSidebarOpen(false)}>
                         <X className="w-5 h-5" />

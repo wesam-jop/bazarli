@@ -22,6 +22,7 @@ export default function CustomerLayout({ children, title }) {
     const { t } = useTranslation();
     const { url, props } = usePage();
     const user = props?.auth?.user;
+    const settings = props?.settings || {};
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const [notificationsOpen, setNotificationsOpen] = useState(false);
@@ -80,7 +81,7 @@ export default function CustomerLayout({ children, title }) {
                         <div className="w-9 h-9 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-xl flex items-center justify-center text-white font-semibold">
                             GC
                         </div>
-                        <span className="font-bold text-slate-900">Getir Clone</span>
+                        <span className="font-bold text-slate-900">{settings?.site_name || 'Getir Clone'}</span>
                     </div>
                     <button onClick={() => setSidebarOpen(false)} className="lg:hidden p-2 text-slate-500 hover:text-slate-700">
                         <X className="w-5 h-5" />

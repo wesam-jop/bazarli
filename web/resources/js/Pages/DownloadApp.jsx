@@ -17,6 +17,7 @@ export default function DownloadApp() {
     const { t, locale } = useTranslation();
     const { props } = usePage();
     const downloadSettings = props.downloadSettings || {};
+    const settings = props?.settings || {};
     const iosUrl = downloadSettings.app_download_ios_url || 'https://apps.apple.com/app/getir/id123456789';
     const androidUrl = downloadSettings.app_download_android_url || 'https://play.google.com/store/apps/details?id=com.getir';
     const directFileUrl = downloadSettings.app_download_direct_file_url || '';
@@ -135,7 +136,7 @@ export default function DownloadApp() {
                                                 <div className="w-16 h-16 bg-white bg-opacity-20 rounded-2xl mx-auto mb-4 flex items-center justify-center">
                                                     <Smartphone className="w-8 h-8" />
                                                 </div>
-                                                <h3 className="text-2xl font-bold mb-2">Getir Clone</h3>
+                                                <h3 className="text-2xl font-bold mb-2">{settings?.site_name || 'Getir Clone'}</h3>
                                                 <p className="text-purple-100 mb-6">{t('fast_delivery')}</p>
                                                 <div className="space-y-3">
                                                     <div className="flex items-center justify-center gap-3">

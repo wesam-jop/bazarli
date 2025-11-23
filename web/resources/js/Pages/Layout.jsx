@@ -238,7 +238,7 @@ export default function Layout({ children }) {
                         </div>
                     </div>
                     <div className="border-t border-slate-800 mt-8 pt-8 text-center text-slate-400">
-                        <p>&copy; 2024 Getir Clone. {t('all_rights_reserved')}</p>
+                        <p>&copy; 2024 {settings?.site_name || 'Getir Clone'}. {t('all_rights_reserved')}</p>
                     </div>
                 </div>
             </footer>

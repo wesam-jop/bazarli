@@ -1,11 +1,13 @@
 import React from 'react';
-import { Head } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 import Layout from './Layout';
 import { useTranslation } from '../hooks/useTranslation';
 import { Shield, CheckCircle, Clock, FileText } from 'lucide-react';
 
 export default function Terms({ intro, lastUpdated, sections = [] }) {
     const { t } = useTranslation();
+    const { props } = usePage();
+    const settings = props?.settings || {};
 
     return (
         <Layout>
@@ -37,7 +39,7 @@ export default function Terms({ intro, lastUpdated, sections = [] }) {
                             </div>
                             <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10">
                                 <CheckCircle className="w-4 h-4" />
-                                <span>{t('terms_applicable')} Getir Clone</span>
+                                <span>{t('terms_applicable')} {settings?.site_name || 'Getir Clone'}</span>
                             </div>
                         </div>
                     </div>

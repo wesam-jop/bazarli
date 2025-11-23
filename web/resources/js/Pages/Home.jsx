@@ -27,6 +27,8 @@ import StoreCard from '../Components/StoreCard';
 
 export default function Home({ categories, featuredProducts, featuredStores = [] }) {
     const { t, locale } = useTranslation();
+    const { props } = usePage();
+    const settings = props?.settings || {};
     
     // دوال إدارة السلة
     const addToCart = (productId) => {
@@ -273,7 +275,7 @@ export default function Home({ categories, featuredProducts, featuredStores = []
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                         <div className="grid md:grid-cols-4 gap-8">
                             <div>
-                                <h3 className="text-lg font-semibold mb-4">Getir Clone</h3>
+                                <h3 className="text-lg font-semibold mb-4">{settings?.site_name || 'Getir Clone'}</h3>
                                 <p className="text-gray-400">
                                     Fast delivery service bringing groceries and essentials to your doorstep in minutes.
                                 </p>
@@ -309,7 +311,7 @@ export default function Home({ categories, featuredProducts, featuredStores = []
                             </div>
                         </div>
                         <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-                            <p>&copy; 2024 Getir Clone. All rights reserved.</p>
+                            <p>&copy; 2024 {settings?.site_name || 'Getir Clone'}. All rights reserved.</p>
                         </div>
                     </div>
                 </footer> */}

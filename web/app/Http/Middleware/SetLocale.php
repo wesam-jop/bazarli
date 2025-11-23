@@ -17,12 +17,23 @@ class SetLocale
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Get locale from session or default to 'ar'
-        $locale = Session::get('locale', 'ar');
+        $locale = null;
         
-        // Check if locale is being changed via URL parameter
+        // Check if locale is being changed via URL parameter (highest priority)
         if ($request->has('locale')) {
             $locale = $request->get('locale');
+        }
+        // Check session for stored locale
+        elseif (Session::has('locale')) {
+            $locale = Session::get('locale');
+        }
+        // Check cookie for stored locale preference
+        elseif ($request->hasCookie('preferred_locale')) {
+            $locale = $request->cookie('preferred_locale');
+        }
+        // If no stored preference, detect from browser language
+        else {
+            $locale = $this->detectBrowserLocale($request);
         }
         
         // Validate locale
@@ -40,5 +51,33 @@ class SetLocale
         $request->attributes->set('locale', $locale);
         
         return $next($request);
+    }
+
+    /**
+     * Detect locale from browser's Accept-Language header
+     * If browser is Arabic → Arabic, otherwise → English
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return string
+     */
+    private function detectBrowserLocale(Request $request): string
+    {
+        $acceptLanguage = $request->header('Accept-Language');
+        
+        if (empty($acceptLanguage)) {
+            return 'en'; // Default to English if no language header
+        }
+
+        // Convert to lowercase for case-insensitive matching
+        $acceptLanguage = strtolower($acceptLanguage);
+        
+        // Check if Arabic language code exists in Accept-Language header
+        // This will match 'ar', 'ar-SY', 'ar-SA', etc.
+        if (preg_match('/\bar\b/', $acceptLanguage)) {
+            return 'ar';
+        }
+        
+        // If not Arabic, default to English
+        return 'en';
     }
 }

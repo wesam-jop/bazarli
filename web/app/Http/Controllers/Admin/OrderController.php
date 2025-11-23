@@ -39,7 +39,35 @@ class OrderController extends Controller
 
     public function show(Order $order)
     {
-        $order->load(['user', 'store', 'orderItems.product', 'deliveryDriver']);
+        // Load all relationships
+        $order->load([
+            'user',
+            'store',
+            'orderItems' => function($query) {
+                $query->with([
+                    'product.category',
+                    'product.store',
+                    'store'
+                ]);
+            },
+            'deliveryDriver.user'
+        ]);
+        
+        // Debug: Log order items count
+        \Log::info('Order Items Count', [
+            'order_id' => $order->id,
+            'order_items_count' => $order->orderItems->count(),
+            'order_items' => $order->orderItems->map(function($item) {
+                return [
+                    'id' => $item->id,
+                    'product_id' => $item->product_id,
+                    'product_name' => $item->product_name,
+                    'quantity' => $item->quantity,
+                    'product_price' => $item->product_price,
+                    'total_price' => $item->total_price,
+                ];
+            })->toArray()
+        ]);
         
         return Inertia::render('Admin/Orders/Show', [
             'order' => $order,

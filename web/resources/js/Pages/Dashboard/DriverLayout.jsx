@@ -21,6 +21,7 @@ export default function DriverLayout({ children, title, subtitle }) {
     const { props, url } = usePage();
     const { t } = useTranslation();
     const user = props?.auth?.user;
+    const settings = props?.settings || {};
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [userMenuOpen, setUserMenuOpen] = useState(false);
@@ -57,7 +58,7 @@ export default function DriverLayout({ children, title, subtitle }) {
                         <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-500 text-white font-semibold flex items-center justify-center">
                             GC
                         </div>
-                        <span className="font-semibold text-slate-900">Getir Clone</span>
+                        <span className="font-semibold text-slate-900">{settings?.site_name || 'Getir Clone'}</span>
                     </div>
                     <button className="lg:hidden p-2 text-slate-500" onClick={() => setSidebarOpen(false)}>
                         <X className="w-5 h-5" />
