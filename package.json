@@ -5,10 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev:web": "cd web && npx concurrently \"npm run dev\" \"php artisan serve\"",
-    "dev:app": "cd application && npm start",
-    "dev:app:android": "cd application && npm run android",
-    "dev:app:ios": "cd application && npm run ios",
-    "dev:app:web": "cd application && npm run web"
+    "dev:app": "cd application && npm start"
   },
   "repository": {
     "type": "git",
