@@ -19,80 +19,113 @@
        ============================================ */
     
     /* 
-     * 🎯 PRIMARY - اللون الأساسي (البرتقالي #FF7A32)
-     * Primary Color (Orange #FF7A32)
+     * 🎯 PRIMARY - اللون الأساسي (البرتقالي #ff7a32)
+     * Primary Color (Orange #ff7a32)
      * استخدمه للأزرار الرئيسية، الروابط، والتأكيدات
      * Use for main buttons, links, and highlights
      */
-    --color-primary: #FF7A32;        /* اللون الرئيسي - برتقالي */
-    --color-primary-light: #FF9D66;  /* فاتح */
-    --color-primary-dark: #E65A1F;   /* داكن */
-    --color-primary-hover: #FF8F4D;  /* عند hover */
+    --color-primary: #ff7a32;        /* اللون الرئيسي - برتقالي */
+    --color-primary-light: #ff9d66;  /* فاتح */
+    --color-primary-dark: #e65a1f;   /* داكن */
+    --color-primary-hover: #ff8f4d;  /* عند hover */
     
     /* 
-     * 🎯 SECONDARY - اللون الثانوي (الرمادي الفاتح للخلفيات)
-     * Secondary Color (Light Gray for backgrounds)
+     * 🎯 SECONDARY - اللون الثانوي (البرتقالي الفاتح #fff6ea)
+     * Secondary Color (Light Orange/Beige #fff6ea)
      * استخدمه للخلفيات، النصوص الثانوية، والحدود
      * Use for backgrounds, secondary text, and borders
      */
-    --color-secondary: #F4F4F4;       /* اللون الثانوي - رمادي فاتح */
-    --color-secondary-light: #FFFFFF; /* أبيض */
-    --color-secondary-dark: #E0E0E0; /* داكن */
-    --color-secondary-hover: #E8E8E8; /* عند hover */
+    --color-secondary: #fff6ea;       /* اللون الثانوي - برتقالي فاتح جداً */
+    --color-secondary-light: #ffffff; /* أبيض */
+    --color-secondary-dark: #ffe8d9; /* داكن قليلاً */
+    --color-secondary-hover: #fff0e0; /* عند hover */
     
     /* 
-     * 🎯 ACCENT - اللون المميز (الأزرق)
-     * Accent Color (Blue)
+     * 🎯 ACCENT - اللون المميز (أزرق متناسق)
+     * Accent Color (Harmonious Blue)
      * استخدمه للعناصر المميزة، الإشعارات، والتأكيدات الإضافية
      * Use for special elements, notifications, and additional highlights
      */
-    --color-accent: #3b82f6;        /* اللون المميز */
-    --color-accent-light: #60a5fa;  /* فاتح */
-    --color-accent-dark: #2563eb;   /* داكن */
-    --color-accent-hover: #60a5fa;  /* عند hover */
+    --color-accent: #4a90e2;        /* اللون المميز - أزرق متناسق */
+    --color-accent-light: #6ba3f0;  /* فاتح */
+    --color-accent-dark: #357abd;   /* داكن */
+    --color-accent-hover: #5a9ef2;  /* عند hover */
     
     /* 
-     * 🎯 SUCCESS - لون النجاح (الأخضر)
-     * Success Color (Green)
+     * 🎯 SUCCESS - لون النجاح (أخضر متناسق)
+     * Success Color (Harmonious Green)
      * استخدمه للرسائل الناجحة، التأكيدات الإيجابية، والحالات الناجحة
      * Use for success messages, positive confirmations, and success states
      */
-    --color-success: #10b981;        /* لون النجاح */
-    --color-success-light: #34d399; /* فاتح */
-    --color-success-dark: #059669;  /* داكن */
-    --color-success-hover: #34d399; /* عند hover */
+    --color-success: #22c55e;        /* لون النجاح - أخضر */
+    --color-success-light: #4ade80; /* فاتح */
+    --color-success-dark: #16a34a;  /* داكن */
+    --color-success-hover: #4ade80; /* عند hover */
+    
+    /* 
+     * 🎯 WARNING - لون التحذير (برتقالي/أصفر متناسق مع PRIMARY)
+     * Warning Color (Orange/Yellow harmonious with PRIMARY)
+     * استخدمه للتحذيرات، التنبيهات، والحالات المعلقة
+     * Use for warnings, alerts, and pending states
+     */
+    --color-warning: #f97316;        /* لون التحذير - برتقالي */
+    --color-warning-light: #fb923c; /* فاتح */
+    --color-warning-dark: #ea580c;  /* داكن */
+    --color-warning-hover: #fb923c; /* عند hover */
+    
+    /* 
+     * 🎯 ERROR - لون الخطأ (أحمر متناسق)
+     * Error Color (Harmonious Red)
+     * استخدمه للأخطاء، الرسائل السلبية، والحالات الملغاة
+     * Use for errors, negative messages, and cancelled states
+     */
+    --color-error: #ef4444;         /* لون الخطأ - أحمر */
+    --color-error-light: #f87171;   /* فاتح */
+    --color-error-dark: #dc2626;    /* داكن */
+    --color-error-hover: #f87171;   /* عند hover */
+    
+    /* 
+     * 🎯 INFO - لون المعلومات (أزرق فاتح متناسق)
+     * Info Color (Light Blue harmonious)
+     * استخدمه للمعلومات، الإشعارات، والتأكيدات
+     * Use for information, notifications, and confirmations
+     */
+    --color-info: #3b82f6;          /* لون المعلومات - أزرق */
+    --color-info-light: #60a5fa;    /* فاتح */
+    --color-info-dark: #2563eb;     /* داكن */
+    --color-info-hover: #60a5fa;    /* عند hover */
     
     /* ============================================
        ألوان Tailwind المخصصة (مشتقة من المتغيرات أعلاه)
        Custom Tailwind Colors (derived from above variables)
        ============================================ */
     
-    /* Primary Colors - البرتقالي #FF7A32 */
-    --color-primary-50: #FFF5F0;
-    --color-primary-100: #FFE6D9;
-    --color-primary-200: #FFCDB3;
-    --color-primary-300: #FFB48D;
-    --color-primary-400: #FF9B66;
-    --color-primary-500: var(--color-primary); /* #FF7A32 */
-    --color-primary-600: var(--color-primary-dark); /* #E65A1F */
-    --color-primary-700: #CC4A1A;
-    --color-primary-800: #B33A15;
-    --color-primary-900: #992A10;
-    --color-primary-950: #801F0B;
+    /* Primary Colors - البرتقالي #ff7a32 */
+    --color-primary-50: #fff5f0;
+    --color-primary-100: #ffe6d9;
+    --color-primary-200: #ffcdb3;
+    --color-primary-300: #ffb48d;
+    --color-primary-400: #ff9b66;
+    --color-primary-500: var(--color-primary); /* #ff7a32 */
+    --color-primary-600: var(--color-primary-dark); /* #e65a1f */
+    --color-primary-700: #cc4a1a;
+    --color-primary-800: #b33a15;
+    --color-primary-900: #992a10;
+    --color-primary-950: #801f0b;
     
-    /* Secondary Colors - الرمادي الفاتح #F4F4F4 */
+    /* Secondary Colors - البرتقالي الفاتح #fff6ea */
     /* Secondary Colors - للخلفيات والحدود */
-    --color-secondary-50: #FFFFFF;
-    --color-secondary-100: #FAFAFA;
-    --color-secondary-200: var(--color-secondary); /* #F4F4F4 */
-    --color-secondary-300: var(--color-secondary-dark); /* #E0E0E0 */
-    --color-secondary-400: #D0D0D0;
-    --color-secondary-500: #C0C0C0;
-    --color-secondary-600: #A0A0A0;
-    --color-secondary-700: #808080;
-    --color-secondary-800: #606060;
-    --color-secondary-900: #404040;
-    --color-secondary-950: #202020;
+    --color-secondary-50: #ffffff;
+    --color-secondary-100: #fffbf5;
+    --color-secondary-200: var(--color-secondary); /* #fff6ea */
+    --color-secondary-300: var(--color-secondary-dark); /* #ffe8d9 */
+    --color-secondary-400: #ffd1b3;
+    --color-secondary-500: #ffc299;
+    --color-secondary-600: #ffb380;
+    --color-secondary-700: #e69966;
+    --color-secondary-800: #cc804d;
+    --color-secondary-900: #b36633;
+    --color-secondary-950: #994d1a;
     
     /* Text Colors - ألوان النصوص */
     --color-text-primary: #121212;    /* الأسود للنصوص الأساسية */
@@ -159,6 +192,45 @@
     --color-success-900: #064e3b;
     --color-success-950: #022c22;
     
+    /* Warning Colors */
+    --color-warning-50: #fffbeb;
+    --color-warning-100: #fef3c7;
+    --color-warning-200: #fde68a;
+    --color-warning-300: var(--color-warning-light);
+    --color-warning-400: #fbbf24;
+    --color-warning-500: var(--color-warning);
+    --color-warning-600: var(--color-warning-dark);
+    --color-warning-700: #b45309;
+    --color-warning-800: #92400e;
+    --color-warning-900: #78350f;
+    --color-warning-950: #451a03;
+    
+    /* Error Colors */
+    --color-error-50: #fef2f2;
+    --color-error-100: #fee2e2;
+    --color-error-200: #fecaca;
+    --color-error-300: var(--color-error-light);
+    --color-error-400: #f87171;
+    --color-error-500: var(--color-error);
+    --color-error-600: var(--color-error-dark);
+    --color-error-700: #b91c1c;
+    --color-error-800: #991b1b;
+    --color-error-900: #7f1d1d;
+    --color-error-950: #450a0a;
+    
+    /* Info Colors */
+    --color-info-50: #eff6ff;
+    --color-info-100: #dbeafe;
+    --color-info-200: #bfdbfe;
+    --color-info-300: var(--color-info-light);
+    --color-info-400: #60a5fa;
+    --color-info-500: var(--color-info);
+    --color-info-600: var(--color-info-dark);
+    --color-info-700: #1d4ed8;
+    --color-info-800: #1e40af;
+    --color-info-900: #1e3a8a;
+    --color-info-950: #172554;
+    
     /* Purple (for backward compatibility) */
     --color-purple-50: var(--color-primary-50);
     --color-purple-100: var(--color-primary-100);
@@ -197,6 +269,58 @@
     --color-blue-800: var(--color-accent-800);
     --color-blue-900: var(--color-accent-900);
     --color-blue-950: var(--color-accent-950);
+    
+    /* Green (for backward compatibility) */
+    --color-green-50: var(--color-success-50);
+    --color-green-100: var(--color-success-100);
+    --color-green-200: var(--color-success-200);
+    --color-green-300: var(--color-success-300);
+    --color-green-400: var(--color-success-400);
+    --color-green-500: var(--color-success-500);
+    --color-green-600: var(--color-success-600);
+    --color-green-700: var(--color-success-700);
+    --color-green-800: var(--color-success-800);
+    --color-green-900: var(--color-success-900);
+    --color-green-950: var(--color-success-950);
+    
+    /* Yellow (for backward compatibility) */
+    --color-yellow-50: var(--color-warning-50);
+    --color-yellow-100: var(--color-warning-100);
+    --color-yellow-200: var(--color-warning-200);
+    --color-yellow-300: var(--color-warning-300);
+    --color-yellow-400: var(--color-warning-400);
+    --color-yellow-500: var(--color-warning-500);
+    --color-yellow-600: var(--color-warning-600);
+    --color-yellow-700: var(--color-warning-700);
+    --color-yellow-800: var(--color-warning-800);
+    --color-yellow-900: var(--color-warning-900);
+    --color-yellow-950: var(--color-warning-950);
+    
+    /* Red (for backward compatibility) */
+    --color-red-50: var(--color-error-50);
+    --color-red-100: var(--color-error-100);
+    --color-red-200: var(--color-error-200);
+    --color-red-300: var(--color-error-300);
+    --color-red-400: var(--color-error-400);
+    --color-red-500: var(--color-error-500);
+    --color-red-600: var(--color-error-600);
+    --color-red-700: var(--color-error-700);
+    --color-red-800: var(--color-error-800);
+    --color-red-900: var(--color-error-900);
+    --color-red-950: var(--color-error-950);
+    
+    /* Orange (for backward compatibility - uses primary) */
+    --color-orange-50: var(--color-primary-50);
+    --color-orange-100: var(--color-primary-100);
+    --color-orange-200: var(--color-primary-200);
+    --color-orange-300: var(--color-primary-300);
+    --color-orange-400: var(--color-primary-400);
+    --color-orange-500: var(--color-primary-500);
+    --color-orange-600: var(--color-primary-600);
+    --color-orange-700: var(--color-primary-700);
+    --color-orange-800: var(--color-primary-800);
+    --color-orange-900: var(--color-primary-900);
+    --color-orange-950: var(--color-primary-950);
 }
 
 /* RTL Support */

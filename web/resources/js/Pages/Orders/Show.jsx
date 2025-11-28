@@ -7,27 +7,27 @@ import { Package, MapPin, Store as StoreIcon, Phone, Truck, ArrowLeft } from 'lu
 
 const statusColors = {
     pending: {
-        badge: 'bg-amber-100 text-amber-800 border border-amber-200',
+        badge: 'bg-warning-100 text-warning-800 border border-warning-200',
         labelKey: 'pending',
     },
     confirmed: {
-        badge: 'bg-blue-100 text-blue-800 border border-blue-200',
+        badge: 'bg-info-100 text-info-800 border border-info-200',
         labelKey: 'confirmed',
     },
     preparing: {
-        badge: 'bg-indigo-100 text-indigo-800 border border-indigo-200',
+        badge: 'bg-primary-100 text-primary-800 border border-primary-200',
         labelKey: 'preparing',
     },
     on_delivery: {
-        badge: 'bg-purple-100 text-purple-800 border border-purple-200',
+        badge: 'bg-primary-100 text-primary-800 border border-primary-200',
         labelKey: 'out_for_delivery',
     },
     delivered: {
-        badge: 'bg-emerald-100 text-emerald-800 border border-emerald-200',
+        badge: 'bg-success-100 text-success-800 border border-success-200',
         labelKey: 'delivered',
     },
     cancelled: {
-        badge: 'bg-rose-100 text-rose-800 border border-rose-200',
+        badge: 'bg-error-100 text-error-800 border border-error-200',
         labelKey: 'cancelled',
     },
 };

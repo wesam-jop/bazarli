@@ -33,15 +33,15 @@ export default function AdminDashboard({ stats, recent_orders, top_products }) {
     const { formatCurrency, formatDate, formatTime } = useGeneralSettings();
 
     const orderStatusStyles = {
-        pending: { label: t('pending'), badge: 'bg-amber-100 text-amber-700' },
-        confirmed: { label: t('confirmed'), badge: 'bg-blue-100 text-blue-700' },
-        preparing: { label: t('preparing'), badge: 'bg-indigo-100 text-indigo-700' },
-        ready: { label: t('ready'), badge: 'bg-slate-100 text-slate-700' },
-        on_delivery: { label: t('on_delivery'), badge: 'bg-orange-100 text-orange-700' },
-        out_for_delivery: { label: t('out_for_delivery'), badge: 'bg-orange-100 text-orange-700' },
-        delivered: { label: t('delivered'), badge: 'bg-emerald-100 text-emerald-700' },
-        completed: { label: t('completed'), badge: 'bg-emerald-100 text-emerald-700' },
-        cancelled: { label: t('cancelled'), badge: 'bg-rose-100 text-rose-700' },
+        pending: { label: t('pending'), badge: 'bg-warning-100 text-warning-700' },
+        confirmed: { label: t('confirmed'), badge: 'bg-info-100 text-info-700' },
+        preparing: { label: t('preparing'), badge: 'bg-primary-100 text-primary-700' },
+        ready: { label: t('ready'), badge: 'bg-secondary-100 text-secondary-700' },
+        on_delivery: { label: t('on_delivery'), badge: 'bg-primary-100 text-primary-700' },
+        out_for_delivery: { label: t('out_for_delivery'), badge: 'bg-primary-100 text-primary-700' },
+        delivered: { label: t('delivered'), badge: 'bg-success-100 text-success-700' },
+        completed: { label: t('completed'), badge: 'bg-success-100 text-success-700' },
+        cancelled: { label: t('cancelled'), badge: 'bg-error-100 text-error-700' },
     };
 
     const getStatusMeta = (status) =>
@@ -53,7 +53,7 @@ export default function AdminDashboard({ stats, recent_orders, top_products }) {
             value: stats?.total_users || 0,
             icon: Users,
             color: 'blue',
-            gradient: 'from-blue-500 to-blue-600',
+            bgColor: 'bg-accent-600',
             bgColor: 'bg-blue-50',
             iconBg: 'bg-blue-100',
             change: '+12%',
@@ -66,7 +66,7 @@ export default function AdminDashboard({ stats, recent_orders, top_products }) {
             value: stats?.total_orders || 0,
             icon: ShoppingCart,
             color: 'green',
-            gradient: 'from-green-500 to-green-600',
+            bgColor: 'bg-success-600',
             bgColor: 'bg-green-50',
             iconBg: 'bg-green-100',
             change: '+8%',
@@ -79,7 +79,7 @@ export default function AdminDashboard({ stats, recent_orders, top_products }) {
             value: stats?.total_products || 0,
             icon: Package,
             color: 'purple',
-            gradient: 'from-purple-500 to-purple-600',
+            bgColor: 'bg-primary-600',
             bgColor: 'bg-purple-50',
             iconBg: 'bg-purple-100',
             change: '+5%',
@@ -92,7 +92,7 @@ export default function AdminDashboard({ stats, recent_orders, top_products }) {
             value: formatCurrency(stats?.total_revenue || 0),
             icon: DollarSign,
             color: 'orange',
-            gradient: 'from-orange-500 to-orange-600',
+            bgColor: 'bg-primary-600',
             bgColor: 'bg-orange-50',
             iconBg: 'bg-orange-100',
             change: '+15%',
@@ -105,7 +105,7 @@ export default function AdminDashboard({ stats, recent_orders, top_products }) {
             value: stats?.pending_orders || 0,
             icon: Clock,
             color: 'yellow',
-            gradient: 'from-yellow-500 to-yellow-600',
+            bgColor: 'bg-warning-600',
             bgColor: 'bg-yellow-50',
             iconBg: 'bg-yellow-100',
             change: '-3%',
@@ -117,7 +117,7 @@ export default function AdminDashboard({ stats, recent_orders, top_products }) {
             value: stats?.completed_orders || 0,
             icon: CheckCircle,
             color: 'emerald',
-            gradient: 'from-emerald-500 to-emerald-600',
+            bgColor: 'bg-success-600',
             bgColor: 'bg-emerald-50',
             iconBg: 'bg-emerald-100',
             change: '+10%',
@@ -132,7 +132,7 @@ export default function AdminDashboard({ stats, recent_orders, top_products }) {
             
             <div className="space-y-8">
                 {/* Welcome Section */}
-                <div className="bg-gradient-to-r from-purple-600 to-blue-600 rounded-2xl p-8 text-white relative overflow-hidden">
+                <div className="bg-primary-600 rounded-2xl p-8 text-white relative overflow-hidden">
                     <div className="absolute inset-0 bg-black bg-opacity-10"></div>
                     <div className="relative z-10">
                         <div className="flex items-center justify-between">
@@ -166,7 +166,7 @@ export default function AdminDashboard({ stats, recent_orders, top_products }) {
                         className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition-all duration-200 group hover:border-green-300"
                     >
                         <div className="flex items-center space-x-3">
-                            <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <div className="w-12 h-12 bg-success-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
                                 <ShoppingCart className="w-6 h-6 text-white" />
                             </div>
                             <div>
@@ -181,7 +181,7 @@ export default function AdminDashboard({ stats, recent_orders, top_products }) {
                         className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition-all duration-200 group hover:border-blue-300"
                     >
                         <div className="flex items-center space-x-3">
-                            <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <div className="w-12 h-12 bg-accent-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
                                 <Users className="w-6 h-6 text-white" />
                             </div>
                             <div>
@@ -196,12 +196,12 @@ export default function AdminDashboard({ stats, recent_orders, top_products }) {
                         className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition-all duration-200 group hover:border-purple-300"
                     >
                         <div className="flex items-center space-x-3">
-                            <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <div className="w-12 h-12 bg-primary-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
                                 <Package className="w-6 h-6 text-white" />
                             </div>
                             <div>
                                 <p className="font-semibold text-slate-900 group-hover:text-purple-700">{t('manage_products')}</p>
-                                <p className="text-sm text-slate-500">{t('products_categories_inventory')}</p>
+                                <p className="text-sm text-slate-500">{t('products_categories') || 'المنتجات والفئات'}</p>
                             </div>
                         </div>
                     </Link>
@@ -211,7 +211,7 @@ export default function AdminDashboard({ stats, recent_orders, top_products }) {
                         className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition-all duration-200 group hover:border-orange-300"
                     >
                         <div className="flex items-center space-x-3">
-                            <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <div className="w-12 h-12 bg-primary-600 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
                                 <BarChart3 className="w-6 h-6 text-white" />
                             </div>
                             <div>
@@ -355,33 +355,33 @@ export default function AdminDashboard({ stats, recent_orders, top_products }) {
 
                 {/* Additional Stats */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-6 text-white">
+                    <div className="bg-accent-600 rounded-xl p-6 text-white">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-blue-100 text-sm">{t('total_stores')}</p>
+                                <p className="text-accent-100 text-sm">{t('total_stores')}</p>
                                 <p className="text-2xl font-bold">{stats?.total_stores || 0}</p>
                             </div>
-                            <Store className="w-8 h-8 text-blue-200" />
+                                <Store className="w-8 h-8 text-accent-200" />
                         </div>
                     </div>
 
-                    <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl p-6 text-white">
+                    <div className="bg-success-600 rounded-xl p-6 text-white">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-green-100 text-sm">{t('active_drivers')}</p>
+                                <p className="text-success-100 text-sm">{t('active_drivers')}</p>
                                 <p className="text-2xl font-bold">{stats?.active_drivers || 0}</p>
                             </div>
-                            <Truck className="w-8 h-8 text-green-200" />
+                                <Truck className="w-8 h-8 text-success-200" />
                         </div>
                     </div>
 
-                    <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl p-6 text-white">
+                    <div className="bg-primary-600 rounded-xl p-6 text-white">
                         <div className="flex items-center justify-between">
                             <div>
-                                <p className="text-purple-100 text-sm">{t('average_rating')}</p>
+                                <p className="text-primary-100 text-sm">{t('average_rating')}</p>
                                 <p className="text-2xl font-bold">4.8</p>
                             </div>
-                            <Star className="w-8 h-8 text-purple-200" />
+                            <Star className="w-8 h-8 text-primary-200" />
                         </div>
                     </div>
                 </div>

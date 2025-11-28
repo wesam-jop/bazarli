@@ -14,9 +14,9 @@ class SettingSeeder extends Seeder
     public function run(): void
     {
         // General Settings
-        Setting::set('site_name', 'Getir Clone', 'text', 'general', 'Site Name', 'The name of your website', true);
+        Setting::set('site_name', 'DeliGo', 'text', 'general', 'Site Name', 'The name of your website', true);
         Setting::set('site_description', 'Fast delivery service for groceries, food, pharmacy and pet supplies', 'textarea', 'general', 'Site Description', 'Brief description of your website', true);
-        Setting::set('site_logo', '/images/logo.png', 'image', 'general', 'Site Logo', 'Main logo of the website', true);
+        Setting::set('site_logo', '/logo.png', 'image', 'general', 'Site Logo', 'Main logo of the website', true);
         Setting::set('site_favicon', '/images/favicon.ico', 'image', 'general', 'Site Favicon', 'Website favicon', true);
 
         // Contact Settings

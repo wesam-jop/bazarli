@@ -40,8 +40,7 @@ export default function Products({ products, stats }) {
             (filterStatus === 'available' && product.is_available) ||
             (filterStatus === 'unavailable' && !product.is_available) ||
             (filterStatus === 'featured' && product.is_featured) ||
-            (filterStatus === 'low_stock' && product.stock_quantity < 10) ||
-            (filterStatus === 'out_of_stock' && product.stock_quantity <= 0);
+            false; // Stock system removed
         
         return matchesSearch && matchesFilter;
     }) || [];
@@ -134,30 +133,6 @@ export default function Products({ products, stats }) {
                             </div>
                         </div>
                     </div>
-                    <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl shadow-sm border border-orange-200 p-6 hover:shadow-md transition-all group">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm font-medium text-orange-700">{t('low_stock') || 'Low Stock'}</p>
-                                <p className="text-3xl font-bold text-orange-900 mt-2">{stats?.low_stock || 0}</p>
-                                <p className="text-xs text-orange-600 mt-1">{t('needs_restock') || 'Needs restock'}</p>
-                            </div>
-                            <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                                <AlertTriangle className="w-7 h-7 text-white" />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="bg-gradient-to-br from-red-50 to-red-100 rounded-xl shadow-sm border border-red-200 p-6 hover:shadow-md transition-all group">
-                        <div className="flex items-center justify-between">
-                            <div>
-                                <p className="text-sm font-medium text-red-700">{t('out_of_stock') || 'Out of Stock'}</p>
-                                <p className="text-3xl font-bold text-red-900 mt-2">{stats?.out_of_stock || 0}</p>
-                                <p className="text-xs text-red-600 mt-1">{t('no_stock') || 'No stock'}</p>
-                            </div>
-                            <div className="w-14 h-14 bg-gradient-to-br from-red-500 to-red-600 rounded-xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                                <XCircle className="w-7 h-7 text-white" />
-                            </div>
-                        </div>
-                    </div>
                     <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl shadow-sm border border-purple-200 p-6 hover:shadow-md transition-all group">
                         <div className="flex items-center justify-between">
                             <div>
@@ -201,8 +176,6 @@ export default function Products({ products, stats }) {
                                 <option value="available">{t('available') || 'Available'}</option>
                                 <option value="unavailable">{t('unavailable') || 'Unavailable'}</option>
                                 <option value="featured">{t('featured') || 'Featured'}</option>
-                                <option value="low_stock">{t('low_stock') || 'Low Stock'}</option>
-                                <option value="out_of_stock">{t('out_of_stock') || 'Out of Stock'}</option>
                             </select>
                         </div>
                     </div>
@@ -320,39 +293,6 @@ export default function Products({ products, stats }) {
                                                                 {parseFloat(product.price || 0).toFixed(2)}
                                                             </div>
                                                         )}
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="flex items-center gap-2">
-                                                    <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${
-                                                        product.stock_quantity <= 0 
-                                                            ? 'bg-red-50' 
-                                                            : product.stock_quantity < 10 
-                                                            ? 'bg-orange-50' 
-                                                            : 'bg-green-50'
-                                                    }`}>
-                                                        <Package className={`w-4 h-4 ${
-                                                            product.stock_quantity <= 0 
-                                                                ? 'text-red-600' 
-                                                                : product.stock_quantity < 10 
-                                                                ? 'text-orange-600' 
-                                                                : 'text-green-600'
-                                                        }`} />
-                                                    </div>
-                                                    <div>
-                                                        <div className={`text-sm font-bold ${
-                                                            product.stock_quantity <= 0 
-                                                                ? 'text-red-700' 
-                                                                : product.stock_quantity < 10 
-                                                                ? 'text-orange-700' 
-                                                                : 'text-green-700'
-                                                        }`}>
-                                                            {product.stock_quantity || 0}
-                                                        </div>
-                                                        <div className="text-xs text-slate-500">
-                                                            {t('units') || 'units'}
-                                                        </div>
                                                     </div>
                                                 </div>
                                             </td>

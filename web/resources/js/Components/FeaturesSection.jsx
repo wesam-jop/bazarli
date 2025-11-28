@@ -12,34 +12,69 @@ export default function FeaturesSection({
 }) {
     const colorClasses = {
         purple: {
-            bg: "bg-purple-100",
-            text: "text-purple-600",
-            hover: "group-hover:bg-purple-200"
+            bg: "bg-primary-100",
+            text: "text-primary-600",
+            hover: "group-hover:bg-primary-200"
         },
         green: {
-            bg: "bg-green-100",
-            text: "text-green-600",
-            hover: "group-hover:bg-green-200"
+            bg: "bg-success-100",
+            text: "text-success-600",
+            hover: "group-hover:bg-success-200"
         },
         orange: {
-            bg: "bg-orange-100",
-            text: "text-orange-600",
-            hover: "group-hover:bg-orange-200"
+            bg: "bg-primary-100",
+            text: "text-primary-600",
+            hover: "group-hover:bg-primary-200"
         },
         blue: {
-            bg: "bg-blue-100",
-            text: "text-blue-600",
-            hover: "group-hover:bg-blue-200"
+            bg: "bg-accent-100",
+            text: "text-accent-600",
+            hover: "group-hover:bg-accent-200"
         },
         pink: {
-            bg: "bg-pink-100",
-            text: "text-pink-600",
-            hover: "group-hover:bg-pink-200"
+            bg: "bg-primary-100",
+            text: "text-primary-600",
+            hover: "group-hover:bg-primary-200"
         },
         red: {
-            bg: "bg-red-100",
-            text: "text-red-600",
-            hover: "group-hover:bg-red-200"
+            bg: "bg-error-100",
+            text: "text-error-600",
+            hover: "group-hover:bg-error-200"
+        },
+        primary: {
+            bg: "bg-primary-100",
+            text: "text-primary-600",
+            hover: "group-hover:bg-primary-200"
+        },
+        secondary: {
+            bg: "bg-secondary-100",
+            text: "text-secondary-600",
+            hover: "group-hover:bg-secondary-200"
+        },
+        accent: {
+            bg: "bg-accent-100",
+            text: "text-accent-600",
+            hover: "group-hover:bg-accent-200"
+        },
+        success: {
+            bg: "bg-success-100",
+            text: "text-success-600",
+            hover: "group-hover:bg-success-200"
+        },
+        warning: {
+            bg: "bg-warning-100",
+            text: "text-warning-600",
+            hover: "group-hover:bg-warning-200"
+        },
+        error: {
+            bg: "bg-error-100",
+            text: "text-error-600",
+            hover: "group-hover:bg-error-200"
+        },
+        info: {
+            bg: "bg-info-100",
+            text: "text-info-600",
+            hover: "group-hover:bg-info-200"
         }
     };
 

@@ -4,13 +4,12 @@ export default function HeroSection({
     title, 
     subtitle, 
     icon: Icon, 
-    gradientFrom, 
-    gradientTo, 
+    bgColor = "bg-primary-600", 
     badges = [],
     className = ""
 }) {
     return (
-        <div className={`bg-gradient-to-r ${gradientFrom} ${gradientTo} text-white py-20 ${className}`}>
+        <div className={`${bgColor} text-white py-20 ${className}`}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="text-center">
                     {Icon && (

@@ -37,15 +37,15 @@ export default function CategoryCard({ category }) {
                 <div className="text-primary-600 mb-2 group-hover:scale-110 transition-transform duration-200 flex justify-center">
                     {renderIcon()}
                 </div>
-                <h3 className="text-xl font-semibold text-primary-900 group-hover:text-primary-600 transition-colors">
+                <h3 className="text-xl font-semibold text-gray-900 group-hover:text-primary-600 transition-colors">
                     {category.display_name || category.name}
                 </h3>
-                <p className="text-secondary-600 text-sm line-clamp-2">
+                <p className="text-gray-600 text-sm line-clamp-2">
                     {category.display_description || category.description}
                 </p>
                 <div className="flex items-center justify-center gap-1 text-xs">
-                    <DollarSign className="w-3 h-3 text-success-500" />
-                    <span className="inline-flex items-center rounded-full border border-primary-200 bg-primary-50 text-primary-700 px-3 py-1">
+                    {/* <DollarSign className="w-3 h-3 text-success-500" /> */}
+                    <span className="inline-flex items-center rounded-full border border-primary-200 bg-primary-50 text-gray-700 px-3 py-1">
                         {category.products_count} {t('products_count_text')}
                     </span>
                 </div>

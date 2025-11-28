@@ -9,12 +9,19 @@ export default function StatsSection({
     showTitle = true 
 }) {
     const colorClasses = {
-        purple: "text-purple-600",
-        green: "text-green-600",
-        orange: "text-orange-600",
-        blue: "text-blue-600",
-        pink: "text-pink-600",
-        red: "text-red-600"
+        purple: "text-primary-600",
+        green: "text-success-600",
+        orange: "text-primary-600",
+        blue: "text-accent-600",
+        pink: "text-primary-600",
+        red: "text-error-600",
+        primary: "text-primary-600",
+        secondary: "text-secondary-600",
+        accent: "text-accent-600",
+        success: "text-success-600",
+        warning: "text-warning-600",
+        error: "text-error-600",
+        info: "text-info-600"
     };
 
     const bgColorClasses = {

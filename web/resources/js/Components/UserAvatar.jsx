@@ -36,7 +36,7 @@ export default function UserAvatar({
 
     return (
         <div
-            className={`relative rounded-full overflow-hidden bg-gradient-to-br from-purple-500 to-indigo-600 text-white flex items-center justify-center ${className}`}
+            className={`relative rounded-full overflow-hidden bg-primary-600 text-white flex items-center justify-center ${className}`}
             style={{ width: size, height: size }}
         >
             {avatarUrl ? (

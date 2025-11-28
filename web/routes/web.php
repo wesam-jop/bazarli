@@ -354,9 +354,7 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::delete('/cities/{city}', [App\Http\Controllers\Admin\CityController::class, 'destroy'])->name('cities.destroy');
     Route::post('/cities/{city}/toggle-active', [App\Http\Controllers\Admin\CityController::class, 'toggleActive'])->name('cities.toggle-active');
     
-    // Inventory Management
-    Route::get('/inventory', [App\Http\Controllers\Admin\InventoryController::class, 'index'])->name('inventory.index');
-    Route::put('/inventory/{product}/stock', [App\Http\Controllers\Admin\InventoryController::class, 'updateStock'])->name('inventory.update-stock');
+    // Inventory Management - Removed (no stock system)
     
     // Analytics
     Route::get('/analytics/overview', [App\Http\Controllers\Admin\AnalyticsController::class, 'overview'])->name('analytics.overview');
@@ -372,6 +370,8 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
 Route::get('/download-app', function () {
     return Inertia::render('DownloadApp');
 })->name('download.app');
+
+Route::post('/download-app/increment', [App\Http\Controllers\Admin\AdminController::class, 'incrementDownloadCount'])->name('download.increment');
 
 Route::get('/', function () {
     $categories = \App\Models\Category::active()->orderBy('sort_order')->limit(6)->get();

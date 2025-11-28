@@ -221,6 +221,96 @@ class AdminController extends Controller
         return redirect()->back()->with('success', 'App download settings updated successfully!');
     }
 
+    /**
+     * Increment download count
+     */
+    public function incrementDownloadCount()
+    {
+        $currentCount = Setting::get('app_download_downloads_count', '100K+');
+        
+        // Parse the current count string to a number
+        $number = $this->parseCountString($currentCount);
+        
+        // Increment by 1
+        $number++;
+        
+        // Format back to string
+        $formattedCount = $this->formatCount($number);
+        
+        // Update the setting
+        Setting::set(
+            'app_download_downloads_count',
+            $formattedCount,
+            'text',
+            'app_downloads',
+            'App Download Downloads Count',
+            null,
+            true
+        );
+        
+        Setting::clearCache();
+        
+        // Return JSON response with updated count for Inertia
+        return response()->json([
+            'success' => true,
+            'count' => $formattedCount,
+            'downloadSettings' => [
+                'app_download_ios_url' => Setting::get('app_download_ios_url', 'https://apps.apple.com/app/getir/id123456789'),
+                'app_download_android_url' => Setting::get('app_download_android_url', 'https://play.google.com/store/apps/details?id=com.getir'),
+                'app_download_direct_file_url' => Setting::get('app_download_direct_file_url', ''),
+                'app_download_downloads_count' => $formattedCount,
+                'app_download_rating' => Setting::get('app_download_rating', '4.8'),
+                'app_download_reviews_count' => Setting::get('app_download_reviews_count', '12K+'),
+            ]
+        ]);
+    }
+
+    /**
+     * Parse count string to number (e.g., "100K+" -> 100000)
+     */
+    private function parseCountString($countString)
+    {
+        // Remove any non-numeric characters except K, M, B
+        $countString = trim($countString);
+        
+        // Extract number and suffix
+        if (preg_match('/([\d.]+)([KMB]?)\+?/i', $countString, $matches)) {
+            $number = (float) $matches[1];
+            $suffix = strtoupper($matches[2] ?? '');
+            
+            switch ($suffix) {
+                case 'K':
+                    return (int) ($number * 1000);
+                case 'M':
+                    return (int) ($number * 1000000);
+                case 'B':
+                    return (int) ($number * 1000000000);
+                default:
+                    return (int) $number;
+            }
+        }
+        
+        // If no match, try to extract just the number
+        $number = (int) preg_replace('/[^0-9]/', '', $countString);
+        return $number > 0 ? $number : 100000; // Default to 100K if parsing fails
+    }
+
+    /**
+     * Format number to count string (e.g., 100000 -> "100K+")
+     */
+    private function formatCount($number)
+    {
+        if ($number >= 1000000000) {
+            return round($number / 1000000000, 1) . 'B+';
+        } elseif ($number >= 1000000) {
+            return round($number / 1000000, 1) . 'M+';
+        } elseif ($number >= 1000) {
+            return round($number / 1000, 1) . 'K+';
+        } else {
+            return $number . '+';
+        }
+    }
+
     public function termsSettings()
     {
         $settings = Setting::where('group', 'terms')->get();

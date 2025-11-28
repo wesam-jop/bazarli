@@ -49,7 +49,6 @@ class CartController extends Controller
                     'final_price' => (float) $product->final_price,
                     'image' => $product->image,
                     'unit' => $product->unit,
-                    'stock_quantity' => $product->stock_quantity,
                     'category' => $product->category ? [
                         'id' => $product->category->id,
                         'name' => $product->category->display_name ?? $product->category->name,
@@ -97,13 +96,6 @@ class CartController extends Controller
             ->first();
 
         $newQuantity = ($cartItem ? $cartItem->quantity : 0) + $request->quantity;
-
-        if ($newQuantity > $product->stock_quantity) {
-            return response()->json([
-                'success' => false,
-                'message' => 'الكمية المطلوبة غير متوفرة في المخزون. المتاح: ' . $product->stock_quantity
-            ], 400);
-        }
 
         if ($cartItem) {
             $cartItem->update(['quantity' => $newQuantity]);
@@ -157,12 +149,6 @@ class CartController extends Controller
             ]);
         }
 
-        if ($request->quantity > $product->stock_quantity) {
-            return response()->json([
-                'success' => false,
-                'message' => 'الكمية المطلوبة غير متوفرة في المخزون. المتاح: ' . $product->stock_quantity
-            ], 400);
-        }
 
         $cartItem->update(['quantity' => $request->quantity]);
 

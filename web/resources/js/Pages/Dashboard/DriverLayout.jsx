@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import UserAvatar from '../../Components/UserAvatar';
 import NotificationBell from '../../Components/NotificationBell';
+import DeliGoLogo from '../../Components/DeliGoLogo';
 import { useTranslation } from '../../hooks/useTranslation';
 
 export default function DriverLayout({ children, title, subtitle }) {
@@ -62,10 +63,9 @@ export default function DriverLayout({ children, title, subtitle }) {
                 sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
             }`}>
                 <div className="flex items-center justify-between h-16 px-4 border-b border-slate-200 flex-shrink-0">
-                    <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-500 text-white font-semibold flex items-center justify-center">GC</div>
-                        <span className="font-semibold text-slate-900">{settings?.site_name || 'Getir Clone'}</span>
-                    </div>
+                    <Link href="/" className="flex items-center gap-3">
+                        <DeliGoLogo height={28} />
+                    </Link>
                     <button className="lg:hidden p-2 text-slate-500 hover:text-slate-700" onClick={() => setSidebarOpen(false)}>
                         <X className="w-5 h-5" />
                     </button>

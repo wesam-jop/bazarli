@@ -102,7 +102,7 @@ export default function Home({ categories, featuredProducts, featuredStores = []
             </Head>
 
                 {/* Hero Section */}
-                <section className="relative overflow-hidden bg-gradient-to-br from-primary-900 via-primary-800 to-primary-950 text-white">
+                <section className="relative overflow-hidden bg-primary-600 text-white">
                     <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.15),_transparent_55%)] pointer-events-none" aria-hidden="true" />
                     <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
                         <div className="text-center space-y-6">
@@ -112,7 +112,7 @@ export default function Home({ categories, featuredProducts, featuredStores = []
                             <p className="text-xl md:text-2xl text-secondary-200">
                                 {t('welcome_subtitle')}
                             </p>
-                            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+                            <div className="flex flex-wrap sm:flex-row gap-3 sm:gap-4 justify-center">
                                 <Link 
                                     href="/products" 
                                     className="flex items-center justify-center gap-2 bg-white text-primary-900 px-6 sm:px-8 py-3 rounded-full font-semibold hover:bg-secondary-50 transition-colors text-center shadow-xl shadow-primary-900/40"
@@ -139,10 +139,10 @@ export default function Home({ categories, featuredProducts, featuredStores = []
                             <span className="inline-flex items-center rounded-full border border-primary-200 bg-primary-50 px-4 py-1 text-sm font-semibold text-primary-700 mb-4">
                                 {t('why_choose_us')}
                             </span>
-                            <h2 className="text-3xl font-bold text-primary-900 mb-4">
+                            <h2 className="text-3xl font-bold text-gray-900 mb-4">
                                 {t('why_choose_us')}
                             </h2>
-                            <p className="text-lg text-secondary-700">
+                            <p className="text-lg text-gray-600">
                                 {t('why_choose_subtitle')}
                             </p>
                         </div>
@@ -156,8 +156,8 @@ export default function Home({ categories, featuredProducts, featuredStores = []
                                     <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary-100 text-primary-700">
                                         <Icon className="w-7 h-7" />
                                     </div>
-                                    <h3 className="text-xl font-semibold text-primary-900 mb-2">{title}</h3>
-                                    <p className="text-secondary-600 text-sm">{description}</p>
+                                    <h3 className="text-xl font-semibold text-gray-900 mb-2">{title}</h3>
+                                    <p className="text-gray-600 text-sm">{description}</p>
                                 </div>
                             ))}
                         </div>
@@ -172,7 +172,7 @@ export default function Home({ categories, featuredProducts, featuredStores = []
                                 <span className="inline-flex items-center rounded-full border border-primary-200 bg-primary-50 px-4 py-1 text-sm font-semibold text-primary-700 mb-4">
                                     {t('product_categories')}
                                 </span>
-                                <h2 className="text-3xl font-bold text-primary-900 mb-4">
+                                <h2 className="text-3xl font-bold text-gray-900 mb-4">
                                     {t('product_categories')}
                                 </h2>
                             <p className="text-lg text-secondary-700">
@@ -180,7 +180,7 @@ export default function Home({ categories, featuredProducts, featuredStores = []
                             </p>
                             </div>
                             
-                            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 sm:gap-6">
+                            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 sm:gap-6">
                                 {categories.slice(0, 6).map((category) => (
                                     <CategoryCard key={category.id} category={category} />
                                 ))}
@@ -203,13 +203,13 @@ export default function Home({ categories, featuredProducts, featuredStores = []
                     <section className="py-16 bg-white">
                         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                             <div className="text-center mb-12 max-w-3xl mx-auto">
-                                <span className="inline-flex items-center rounded-full border border-primary-200 bg-primary-50 px-4 py-1 text-sm font-semibold text-primary-700 mb-4">
-                                    {t('featured_products')}
-                                </span>
-                                <h2 className="text-3xl font-bold text-primary-900 mb-4">
-                                    {t('featured_products')}
-                                </h2>
-                            <p className="text-lg text-secondary-700">
+                            <span className="inline-flex items-center rounded-full border border-primary-200 bg-primary-50 px-4 py-1 text-sm font-semibold text-primary-700 mb-4">
+                                {t('featured_products')}
+                            </span>
+                            <h2 className="text-3xl font-bold text-gray-900 mb-4">
+                                {t('featured_products')}
+                            </h2>
+                            <p className="text-lg text-gray-600">
                                 {t('featured_products_subtitle')}
                             </p>
                             </div>
@@ -240,7 +240,7 @@ export default function Home({ categories, featuredProducts, featuredStores = []
                                 <span className="inline-flex items-center rounded-full border border-primary-200 bg-primary-50 px-4 py-1 text-sm font-semibold text-primary-700 mb-4">
                                     {t('featured_stores')}
                                 </span>
-                                <h2 className="text-3xl font-bold text-primary-900 mb-4">
+                                <h2 className="text-3xl font-bold text-gray-900 mb-4">
                                     {t('featured_stores')}
                                 </h2>
                             <p className="text-lg text-secondary-700">
@@ -248,7 +248,7 @@ export default function Home({ categories, featuredProducts, featuredStores = []
                             </p>
                             </div>
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                                 {featuredStores.map((store) => (
                                     <StoreCard 
                                         key={store.id}
@@ -270,53 +270,6 @@ export default function Home({ categories, featuredProducts, featuredStores = []
                     </section>
                 )}
 
-                {/* Footer */}
-                {/* <footer className="bg-gray-900 text-white py-12">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="grid md:grid-cols-4 gap-8">
-                            <div>
-                                <h3 className="text-lg font-semibold mb-4">{settings?.site_name || 'Getir Clone'}</h3>
-                                <p className="text-gray-400">
-                                    Fast delivery service bringing groceries and essentials to your doorstep in minutes.
-                                </p>
-                            </div>
-                            <div>
-                                <h4 className="font-semibold mb-4">Quick Links</h4>
-                                <ul className="space-y-2 text-gray-400">
-                                    <li><a href="#" className="hover:text-white">About Us</a></li>
-                                    <li><a href="#" className="hover:text-white">Contact</a></li>
-                                    <li><a href="#" className="hover:text-white">Careers</a></li>
-                                    <li><a href="#" className="hover:text-white">Help</a></li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h4 className="font-semibold mb-4">Services</h4>
-                                <ul className="space-y-2 text-gray-400">
-                                    <li><a href="#" className="hover:text-white">Grocery Delivery</a></li>
-                                    <li><a href="#" className="hover:text-white">Food Delivery</a></li>
-                                    <li><a href="#" className="hover:text-white">Pharmacy</a></li>
-                                    <li><a href="#" className="hover:text-white">Pet Supplies</a></li>
-                                </ul>
-                            </div>
-                            <div>
-                                <h4 className="font-semibold mb-4">Download App</h4>
-                                <div className="space-y-2">
-                                    <button className="block w-full bg-gray-800 text-white py-2 px-4 rounded hover:bg-gray-700">
-                                        Download for iOS
-                                    </button>
-                                    <button className="block w-full bg-gray-800 text-white py-2 px-4 rounded hover:bg-gray-700">
-                                        Download for Android
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400">
-                            <p>&copy; 2024 {settings?.site_name || 'Getir Clone'}. All rights reserved.</p>
-                        </div>
-                    </div>
-                </footer> */}
-
-                {/* App Download Section */}
                 <AppDownloadSection />
         </Layout>
     );

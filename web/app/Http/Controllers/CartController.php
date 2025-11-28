@@ -58,10 +58,6 @@ class CartController extends Controller
         $currentQuantity = $cart[$product->id] ?? 0;
         $newQuantity = $currentQuantity + $request->quantity;
 
-        if ($newQuantity > $product->stock_quantity) {
-            return back()->with('error', __('insufficient_stock'));
-        }
-
         $cart[$product->id] = $newQuantity;
         $request->session()->put('cart', $cart);
 
@@ -81,9 +77,6 @@ class CartController extends Controller
         if ($request->quantity == 0) {
             unset($cart[$product->id]);
         } else {
-            if ($request->quantity > $product->stock_quantity) {
-                return back()->with('error', 'الكمية المطلوبة غير متوفرة في المخزون');
-            }
             $cart[$product->id] = $request->quantity;
         }
 

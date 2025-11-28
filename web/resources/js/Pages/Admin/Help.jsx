@@ -94,8 +94,8 @@ export default function Help() {
         {
             id: 8,
             category: 'products',
-            question: t('how_to_manage_inventory') || 'How do I manage inventory?',
-            answer: t('manage_inventory_answer') || 'Go to Inventory section. You can view all products with their stock levels, filter by stock status (In Stock, Low Stock, Out of Stock), and update stock quantities directly from the table.'
+            question: t('how_to_manage_products') || 'How do I manage products?',
+            answer: t('manage_products_answer') || 'Go to Products section. You can view all products, add new products, edit existing ones, and manage their availability.'
         },
         {
             id: 9,
@@ -160,7 +160,7 @@ export default function Help() {
         {
             icon: Package,
             title: t('products') || 'Products',
-            description: t('manage_products') || 'Manage products and inventory',
+            description: t('manage_products') || 'Manage products',
             link: '/admin/products',
             color: 'from-orange-500 to-red-600'
         },

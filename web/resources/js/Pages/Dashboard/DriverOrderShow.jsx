@@ -96,15 +96,15 @@ export default function DriverOrderShow({ order }) {
 
     const getStatusBadge = (status) => {
         const statusMap = {
-            pending_driver_approval: { label: t('pending_driver_approval') || 'Pending Approval', color: 'bg-amber-100 text-amber-700' },
-            driver_accepted: { label: t('driver_accepted') || 'Accepted', color: 'bg-blue-100 text-blue-700' },
-            store_preparing: { label: t('store_preparing') || 'Preparing', color: 'bg-purple-100 text-purple-700' },
-            ready_for_delivery: { label: t('ready_for_delivery') || 'Ready', color: 'bg-green-100 text-green-700' },
-            driver_picked_up: { label: t('driver_picked_up') || 'Picked Up', color: 'bg-indigo-100 text-indigo-700' },
-            out_for_delivery: { label: t('out_for_delivery') || 'Out for Delivery', color: 'bg-orange-100 text-orange-700' },
-            delivered: { label: t('delivered') || 'Delivered', color: 'bg-emerald-100 text-emerald-700' },
+            pending_driver_approval: { label: t('pending_driver_approval') || 'Pending Approval', color: 'bg-warning-100 text-warning-700' },
+            driver_accepted: { label: t('driver_accepted') || 'Accepted', color: 'bg-info-100 text-info-700' },
+            store_preparing: { label: t('store_preparing') || 'Preparing', color: 'bg-primary-100 text-primary-700' },
+            ready_for_delivery: { label: t('ready_for_delivery') || 'Ready', color: 'bg-success-100 text-success-700' },
+            driver_picked_up: { label: t('driver_picked_up') || 'Picked Up', color: 'bg-accent-100 text-accent-700' },
+            out_for_delivery: { label: t('out_for_delivery') || 'Out for Delivery', color: 'bg-primary-100 text-primary-700' },
+            delivered: { label: t('delivered') || 'Delivered', color: 'bg-success-100 text-success-700' },
         };
-        return statusMap[status] || { label: status, color: 'bg-slate-100 text-slate-700' };
+        return statusMap[status] || { label: status, color: 'bg-secondary-100 text-secondary-700' };
     };
 
     const statusBadge = getStatusBadge(order.status);
@@ -225,7 +225,7 @@ export default function DriverOrderShow({ order }) {
 
                     {order.stores?.map((store, storeIndex) => (
                         <div key={store.id} className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
-                            <div className="px-6 py-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-slate-200">
+                            <div className="px-6 py-4 bg-secondary-50 border-b border-secondary-200">
                                 <div className="flex items-start justify-between">
                                     <div className="flex-1">
                                         <div className="flex items-center gap-2 mb-2">

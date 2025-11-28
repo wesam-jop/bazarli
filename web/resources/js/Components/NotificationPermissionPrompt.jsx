@@ -80,7 +80,7 @@ export default function NotificationPermissionPrompt({ vapidPublicKey, onDismiss
             <div className="bg-white rounded-xl shadow-2xl border border-slate-200 p-6">
                 <div className="flex items-start gap-4">
                     <div className="flex-shrink-0">
-                        <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center">
+                        <div className="w-12 h-12 bg-accent-600 rounded-xl flex items-center justify-center">
                             <Bell className="w-6 h-6 text-white" />
                         </div>
                     </div>
@@ -95,7 +95,7 @@ export default function NotificationPermissionPrompt({ vapidPublicKey, onDismiss
                             <button
                                 onClick={handleEnable}
                                 disabled={isRequesting}
-                                className="flex-1 bg-gradient-to-r from-blue-500 to-indigo-600 text-white px-4 py-2 rounded-lg font-medium hover:from-blue-600 hover:to-indigo-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                className="flex-1 bg-accent-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-accent-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                             >
                                 {isRequesting ? (
                                     <>

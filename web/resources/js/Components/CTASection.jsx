@@ -7,15 +7,14 @@ export default function CTASection({
     primaryButton, 
     secondaryButton, 
     icon: Icon,
-    gradientFrom = "from-primary-600", 
-    gradientTo = "to-primary-800", 
+    bgColor = "bg-primary-600", 
     className = "",
     centered = true
 }) {
     const contentClasses = centered ? "text-center" : "text-left";
 
     return (
-        <div className={`bg-gradient-to-r ${gradientFrom} ${gradientTo} text-white py-16 ${className}`}>
+        <div className={`${bgColor} text-white py-16 ${className}`}>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className={contentClasses}>
                     {Icon && (

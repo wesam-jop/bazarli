@@ -134,7 +134,8 @@ class ProductController extends Controller
         $product->load([
             'category',
             'store' => function($q) {
-                $q->with(['governorate:id,name_ar,name_en', 'city:id,name_ar,name_en']);
+                $q->with(['governorate:id,name_ar,name_en', 'city:id,name_ar,name_en'])
+                  ->select('id', 'name', 'address', 'governorate_id', 'city_id');
             }
         ]);
         

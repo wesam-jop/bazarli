@@ -9,22 +9,22 @@ export default function StoreCard({ store }) {
     return (
         <div className="bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow duration-200 overflow-hidden group relative">
             <Link href={`/stores/${store.id}`}>
-                <div className="aspect-square bg-gradient-to-br from-primary-50 to-secondary-50 flex items-center justify-center p-4">
+                <div className="aspect-square bg-secondary-100 flex items-center justify-center p-4">
                     <Store className="w-16 h-16 text-primary-600 group-hover:scale-110 transition-transform duration-200" />
                 </div>
                 <div className="p-4">
-                    <h3 className="font-semibold text-primary-900 mb-1 group-hover:text-primary-600 transition-colors">
+                    <h3 className="font-semibold text-gray-900 mb-1 group-hover:text-primary-600 transition-colors">
                         {store.name}
                     </h3>
-                    <p className="text-sm text-secondary-600 mb-2">
+                    <p className="text-sm text-gray-600 mb-2">
                         {store.store_type_label || store.store_type}
                     </p>
                     
                     {/* Location Information */}
                     {store.governorate && store.city && (
                         <div className="mb-2 pt-2 border-t border-secondary-200">
-                            <div className="flex items-center gap-1.5 text-xs text-secondary-600">
-                                <MapPin className="w-3.5 h-3.5 text-secondary-400" />
+                            <div className="flex items-center gap-1.5 text-xs text-gray-600">
+                                <MapPin className="w-3.5 h-3.5 text-gray-400" />
                                 <span>
                                     {locale === 'ar' 
                                         ? `${store.city.name_ar}، ${store.governorate.name_ar}`
@@ -37,21 +37,21 @@ export default function StoreCard({ store }) {
                     
                     {store.address && (
                         <div className="mb-2">
-                            <div className="flex items-center gap-1.5 text-xs text-secondary-600">
-                                <MapPin className="w-3.5 h-3.5 text-secondary-400" />
+                            <div className="flex items-center gap-1.5 text-xs text-gray-600">
+                                <MapPin className="w-3.5 h-3.5 text-gray-400" />
                                 <span className="line-clamp-1">{store.address}</span>
                             </div>
                         </div>
                     )}
 
                     {/* Stats */}
-                    <div className="flex items-center gap-4 text-xs text-secondary-700 mb-2">
+                    <div className="flex items-center gap-4 text-xs text-gray-700 mb-2">
                         <div className="flex items-center gap-1">
-                            <Package className="w-3.5 h-3.5 text-primary-500" />
+                            <Package className="w-3.5 h-3.5 text-gray-500" />
                             <span>{store.products_count || 0} {t('products') || 'منتج'}</span>
                         </div>
                         <div className="flex items-center gap-1">
-                            <ShoppingBag className="w-3.5 h-3.5 text-accent-500" />
+                            <ShoppingBag className="w-3.5 h-3.5 text-gray-500" />
                             <span>{store.orders_count || 0} {t('orders') || 'طلب'}</span>
                         </div>
                     </div>

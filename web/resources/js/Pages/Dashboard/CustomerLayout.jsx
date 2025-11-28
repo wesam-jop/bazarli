@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import UserAvatar from '../../Components/UserAvatar';
 import NotificationBell from '../../Components/NotificationBell';
+import DeliGoLogo from '../../Components/DeliGoLogo';
 import { useTranslation } from '../../hooks/useTranslation';
 
 export default function CustomerLayout({ children, title }) {
@@ -72,12 +73,9 @@ export default function CustomerLayout({ children, title }) {
             {/* Sidebar */}
             <div className={`fixed inset-y-0 left-0 z-40 w-64 border-r border-slate-200 bg-white shadow-xl transition-transform duration-300 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`}>
                 <div className="flex items-center justify-between h-16 px-5 border-b border-slate-200">
-                    <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 bg-gradient-to-br from-purple-500 to-indigo-500 rounded-xl flex items-center justify-center text-white font-semibold">
-                            GC
-                        </div>
-                        <span className="font-bold text-slate-900">{settings?.site_name || 'Getir Clone'}</span>
-                    </div>
+                    <Link href="/" className="flex items-center gap-3">
+                        <DeliGoLogo height={28} />
+                    </Link>
                     <button onClick={() => setSidebarOpen(false)} className="lg:hidden p-2 text-slate-500 hover:text-slate-700">
                         <X className="w-5 h-5" />
                     </button>

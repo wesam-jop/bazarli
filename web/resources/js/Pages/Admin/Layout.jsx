@@ -44,6 +44,7 @@ import {
     ClipboardList
 } from 'lucide-react';
 import UserAvatar from '../../Components/UserAvatar';
+import DeliGoLogo from '../../Components/DeliGoLogo';
 
 export default function AdminLayout({ children, title = "Admin Dashboard" }) {
     const { props, url } = usePage();
@@ -127,7 +128,6 @@ export default function AdminLayout({ children, title = "Admin Dashboard" }) {
                 { label: t('stores'), href: '/admin/stores', icon: Store },
                 { label: t('products'), href: '/admin/products', icon: Package },
                 { label: t('categories'), href: '/admin/categories', icon: Package },
-                { label: t('inventory'), href: '/admin/inventory', icon: Package },
             ],
             color: 'text-green-600'
         },
@@ -269,14 +269,9 @@ export default function AdminLayout({ children, title = "Admin Dashboard" }) {
                 {/* Sidebar Header */}
                 <div className={`flex items-center justify-between h-16 px-4 border-b ${isDarkMode ? 'border-slate-700' : 'border-slate-200'}`}>
                     {!sidebarCollapsed && (
-                        <div className="flex items-center space-x-3">
-                            <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-600 rounded-lg flex items-center justify-center">
-                                <Zap className="w-5 h-5 text-white" />
-                            </div>
-                            <h1 className={`text-lg font-bold ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
-                                {t('admin_panel')}
-                            </h1>
-                        </div>
+                        <Link href="/" className="flex items-center space-x-3">
+                            <DeliGoLogo height={28} />
+                        </Link>
                     )}
                     
                     <div className="flex items-center space-x-2">
@@ -423,18 +418,16 @@ export default function AdminLayout({ children, title = "Admin Dashboard" }) {
                                 <Menu className="w-5 h-5" />
                             </button>
 
-                            <div className="flex items-center space-x-3">
-                                <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-600 rounded-lg flex items-center justify-center">
-                                    <Zap className="w-5 h-5 text-white" />
-                                </div>
-                                <div>
-                                    <h1 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
-                                        {title}
-                                    </h1>
-                                    <p className={`text-xs ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
-                                        {t('admin_dashboard')}
-                                    </p>
-                                </div>
+                            <Link href="/" className="flex items-center space-x-3">
+                                <DeliGoLogo height={28} />
+                            </Link>
+                            <div>
+                                <h1 className={`text-lg font-semibold ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+                                    {title}
+                                </h1>
+                                <p className={`text-xs ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
+                                    {t('admin_dashboard')}
+                                </p>
                             </div>
                         </div>
 

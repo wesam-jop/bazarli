@@ -50,12 +50,12 @@ export default function AnalyticsOverview({
 
     const getStatusColor = (status) => {
         const colors = {
-            pending: 'bg-yellow-100 text-yellow-700 border-yellow-200',
-            confirmed: 'bg-blue-100 text-blue-700 border-blue-200',
-            preparing: 'bg-purple-100 text-purple-700 border-purple-200',
-            on_delivery: 'bg-orange-100 text-orange-700 border-orange-200',
-            delivered: 'bg-green-100 text-green-700 border-green-200',
-            cancelled: 'bg-red-100 text-red-700 border-red-200',
+            pending: 'bg-warning-100 text-warning-700 border-warning-200',
+            confirmed: 'bg-info-100 text-info-700 border-info-200',
+            preparing: 'bg-primary-100 text-primary-700 border-primary-200',
+            on_delivery: 'bg-primary-100 text-primary-700 border-primary-200',
+            delivered: 'bg-success-100 text-success-700 border-success-200',
+            cancelled: 'bg-error-100 text-error-700 border-error-200',
         };
         return colors[status] || colors.pending;
     };

@@ -118,7 +118,6 @@ class ProductSeeder extends Seeder
                     'description' => 'وصف ' . $productData['name_ar'],
                     'price' => $productData['price'],
                     'unit' => $productData['unit'],
-                    'stock_quantity' => $productData['stock'],
                     'is_available' => true,
                     'is_featured' => false,
                 ]

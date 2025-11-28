@@ -159,12 +159,7 @@ class StoreOrderController extends Controller
                 ->where('store_id', $orderStore->store_id)
                 ->get();
                 
-            foreach ($storeItems as $item) {
-                $product = Product::find($item->product_id);
-                if ($product) {
-                    $product->increment('stock_quantity', $item->quantity);
-                }
-            }
+            // Stock system removed
 
             // تحديث حالة order_store
             $orderStore->update([
@@ -177,14 +172,7 @@ class StoreOrderController extends Controller
                 'status' => 'store_rejected',
             ]);
 
-            // إرجاع جميع المنتجات من المتاجر الأخرى أيضاً
-            $allStoreItems = $order->orderItems()->get();
-            foreach ($allStoreItems as $item) {
-                $product = Product::find($item->product_id);
-                if ($product && !$storeItems->contains('id', $item->id)) {
-                    $product->increment('stock_quantity', $item->quantity);
-                }
-            }
+            // Stock system removed
 
             DB::commit();
 

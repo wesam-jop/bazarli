@@ -113,14 +113,7 @@ class DriverOrderController extends Controller
             $order->load('orderItems');
             foreach ($order->orderItems as $item) {
                 $product = Product::lockForUpdate()->find($item->product_id);
-                if ($product) {
-                    // التحقق من أن المخزون كافي
-                    if ($product->stock_quantity < $item->quantity) {
-                        DB::rollBack();
-                        return back()->with('error', 'الكمية المطلوبة من ' . $item->product_name . ' غير متوفرة في المخزون');
-                    }
-                    $product->decrement('stock_quantity', $item->quantity);
-                }
+                // Product validation removed - no stock system
             }
 
             // تحديث order_stores لإرسالها للمتاجر

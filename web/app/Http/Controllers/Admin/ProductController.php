@@ -23,8 +23,6 @@ class ProductController extends Controller
             'available' => Product::where('is_available', true)->count(),
             'unavailable' => Product::where('is_available', false)->count(),
             'featured' => Product::where('is_featured', true)->count(),
-            'low_stock' => Product::where('stock_quantity', '<', 10)->count(),
-            'out_of_stock' => Product::where('stock_quantity', '<=', 0)->count(),
             'total_sales' => Product::sum('sales_count'),
         ];
 

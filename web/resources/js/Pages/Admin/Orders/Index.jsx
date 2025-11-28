@@ -26,12 +26,12 @@ import {
 
 const getStatusBadge = (status, t) => {
     const statusConfig = {
-        pending: { bg: 'bg-yellow-50', text: 'text-yellow-700', border: 'border-yellow-200', icon: Clock, label: t('pending') || 'Pending' },
-        confirmed: { bg: 'bg-blue-50', text: 'text-blue-700', border: 'border-blue-200', icon: CheckCircle, label: t('confirmed') || 'Confirmed' },
-        preparing: { bg: 'bg-purple-50', text: 'text-purple-700', border: 'border-purple-200', icon: Package, label: t('preparing') || 'Preparing' },
-        on_delivery: { bg: 'bg-orange-50', text: 'text-orange-700', border: 'border-orange-200', icon: Truck, label: t('on_delivery') || 'On Delivery' },
-        delivered: { bg: 'bg-green-50', text: 'text-green-700', border: 'border-green-200', icon: CheckCircle, label: t('delivered') || 'Delivered' },
-        cancelled: { bg: 'bg-red-50', text: 'text-red-700', border: 'border-red-200', icon: XCircle, label: t('cancelled') || 'Cancelled' },
+        pending: { bg: 'bg-warning-50', text: 'text-warning-700', border: 'border-warning-200', icon: Clock, label: t('pending') || 'Pending' },
+        confirmed: { bg: 'bg-info-50', text: 'text-info-700', border: 'border-info-200', icon: CheckCircle, label: t('confirmed') || 'Confirmed' },
+        preparing: { bg: 'bg-primary-50', text: 'text-primary-700', border: 'border-primary-200', icon: Package, label: t('preparing') || 'Preparing' },
+        on_delivery: { bg: 'bg-primary-50', text: 'text-primary-700', border: 'border-primary-200', icon: Truck, label: t('on_delivery') || 'On Delivery' },
+        delivered: { bg: 'bg-success-50', text: 'text-success-700', border: 'border-success-200', icon: CheckCircle, label: t('delivered') || 'Delivered' },
+        cancelled: { bg: 'bg-error-50', text: 'text-error-700', border: 'border-error-200', icon: XCircle, label: t('cancelled') || 'Cancelled' },
     };
 
     const config = statusConfig[status] || statusConfig.pending;

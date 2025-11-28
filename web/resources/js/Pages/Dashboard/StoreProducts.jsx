@@ -14,7 +14,6 @@ export default function StoreProducts({ store, productCategories, products }) {
         name: '',
         category_id: productCategories[0]?.id || '',
         price: '',
-        stock_quantity: 0,
         unit: 'piece',
         description: '',
         image: null,
@@ -26,7 +25,7 @@ export default function StoreProducts({ store, productCategories, products }) {
             forceFormData: true,
             preserveScroll: true,
             onSuccess: () => {
-                form.reset('name', 'price', 'stock_quantity', 'unit', 'description', 'image');
+                form.reset('name', 'price', 'unit', 'description', 'image');
             },
         });
     };
@@ -108,18 +107,6 @@ export default function StoreProducts({ store, productCategories, products }) {
                                 </div>
                                 <div>
                                     <label className="block text-sm font-semibold text-slate-700 mb-2">
-                                        {t('store_product_stock_label')}
-                                    </label>
-                                    <input
-                                        type="number"
-                                        value={form.data.stock_quantity}
-                                        onChange={(e) => form.setData('stock_quantity', e.target.value)}
-                                        className="w-full rounded-2xl border border-slate-200 px-4 py-3 text-sm text-slate-900 focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                                    />
-                                    {form.errors.stock_quantity && <p className="mt-1 text-xs text-rose-600">{form.errors.stock_quantity}</p>}
-                                </div>
-                                <div>
-                                    <label className="block text-sm font-semibold text-slate-700 mb-2">
                                         {t('store_product_unit_label')}
                                     </label>
                                     <input
@@ -195,9 +182,6 @@ export default function StoreProducts({ store, productCategories, products }) {
                                                 <DollarSign className="w-4 h-4 text-emerald-500" />
                                                 <span>{formatCurrency(product.price)}</span>
                                             </div>
-                                            <p className="text-xs text-slate-500">
-                                                {product.stock_quantity} {t('store_products_table_stock')}
-                                            </p>
                                         </div>
                                     </div>
                                 ))}

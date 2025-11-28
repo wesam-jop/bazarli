@@ -388,7 +388,6 @@ class DashboardController extends Controller
                     'name' => $product->name,
                     'category' => $product->category?->display_name,
                     'price' => $product->price,
-                    'stock_quantity' => $product->stock_quantity,
                     'unit' => $product->unit,
                     'is_available' => $product->is_available,
                     'created_at' => $product->created_at,

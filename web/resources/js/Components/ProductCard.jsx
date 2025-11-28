@@ -41,23 +41,23 @@ export default function ProductCard({ product, showAddToCart = true }) {
                     <Package className="w-16 h-16 text-primary-600 group-hover:scale-110 transition-transform duration-200" />
                 </div>
                 <div className="p-4">
-                    <h3 className="font-semibold text-primary-900 mb-1 group-hover:text-primary-600 transition-colors">
+                    <h3 className="font-semibold text-gray-900 mb-1 group-hover:text-primary-600 transition-colors">
                         {product.name}
                     </h3>
-                    <p className="text-sm text-secondary-600 mb-2 line-clamp-2">
+                    <p className="text-sm text-gray-600 mb-2 line-clamp-2">
                         {product.description}
                     </p>
                     
                     {/* Store Information */}
                     {product.store && (
                         <div className="mb-2 pt-2 border-t border-secondary-200">
-                            <div className="flex items-center gap-1.5 text-xs text-secondary-600 mb-1">
-                                <Store className="w-3.5 h-3.5 text-primary-500" />
-                                <span className="font-medium text-primary-800">{product.store.name}</span>
+                            <div className="flex items-center gap-1.5 text-xs text-gray-600 mb-1">
+                                <Store className="w-3.5 h-3.5 text-gray-500" />
+                                <span className="font-medium text-gray-800">{product.store.name}</span>
                             </div>
                             {product.store.governorate && product.store.city && (
-                                <div className="flex items-center gap-1.5 text-xs text-secondary-500">
-                                    <MapPin className="w-3.5 h-3.5 text-secondary-400" />
+                                <div className="flex items-center gap-1.5 text-xs text-gray-500">
+                                    <MapPin className="w-3.5 h-3.5 text-gray-400" />
                                     <span>
                                         {locale === 'ar' 
                                             ? `${product.store.city.name_ar}، ${product.store.governorate.name_ar}`
@@ -72,11 +72,11 @@ export default function ProductCard({ product, showAddToCart = true }) {
                     <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-1">
                             <DollarSign className="w-4 h-4 text-success-600" />
-                            <span className="text-lg font-bold text-primary-600">
+                            <span className="text-lg font-bold text-gray-900">
                                 {product.price}
                             </span>
                         </div>
-                        <span className="text-xs text-secondary-500">
+                        <span className="text-xs text-gray-500">
                             {product.unit}
                         </span>
                     </div>

@@ -73,7 +73,7 @@ class OrderController extends Controller
         foreach ($cart as $productId => $quantity) {
             $product = Product::with('store')->find($productId);
             
-            if (!$product || !$product->is_available || $quantity > $product->stock_quantity) {
+            if (!$product || !$product->is_available) {
                 continue;
             }
             
@@ -248,14 +248,6 @@ class OrderController extends Controller
         DB::beginTransaction();
         
         try {
-            // إرجاع المنتجات إلى المخزون
-            foreach ($order->orderItems as $item) {
-                $product = Product::find($item->product_id);
-                if ($product) {
-                    $product->increment('stock_quantity', $item->quantity);
-                }
-            }
-
             $order->update(['status' => 'cancelled']);
             
             DB::commit();

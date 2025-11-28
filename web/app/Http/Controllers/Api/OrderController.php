@@ -142,9 +142,7 @@ class OrderController extends Controller
                         throw new \Exception('المنتج ' . $product->name . ' غير متوفر');
                     }
 
-                    if ($item['quantity'] > $product->stock_quantity) {
-                        throw new \Exception('الكمية المطلوبة من ' . $product->name . ' غير متوفرة');
-                    }
+                    // Stock system removed
 
                     $itemTotal = $product->price * $item['quantity'];
                     $storeSubtotal += $itemTotal;
@@ -282,13 +280,7 @@ class OrderController extends Controller
         DB::beginTransaction();
         
         try {
-            // Return products to stock
-            foreach ($order->orderItems as $item) {
-                $product = Product::find($item->product_id);
-                if ($product) {
-                    $product->increment('stock_quantity', $item->quantity);
-                }
-            }
+            // Stock system removed
 
             $order->update(['status' => 'cancelled']);
             

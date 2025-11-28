@@ -12,27 +12,27 @@ export default function OrdersIndex({ orders }) {
 
     const statusStyles = {
         pending: {
-            badge: 'bg-amber-100 text-amber-700 border border-amber-200',
+            badge: 'bg-warning-100 text-warning-700 border border-warning-200',
             label: t('pending'),
         },
         confirmed: {
-            badge: 'bg-blue-100 text-blue-700 border border-blue-200',
+            badge: 'bg-info-100 text-info-700 border border-info-200',
             label: t('confirmed'),
         },
         preparing: {
-            badge: 'bg-indigo-100 text-indigo-700 border border-indigo-200',
+            badge: 'bg-primary-100 text-primary-700 border border-primary-200',
             label: t('preparing'),
         },
         on_delivery: {
-            badge: 'bg-purple-100 text-purple-700 border border-purple-200',
+            badge: 'bg-primary-100 text-primary-700 border border-primary-200',
             label: t('out_for_delivery'),
         },
         delivered: {
-            badge: 'bg-emerald-100 text-emerald-700 border border-emerald-200',
+            badge: 'bg-success-100 text-success-700 border border-success-200',
             label: t('delivered'),
         },
         cancelled: {
-            badge: 'bg-rose-100 text-rose-700 border border-rose-200',
+            badge: 'bg-error-100 text-error-700 border border-error-200',
             label: t('cancelled'),
         },
     };
@@ -224,7 +224,7 @@ export default function OrdersIndex({ orders }) {
                         </p>
                         <Link
                             href="/products"
-                            className="inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-purple-600 to-indigo-500 px-6 py-3 text-sm font-semibold text-white shadow-lg"
+                            className="inline-flex items-center justify-center rounded-2xl bg-primary-600 px-6 py-3 text-sm font-semibold text-white shadow-lg"
                         >
                             {t('start_shopping_cta')}
                         </Link>

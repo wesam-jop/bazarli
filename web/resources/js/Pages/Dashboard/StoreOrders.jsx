@@ -30,16 +30,16 @@ export default function StoreOrders({ store, orders, stats, filters }) {
 
     const statusBadge = (status) => {
         const map = {
-            pending: 'bg-amber-100 text-amber-700',
-            confirmed: 'bg-blue-100 text-blue-700',
-            preparing: 'bg-indigo-100 text-indigo-700',
-            ready: 'bg-slate-100 text-slate-700',
-            on_delivery: 'bg-orange-100 text-orange-700',
-            out_for_delivery: 'bg-orange-100 text-orange-700',
-            delivered: 'bg-emerald-100 text-emerald-700',
-            cancelled: 'bg-rose-100 text-rose-700',
+            pending: 'bg-warning-100 text-warning-700',
+            confirmed: 'bg-info-100 text-info-700',
+            preparing: 'bg-primary-100 text-primary-700',
+            ready: 'bg-secondary-100 text-secondary-700',
+            on_delivery: 'bg-primary-100 text-primary-700',
+            out_for_delivery: 'bg-primary-100 text-primary-700',
+            delivered: 'bg-success-100 text-success-700',
+            cancelled: 'bg-error-100 text-error-700',
         };
-        return map[status] || 'bg-slate-100 text-slate-600';
+        return map[status] || 'bg-secondary-100 text-secondary-600';
     };
 
     return (
@@ -51,11 +51,11 @@ export default function StoreOrders({ store, orders, stats, filters }) {
 
             <div className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                    <StatCard label={t('total_orders')} value={stats.total} accent="from-purple-500 to-purple-600" />
-                    <StatCard label={t('pending')} value={stats.pending} accent="from-amber-500 to-amber-600" />
-                    <StatCard label={t('preparing')} value={stats.preparing} accent="from-indigo-500 to-indigo-600" />
-                    <StatCard label={t('on_delivery')} value={stats.on_delivery} accent="from-orange-500 to-orange-600" />
-                    <StatCard label={t('delivered')} value={stats.delivered} accent="from-emerald-500 to-emerald-600" />
+                    <StatCard label={t('total_orders')} value={stats.total} bgColor="bg-primary-600" />
+                    <StatCard label={t('pending')} value={stats.pending} bgColor="bg-warning-600" />
+                    <StatCard label={t('preparing')} value={stats.preparing} bgColor="bg-primary-600" />
+                    <StatCard label={t('on_delivery')} value={stats.on_delivery} bgColor="bg-primary-600" />
+                    <StatCard label={t('delivered')} value={stats.delivered} bgColor="bg-success-600" />
                 </div>
 
                 <div className="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 flex flex-wrap items-center justify-between gap-4">
@@ -162,9 +162,9 @@ export default function StoreOrders({ store, orders, stats, filters }) {
     );
 }
 
-function StatCard({ label, value, accent }) {
+function StatCard({ label, value, bgColor = "bg-primary-600" }) {
     return (
-        <div className={`rounded-2xl bg-gradient-to-br ${accent} text-white shadow-sm p-4`}>
+        <div className={`rounded-2xl ${bgColor} text-white shadow-sm p-4`}>
             <p className="text-xs uppercase tracking-widest">{label}</p>
             <p className="text-3xl font-bold mt-2">{value}</p>
         </div>
