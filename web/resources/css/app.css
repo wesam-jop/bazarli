@@ -19,26 +19,26 @@
        ============================================ */
     
     /* 
-     * 🎯 PRIMARY - اللون الأساسي (الأزرق الداكن #0C2B4E)
-     * Primary Color (Dark Blue #0C2B4E)
+     * 🎯 PRIMARY - اللون الأساسي (البرتقالي #FF7A32)
+     * Primary Color (Orange #FF7A32)
      * استخدمه للأزرار الرئيسية، الروابط، والتأكيدات
      * Use for main buttons, links, and highlights
      */
-    --color-primary: #0C2B4E;        /* اللون الرئيسي - أزرق داكن */
-    --color-primary-light: #1a4a7a;  /* فاتح */
-    --color-primary-dark: #081a2e;   /* داكن */
-    --color-primary-hover: #1a4a7a;  /* عند hover */
+    --color-primary: #FF7A32;        /* اللون الرئيسي - برتقالي */
+    --color-primary-light: #FF9D66;  /* فاتح */
+    --color-primary-dark: #E65A1F;   /* داكن */
+    --color-primary-hover: #FF8F4D;  /* عند hover */
     
     /* 
-     * 🎯 SECONDARY - اللون الثانوي (الرمادي الفاتح #F4F4F4)
-     * Secondary Color (Light Gray #F4F4F4)
+     * 🎯 SECONDARY - اللون الثانوي (الرمادي الفاتح للخلفيات)
+     * Secondary Color (Light Gray for backgrounds)
      * استخدمه للخلفيات، النصوص الثانوية، والحدود
      * Use for backgrounds, secondary text, and borders
      */
     --color-secondary: #F4F4F4;       /* اللون الثانوي - رمادي فاتح */
-    --color-secondary-light: #ffffff; /* فاتح */
-    --color-secondary-dark: #e0e0e0; /* داكن */
-    --color-secondary-hover: #e8e8e8; /* عند hover */
+    --color-secondary-light: #FFFFFF; /* أبيض */
+    --color-secondary-dark: #E0E0E0; /* داكن */
+    --color-secondary-hover: #E8E8E8; /* عند hover */
     
     /* 
      * 🎯 ACCENT - اللون المميز (الأزرق)
@@ -67,31 +67,71 @@
        Custom Tailwind Colors (derived from above variables)
        ============================================ */
     
-    /* Primary Colors - الأزرق الداكن #0C2B4E */
-    --color-primary-50: #e6ecf5;
-    --color-primary-100: #ccd9eb;
-    --color-primary-200: #99b3d7;
-    --color-primary-300: #668dc3;
-    --color-primary-400: #3367af;
-    --color-primary-500: var(--color-primary); /* #0C2B4E */
-    --color-primary-600: var(--color-primary-dark); /* #081a2e */
-    --color-primary-700: #060f1f;
-    --color-primary-800: #040a15;
-    --color-primary-900: #02050a;
-    --color-primary-950: #010205;
+    /* Primary Colors - البرتقالي #FF7A32 */
+    --color-primary-50: #FFF5F0;
+    --color-primary-100: #FFE6D9;
+    --color-primary-200: #FFCDB3;
+    --color-primary-300: #FFB48D;
+    --color-primary-400: #FF9B66;
+    --color-primary-500: var(--color-primary); /* #FF7A32 */
+    --color-primary-600: var(--color-primary-dark); /* #E65A1F */
+    --color-primary-700: #CC4A1A;
+    --color-primary-800: #B33A15;
+    --color-primary-900: #992A10;
+    --color-primary-950: #801F0B;
     
     /* Secondary Colors - الرمادي الفاتح #F4F4F4 */
-    --color-secondary-50: #ffffff;
-    --color-secondary-100: #fafafa;
+    /* Secondary Colors - للخلفيات والحدود */
+    --color-secondary-50: #FFFFFF;
+    --color-secondary-100: #FAFAFA;
     --color-secondary-200: var(--color-secondary); /* #F4F4F4 */
-    --color-secondary-300: var(--color-secondary-dark); /* #e0e0e0 */
-    --color-secondary-400: #d0d0d0;
-    --color-secondary-500: #c0c0c0;
-    --color-secondary-600: #a0a0a0;
+    --color-secondary-300: var(--color-secondary-dark); /* #E0E0E0 */
+    --color-secondary-400: #D0D0D0;
+    --color-secondary-500: #C0C0C0;
+    --color-secondary-600: #A0A0A0;
     --color-secondary-700: #808080;
     --color-secondary-800: #606060;
     --color-secondary-900: #404040;
     --color-secondary-950: #202020;
+    
+    /* Text Colors - ألوان النصوص */
+    --color-text-primary: #121212;    /* الأسود للنصوص الأساسية */
+    --color-text-secondary: #606060;  /* رمادي للنصوص الثانوية */
+    --color-text-light: #808080;     /* رمادي فاتح */
+    --color-text-white: #FFFFFF;      /* أبيض للنصوص على خلفيات داكنة */
+    
+    /* Gray Colors - للاستخدام في النصوص والخلفيات */
+    --color-gray-50: #FAFAFA;
+    --color-gray-100: #F4F4F4;
+    --color-gray-200: #E0E0E0;
+    --color-gray-300: #D0D0D0;
+    --color-gray-400: #C0C0C0;
+    --color-gray-500: #A0A0A0;
+    --color-gray-600: #808080;
+    --color-gray-700: #606060;
+    --color-gray-800: #404040;
+    --color-gray-900: #121212;        /* الأسود للنصوص */
+    --color-gray-950: #0A0A0A;
+    
+    /* Black Colors - للاستخدام في النصوص */
+    --color-black: #121212;
+    --color-black-50: #F5F5F5;
+    --color-black-100: #E5E5E5;
+    --color-black-200: #D5D5D5;
+    --color-black-300: #C5C5C5;
+    --color-black-400: #B5B5B5;
+    --color-black-500: #959595;
+    --color-black-600: #757575;
+    --color-black-700: #555555;
+    --color-black-800: #353535;
+    --color-black-900: #121212;       /* الأسود الأساسي */
+    --color-black-950: #000000;
+    
+    /* White Colors - للخلفيات */
+    --color-white: #FFFFFF;
+    --color-white-50: #FFFFFF;
+    --color-white-100: #FAFAFA;
+    --color-white-200: #F5F5F5;
     
     /* Accent Colors */
     --color-accent-50: #eff6ff;
