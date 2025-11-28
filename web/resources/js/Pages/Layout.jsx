@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import UserAvatar from '../Components/UserAvatar';
 import NotificationPermissionPrompt from '../Components/NotificationPermissionPrompt';
+import DeliGoLogo from '../Components/DeliGoLogo';
 
 export default function Layout({ children }) {
     const { props, url } = usePage();
@@ -143,23 +144,21 @@ export default function Layout({ children }) {
                                     <>
                                         <img 
                                             src={settings.site_logo.startsWith('http') ? settings.site_logo : (settings.site_logo.startsWith('/') ? settings.site_logo : `/${settings.site_logo}`)} 
-                                            alt={settings?.site_name || 'Getir Clone'} 
+                                            alt={settings?.site_name || 'DeliGo'} 
                                             className="h-8 w-auto object-contain"
                                             onError={(e) => {
                                                 e.target.style.display = 'none';
                                                 if (e.target.nextElementSibling) {
-                                                    e.target.nextElementSibling.style.display = 'inline';
+                                                    e.target.nextElementSibling.style.display = 'flex';
                                                 }
                                             }}
                                         />
-                                        <span className="text-2xl font-bold text-primary-600 whitespace-nowrap" style={{ display: 'none' }}>
-                                            {settings?.site_name || 'Getir Clone'}
-                                        </span>
+                                        <div style={{ display: 'none' }}>
+                                            <DeliGoLogo height={32} iconColor="#FF7A32" textColor="#121212" />
+                                        </div>
                                     </>
                                 ) : (
-                                    <span className="text-2xl font-bold text-primary-600 whitespace-nowrap">
-                                        {settings?.site_name || 'Getir Clone'}
-                                    </span>
+                                    <DeliGoLogo height={32} iconColor="#FF7A32" textColor="#121212" />
                                 )}
                             </Link>
                         </div>
