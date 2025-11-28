@@ -102,31 +102,43 @@ export default function Home({ categories, featuredProducts, featuredStores = []
             </Head>
 
                 {/* Hero Section */}
-                <section className="relative overflow-hidden bg-gradient-to-br from-primary-900 via-primary-800 to-primary-950 text-white">
-                    <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.15),_transparent_55%)] pointer-events-none" aria-hidden="true" />
+                <section className="relative overflow-hidden bg-gradient-to-br from-primary-900 via-primary-600 to-primary-950 text-white min-h-[500px] md:min-h-[600px]">
                     <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
-                        <div className="text-center space-y-6">
-                            <h1 className="text-4xl md:text-6xl font-bold leading-tight">
-                                {t('welcome_title')}
-                            </h1>
-                            <p className="text-xl md:text-2xl text-secondary-200">
-                                {t('welcome_subtitle')}
-                            </p>
-                            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-                                <Link 
-                                    href="/products" 
-                                    className="flex items-center justify-center gap-2 bg-white text-primary-900 px-6 sm:px-8 py-3 rounded-full font-semibold hover:bg-secondary-50 transition-colors text-center shadow-xl shadow-primary-900/40"
-                                >
-                                    <ShoppingCart className="w-5 h-5" />
-                                    <span>{t('start_shopping')}</span>
-                                </Link>
-                                <Link 
-                                    href="/download-app" 
-                                    className="flex items-center justify-center gap-2 border-2 border-white/70 text-white px-6 sm:px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-primary-900 transition-colors"
-                                >
-                                    <Smartphone className="w-5 h-5" />
-                                    <span>{t('download_app')}</span>
-                                </Link>
+                        <div className="grid md:grid-cols-2 gap-16 items-center">
+                            {/* Left Side - Content */}
+                            <div className="text-center md:text-start space-y-6 z-10">
+                                <h1 className="text-4xl md:text-6xl font-bold leading-tight">
+                                    {t('welcome_title')}
+                                </h1>
+                                <p className="text-xl md:text-2xl text-white/90">
+                                    {t('welcome_subtitle')}
+                                </p>
+                                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 md:justify-senter justify-end">
+                                    <Link 
+                                        href="/products" 
+                                        className="flex items-center justify-center gap-2 bg-white text-primary-600 px-6 sm:px-8 py-3 rounded-full font-semibold hover:bg-secondary-50 transition-all text-center shadow-xl shadow-primary-900/40 hover:scale-105"
+                                    >
+                                        <ShoppingCart className="w-5 h-5" />
+                                        <span>{t('start_shopping')}</span>
+                                    </Link>
+                                    <Link 
+                                        href="/download-app" 
+                                        className="flex items-center justify-center gap-2 border-2 border-white/90 text-white px-6 sm:px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-primary-600 transition-all backdrop-blur-sm"
+                                    >
+                                        <Smartphone className="w-5 h-5" />
+                                        <span>{t('download_app')}</span>
+                                    </Link>
+                                </div>
+                            </div>
+                            
+                            {/* Right Side - Image */}
+                            <div className="relative z-10 flex items-center justify-center md:justify-senter">
+                                <img
+                                    src={locale === 'ar' ? "/images/hero-background-ar-7.png" : "/images/hero-background-en-7.png"}
+                                    alt="Hero"
+                                    className="w-full h-auto max-w-2xl object-contain"
+                                    style={{ maxHeight: '750px' }}
+                                />
                             </div>
                         </div>
                     </div>
