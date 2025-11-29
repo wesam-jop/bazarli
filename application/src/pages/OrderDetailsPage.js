@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useLanguage } from '../context/LanguageContext';
+import { useCurrency } from '../hooks/useCurrency';
 import { colors, additionalColors } from '../constants/colors';
 import CustomText from '../components/CustomText';
 import CustomButton from '../components/CustomButton';
@@ -17,6 +18,7 @@ import { useGetOrderQuery, useCancelOrderMutation } from '../store/slices/orders
 
 const OrderDetailsPage = ({ orderId, onBack, onTrack }) => {
   const { t, isRTL, language } = useLanguage();
+  const currency = useCurrency();
 
   const { data: orderData, isLoading, error, refetch } = useGetOrderQuery(orderId);
   const [cancelOrder, { isLoading: isCancelling }] = useCancelOrderMutation();
@@ -195,11 +197,11 @@ const OrderDetailsPage = ({ orderId, onBack, onTrack }) => {
                   {item.product?.name || t('unknown_product')}
                 </CustomText>
                 <CustomText variant="caption" color={additionalColors.textLight}>
-                  {item.quantity} x {item.price?.toFixed(0)} {t('currency')}
+                  {item.quantity} x {item.price?.toFixed(0)} {currency}
                 </CustomText>
               </View>
               <CustomText variant="body" color={colors.primary} style={styles.itemTotal}>
-                {(item.quantity * item.price).toFixed(0)} {t('currency')}
+                {(item.quantity * item.price).toFixed(0)} {currency}
               </CustomText>
             </View>
           ))}
@@ -216,7 +218,7 @@ const OrderDetailsPage = ({ orderId, onBack, onTrack }) => {
                 {t('subtotal')}
               </CustomText>
               <CustomText variant="body">
-                {order.subtotal?.toFixed(0) || (order.total_amount - (order.delivery_fee || 0)).toFixed(0)} {t('currency')}
+                {order.subtotal?.toFixed(0) || (order.total_amount - (order.delivery_fee || 0)).toFixed(0)} {currency}
               </CustomText>
             </View>
             <View style={styles.summaryRow}>
@@ -224,7 +226,7 @@ const OrderDetailsPage = ({ orderId, onBack, onTrack }) => {
                 {t('delivery_fee')}
               </CustomText>
               <CustomText variant="body">
-                {order.delivery_fee?.toFixed(0) || 0} {t('currency')}
+                {order.delivery_fee?.toFixed(0) || 0} {currency}
               </CustomText>
             </View>
             <View style={styles.divider} />
@@ -233,7 +235,7 @@ const OrderDetailsPage = ({ orderId, onBack, onTrack }) => {
                 {t('total')}
               </CustomText>
               <CustomText variant="h3" color={colors.primary}>
-                {order.total_amount?.toFixed(0)} {t('currency')}
+                {order.total_amount?.toFixed(0)} {currency}
               </CustomText>
             </View>
             <View style={styles.paymentMethod}>

@@ -1,16 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View, SafeAreaView, ScrollView, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, SafeAreaView, ScrollView, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { Provider } from 'react-redux';
 import { store } from './src/store';
 import { useAppDispatch, useAppSelector } from './src/store/hooks';
 import { loadUser } from './src/store/slices/authSlice';
-import { colors } from './src/constants/colors';
+import { setSelectedCategoryId, setProductFilters } from './src/store/slices/productsSlice';
+import { useGetSettingsQuery } from './src/store/slices/settingsSlice';
+import { useGetCategoriesQuery } from './src/store/slices/productsSlice';
+import { useGetGovernoratesQuery } from './src/store/slices/locationSlice';
+import { colors, additionalColors } from './src/constants/colors';
 import { LanguageProvider, useLanguage } from './src/context/LanguageContext';
 import { useCairoFonts } from './src/hooks/useFonts';
 import Header from './src/components/Header';
 import BottomNavigation from './src/components/BottomNavigation';
 import Cart from './src/components/Cart';
 import HeroSection from './src/components/HeroSection';
+import CategoriesSection from './src/components/CategoriesSection';
 import StoresSection from './src/components/StoresSection';
 import ProductsSection from './src/components/ProductsSection';
 import StoresPage from './src/pages/StoresPage';
@@ -27,19 +33,43 @@ import TermsPage from './src/pages/TermsPage';
 import PrivacyPage from './src/pages/PrivacyPage';
 import StoreDetailsPage from './src/pages/StoreDetailsPage';
 import CustomText from './src/components/CustomText';
+import SearchBar from './src/components/SearchBar';
+import FilterModal from './src/components/FilterModal';
 
 const AppContent = () => {
   const { t, isRTL } = useLanguage();
   const dispatch = useAppDispatch();
   const { isAuthenticated, loading: authLoading, user } = useAppSelector((state) => state.auth);
+  const { filters } = useAppSelector((state) => state.products);
   const [activeTab, setActiveTab] = useState('home');
   const [currentPage, setCurrentPage] = useState(null);
   const [selectedStoreId, setSelectedStoreId] = useState(null);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isFilterModalVisible, setIsFilterModalVisible] = useState(false);
 
-  // Load user on mount
+  // Load user and settings on mount
+  const { data: settingsData } = useGetSettingsQuery();
+
   useEffect(() => {
     dispatch(loadUser());
   }, [dispatch]);
+
+  // Fetch filter options
+  const { data: categoriesData, isLoading: categoriesLoading } = useGetCategoriesQuery();
+  const { data: governoratesData } = useGetGovernoratesQuery();
+
+  const categories = categoriesData?.data || [];
+  const governorates = governoratesData?.data || [];
+
+  const handleSearch = (text) => {
+    setSearchQuery(text);
+  };
+
+  const handleFilterChange = (filters) => {
+    dispatch(setProductFilters(filters));
+    setIsFilterModalVisible(false);
+  };
 
   // Handle navigation
   useEffect(() => {
@@ -61,114 +91,169 @@ const AppContent = () => {
     );
   }
 
-  // Show Terms or Privacy pages
+  // Show Terms or Privacy pages (without bottom navigation)
   if (currentPage === 'terms') {
-    return <TermsPage onBack={() => setCurrentPage(null)} />;
+    return (
+      <>
+        <View style={styles.container}>
+          <TermsPage onBack={() => setCurrentPage(null)} />
+        </View>
+      </>
+    );
   }
   if (currentPage === 'privacy') {
-    return <PrivacyPage onBack={() => setCurrentPage(null)} />;
+    return (
+      <>
+        <View style={styles.container}>
+          <PrivacyPage onBack={() => setCurrentPage(null)} />
+        </View>
+      </>
+    );
   }
 
-  // Show login/register pages if not authenticated
+  // Show login/register pages if not authenticated (without bottom navigation)
   if (!isAuthenticated) {
     if (currentPage === 'register') {
-      return <RegisterPage onNavigate={(page, data) => {
-        if (page === 'otp' && data) {
-          setCurrentPage({ type: 'otp', phone: data.phone, action: 'register' });
-        } else {
-          setCurrentPage(page);
-        }
-      }} />;
+      return (
+        <>
+          <View style={styles.container}>
+            <RegisterPage onNavigate={(page, data) => {
+              if (page === 'otp' && data) {
+                setCurrentPage({ type: 'otp', phone: data.phone, action: 'register' });
+              } else {
+                setCurrentPage(page);
+              }
+            }} />
+          </View>
+        </>
+      );
     }
     if (currentPage?.type === 'otp') {
       return (
-        <OTPVerificationPage
-          onNavigate={(page) => setCurrentPage(page)}
-          phone={currentPage.phone}
-          action={currentPage.action || 'login'}
-        />
+        <>
+          <View style={styles.container}>
+            <OTPVerificationPage
+              onNavigate={(page) => setCurrentPage(page)}
+              phone={currentPage.phone}
+              action={currentPage.action || 'login'}
+            />
+          </View>
+        </>
       );
     }
     return (
-      <LoginPage
-        onNavigate={(page, data) => {
-          if (page === 'otp' && data) {
-            setCurrentPage({ type: 'otp', phone: data.phone, action: 'login' });
-          } else {
-            setCurrentPage(page);
-          }
-        }}
-      />
+      <>
+        <View style={styles.container}>
+          <LoginPage
+            onNavigate={(page, data) => {
+              if (page === 'otp' && data) {
+                setCurrentPage({ type: 'otp', phone: data.phone, action: 'login' });
+              } else {
+                setCurrentPage(page);
+              }
+            }}
+          />
+        </View>
+      </>
     );
   }
 
-  // Show checkout page
+  // Show checkout page (without bottom navigation for now)
   if (currentPage === 'checkout') {
     return (
-      <CheckoutPage
-        navigation={{ goBack: () => setCurrentPage(null) }}
-        onSuccess={() => {
-          setCurrentPage(null);
-          setActiveTab('profile');
-        }}
-      />
+      <>
+        <View style={styles.container}>
+          <CheckoutPage
+            navigation={{ goBack: () => setCurrentPage(null) }}
+            onSuccess={() => {
+              setCurrentPage(null);
+              setActiveTab('profile');
+            }}
+          />
+        </View>
+        <Cart onCheckout={() => setCurrentPage('checkout')} />
+      </>
     );
   }
 
-  // Show store details page
+  // Show store details page (with bottom navigation)
   if (currentPage?.type === 'store' && currentPage.storeId) {
     return (
-      <StoreDetailsPage
-        storeId={currentPage.storeId}
-        onBack={() => setCurrentPage(null)}
-      />
+      <>
+        <View style={styles.container}>
+          <StoreDetailsPage
+            storeId={currentPage.storeId}
+            onBack={() => setCurrentPage(null)}
+          />
+        </View>
+        <BottomNavigation activeTab={activeTab} onTabChange={setActiveTab} />
+        <Cart onCheckout={() => setCurrentPage('checkout')} />
+      </>
     );
   }
 
-  // Show dashboard based on user type
+  // Show dashboard based on user type (with bottom navigation)
   if (activeTab === 'profile') {
+    let dashboardContent;
     if (user?.user_type === 'customer' || !user?.user_type) {
-      return (
-        <CustomerDashboard 
-          onBack={() => setActiveTab('home')} 
+      dashboardContent = (
+        <CustomerDashboard
+          onBack={() => setActiveTab('home')}
         />
       );
-    }
-    if (user?.user_type === 'driver') {
-      return <DriverDashboard onBack={() => setActiveTab('home')} />;
-    }
-    if (user?.user_type === 'store_owner') {
-      return (
-        <StoreDashboard 
+    } else if (user?.user_type === 'driver') {
+      dashboardContent = <DriverDashboard onBack={() => setActiveTab('home')} />;
+    } else if (user?.user_type === 'store_owner') {
+      dashboardContent = (
+        <StoreDashboard
           onBack={() => setActiveTab('home')}
           onSetupStore={() => {/* Navigate to store setup */}}
           onManageProducts={() => {/* Navigate to products management */}}
         />
       );
+    } else if (user?.user_type === 'admin') {
+      dashboardContent = <AdminDashboard onBack={() => setActiveTab('home')} />;
     }
-    if (user?.user_type === 'admin') {
-      return <AdminDashboard onBack={() => setActiveTab('home')} />;
-    }
+
+    return (
+      <>
+        <View style={styles.container}>
+          {dashboardContent}
+        </View>
+        <BottomNavigation activeTab={activeTab} onTabChange={setActiveTab} />
+        <Cart onCheckout={() => setCurrentPage('checkout')} />
+      </>
+    );
   }
 
   const renderContent = () => {
     switch (activeTab) {
       case 'home':
         return (
-          <ScrollView 
+          <ScrollView
             style={styles.scrollView}
             contentContainerStyle={styles.scrollContent}
             showsVerticalScrollIndicator={false}
           >
             <HeroSection />
-            <StoresSection 
+
+            {!categoriesLoading && (
+              <CategoriesSection
+                onViewAll={() => setActiveTab('products')}
+                onCategoryPress={(category) => {
+                  dispatch(setSelectedCategoryId(category.id));
+                  setActiveTab('products');
+                }}
+              />
+            )}
+            <StoresSection
               onViewAll={(storeId) => {
                 if (storeId) {
                   setCurrentPage({ type: 'store', storeId });
                 } else {
                   setActiveTab('stores');
                 }
-              }} 
+              }}
             />
             <ProductsSection onViewAll={() => setActiveTab('products')} />
           </ScrollView>
@@ -200,6 +285,7 @@ const AppContent = () => {
     }
   };
 
+  // Show main app content with bottom navigation
   return (
     <>
       <View style={styles.container}>
@@ -207,6 +293,16 @@ const AppContent = () => {
       </View>
       <BottomNavigation activeTab={activeTab} onTabChange={setActiveTab} />
       <Cart onCheckout={() => setCurrentPage('checkout')} />
+
+      {/* Filter Modal */}
+      <FilterModal
+        visible={isFilterModalVisible}
+        onClose={() => setIsFilterModalVisible(false)}
+        onApplyFilters={handleFilterChange}
+        filters={filters}
+        categories={categories}
+        governorates={governorates}
+      />
     </>
   );
 };
@@ -262,5 +358,27 @@ const styles = StyleSheet.create({
   },
   text: {
     marginBottom: 10,
+  },
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    marginBottom: 16,
+  },
+  searchBar: {
+    flex: 1,
+    marginRight: 12,
+  },
+  filterButton: {
+    padding: 12,
+    backgroundColor: colors.background,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: additionalColors.border,
+    elevation: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
   },
 });

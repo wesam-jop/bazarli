@@ -127,7 +127,7 @@ const ProductCard = ({ product, onPress, index = 0 }) => {
                 color={additionalColors.textLight}
                 style={styles.originalPrice}
               >
-                {productData.price} ل.س
+                {`${productData.price} ل.س`}
               </CustomText>
             )}
             <CustomText
@@ -135,7 +135,7 @@ const ProductCard = ({ product, onPress, index = 0 }) => {
               color={colors.primary}
               style={styles.productPrice}
             >
-              {productData.final_price} ل.س
+              {`${productData.final_price} ل.س`}
             </CustomText>
           </View>
 

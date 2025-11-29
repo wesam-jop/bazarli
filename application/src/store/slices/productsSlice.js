@@ -3,6 +3,7 @@ import { apiSlice } from '../api';
 
 // Extend API slice with products endpoints
 export const productsApiSlice = apiSlice.injectEndpoints({
+  overrideExisting: true,
   endpoints: (builder) => ({
     getProducts: builder.query({
       query: (params = {}) => ({
@@ -42,6 +43,18 @@ export const productsApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ['Favorites'],
     }),
+    getProductsByCategory: builder.query({
+      query: (categoryId) => ({
+        url: '/products',
+        params: {
+          category_id: categoryId,
+          per_page: 3,
+          sort_by: 'created_at',
+          sort_order: 'desc',
+        },
+      }),
+      providesTags: (result, error, categoryId) => [{ type: 'Products', id: `category-${categoryId}` }],
+    }),
   }),
 });
 
@@ -50,6 +63,7 @@ export const {
   useGetProductQuery,
   useGetCategoriesQuery,
   useGetCategoryQuery,
+  useGetProductsByCategoryQuery,
   useGetFavoritesQuery,
   useAddToFavoritesMutation,
   useRemoveFromFavoritesMutation,
@@ -68,6 +82,7 @@ const initialState = {
   sortBy: 'sort_order',
   sortOrder: 'asc',
   selectedProduct: null,
+  selectedCategoryId: null,
 };
 
 const productsSlice = createSlice({
@@ -87,9 +102,12 @@ const productsSlice = createSlice({
     setSelectedProduct: (state, action) => {
       state.selectedProduct = action.payload;
     },
+    setSelectedCategoryId: (state, action) => {
+      state.selectedCategoryId = action.payload;
+    },
   },
 });
 
-export const { setFilters: setProductFilters, clearFilters: clearProductFilters, setSort, setSelectedProduct } = productsSlice.actions;
+export const { setFilters: setProductFilters, clearFilters: clearProductFilters, setSort, setSelectedProduct, setSelectedCategoryId } = productsSlice.actions;
 export default productsSlice.reducer;
 

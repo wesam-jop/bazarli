@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useLanguage } from '../context/LanguageContext';
+import { useCurrency } from '../hooks/useCurrency';
 import { colors, additionalColors } from '../constants/colors';
 import CustomText from '../components/CustomText';
 import CustomButton from '../components/CustomButton';
@@ -21,6 +22,7 @@ const { width } = Dimensions.get('window');
 
 const ProductDetailsPage = ({ productId, onBack, onStorePress }) => {
   const { t, isRTL, language } = useLanguage();
+  const currency = useCurrency();
   const [quantity, setQuantity] = useState(1);
   const [imageError, setImageError] = useState(false);
 
@@ -146,11 +148,11 @@ const ProductDetailsPage = ({ productId, onBack, onStorePress }) => {
           {/* Price */}
           <View style={styles.priceContainer}>
             <CustomText variant="h2" color={colors.primary} style={styles.price}>
-              {finalPrice?.toFixed(0)} {t('currency')}
+              {finalPrice?.toFixed(0)} {currency}
             </CustomText>
             {hasDiscount && (
               <CustomText variant="body" color={additionalColors.textLight} style={styles.originalPrice}>
-                {product.price?.toFixed(0)} {t('currency')}
+                {product.price?.toFixed(0)} {currency}
               </CustomText>
             )}
             {product.unit && (
@@ -226,7 +228,7 @@ const ProductDetailsPage = ({ productId, onBack, onStorePress }) => {
 
           {/* Add to Cart Button */}
           <CustomButton
-            title={`${t('add_to_cart')} - ${(finalPrice * quantity).toFixed(0)} ${t('currency')}`}
+            title={`${t('add_to_cart')} - ${(finalPrice * quantity).toFixed(0)} ${currency}`}
             onPress={handleAddToCart}
             loading={isAddingToCart}
             style={styles.addToCartButton}

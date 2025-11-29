@@ -108,7 +108,10 @@ const CustomButton = ({
               {children}
             </CustomText>
           ) : (
-            children
+            React.Children.toArray(children).filter(child => 
+              child !== null && child !== undefined && 
+              (typeof child !== 'string' || child.trim() !== '')
+            )
           )}
         </View>
       )}

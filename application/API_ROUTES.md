@@ -41,6 +41,41 @@ Body: { phone }
 
 ---
 
+## ⚙️ Settings Routes (Public)
+
+### 1. Get App Settings
+```
+GET /api/v1/settings
+```
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "app_name": "DeliGo",
+    "app_description": "",
+    "app_logo": "",
+    "app_version": "1.0.0",
+    "default_language": "ar",
+    "default_currency": "SYP",
+    "currency_symbol": "ل.س",
+    "min_order_amount": 0,
+    "default_delivery_fee": 0,
+    "default_estimated_delivery_time": 15,
+    "maintenance_mode": false,
+    "maintenance_message": "",
+    "payment_methods": [],
+    "support_phone": "",
+    "support_email": ""
+  }
+}
+```
+**يستخدم في:**
+- `App.js` (useGetSettingsQuery - جلب الإعدادات عند بدء التطبيق)
+- `Header.js` (useGetSettingsQuery - عرض اسم التطبيق)
+
+---
+
 ## 👤 User Routes (Protected - auth:sanctum)
 
 ### 5. Get User - بيانات المستخدم
@@ -353,6 +388,41 @@ POST /api/v1/delivery-locations/{id}/default
   "message": "رسالة الخطأ"
 }
 ```
+
+---
+
+## ⚙️ Settings Routes (Public)
+
+### 1. Get App Settings
+```
+GET /api/v1/settings
+```
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "app_name": "DeliGo",
+    "app_description": "",
+    "app_logo": "",
+    "app_version": "1.0.0",
+    "default_language": "ar",
+    "default_currency": "SYP",
+    "currency_symbol": "ل.س",
+    "min_order_amount": 0,
+    "default_delivery_fee": 0,
+    "default_estimated_delivery_time": 15,
+    "maintenance_mode": false,
+    "maintenance_message": "",
+    "payment_methods": [],
+    "support_phone": "",
+    "support_email": ""
+  }
+}
+```
+**يستخدم في:**
+- `App.js` (useGetSettingsQuery - جلب الإعدادات عند بدء التطبيق)
+- `Header.js` (useGetSettingsQuery - عرض اسم التطبيق)
 
 ---
 

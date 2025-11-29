@@ -6,7 +6,7 @@ import { colors, additionalColors } from '../constants/colors';
 import CustomText from './CustomText';
 import CustomButton from './CustomButton';
 
-const StoreCard = ({ store, onPress, index = 0 }) => {
+const StoreCard = ({ store, onPress, index = 0, fullWidth = false }) => {
   const { t, isRTL } = useLanguage();
   
   // Create fresh Animated.Value instances to avoid frozen object issues
@@ -78,7 +78,7 @@ const StoreCard = ({ store, onPress, index = 0 }) => {
     <Animated.View style={animatedStyle}>
       <TouchableOpacity
         activeOpacity={0.8}
-        style={styles.card}
+        style={[styles.card, fullWidth && styles.cardFullWidth]}
         onPress={onPress}
       >
         {/* Store Image */}
@@ -151,12 +151,7 @@ const StoreCard = ({ store, onPress, index = 0 }) => {
             >
               <View style={[styles.viewButtonContent, { flexDirection: isRTL ? 'row-reverse' : 'row' }]}>
                 <CustomText variant="body" color={colors.background} translate={true} translationKey="viewStore" />
-                <Ionicons 
-                  name={isRTL ? "arrow-back" : "arrow-forward"} 
-                  size={16} 
-                  color={colors.background} 
-                  style={{ marginLeft: isRTL ? 0 : 8, marginRight: isRTL ? 8 : 0 }} 
-                />
+                <Ionicons name={isRTL ? "arrow-back" : "arrow-forward"} size={16} color={colors.background} style={{ marginLeft: isRTL ? 0 : 8, marginRight: isRTL ? 8 : 0 }} />
               </View>
             </CustomButton>
           )}
@@ -184,6 +179,10 @@ const styles = StyleSheet.create({
     borderColor: additionalColors.border,
     width: 280,
     marginRight: 16,
+  },
+  cardFullWidth: {
+    width: '100%',
+    marginRight: 0,
   },
   imageContainer: {
     width: '100%',
