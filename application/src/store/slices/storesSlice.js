@@ -1,9 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { apiSlice } from '../api';
-import { productsApiSlice } from './productsSlice';
 
 // Extend API slice with stores endpoints
 export const storesApiSlice = apiSlice.injectEndpoints({
+  overrideExisting: true,
   endpoints: (builder) => ({
     getStores: builder.query({
       query: (params = {}) => ({

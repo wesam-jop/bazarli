@@ -3,6 +3,7 @@ import { apiSlice } from '../api';
 
 // Extend API slice with store owner endpoints
 export const storeOwnerApiSlice = apiSlice.injectEndpoints({
+  overrideExisting: true,
   endpoints: (builder) => ({
     // Store Setup
     getStoreSetupForm: builder.query({

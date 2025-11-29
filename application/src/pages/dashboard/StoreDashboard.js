@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useLanguage } from '../../context/LanguageContext';
+import { useCurrency } from '../../hooks/useCurrency';
 import { colors, additionalColors } from '../../constants/colors';
 import CustomText from '../../components/CustomText';
 import CustomButton from '../../components/CustomButton';
@@ -27,6 +28,7 @@ import {
 
 const StoreDashboard = ({ onBack, onSetupStore, onManageProducts }) => {
   const { t, isRTL, language } = useLanguage();
+  const currency = useCurrency();
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
   const [activeTab, setActiveTab] = useState('overview');
@@ -197,7 +199,7 @@ const StoreDashboard = ({ onBack, onSetupStore, onManageProducts }) => {
               {t('revenue_today')}
             </CustomText>
             <CustomText variant="h4" color={additionalColors.success}>
-              {(stats.today?.revenue || 0).toFixed(0)} {t('currency')}
+              {(stats.today?.revenue || 0).toFixed(0)} {currency}
             </CustomText>
           </View>
         </View>
@@ -255,7 +257,7 @@ const StoreDashboard = ({ onBack, onSetupStore, onManageProducts }) => {
             {t('total')}:
           </CustomText>
           <CustomText variant="h4" color={colors.primary}>
-            {order.total?.toFixed(0)} {t('currency')}
+            {order.total?.toFixed(0)} {currency}
           </CustomText>
         </View>
 

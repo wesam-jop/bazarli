@@ -3,6 +3,7 @@ import { apiSlice } from '../api';
 
 // Extend API slice with location endpoints
 export const locationApiSlice = apiSlice.injectEndpoints({
+  overrideExisting: true,
   endpoints: (builder) => ({
     getGovernorates: builder.query({
       query: () => '/governorates',

@@ -56,7 +56,7 @@ const StoresSection = ({ onViewAll }) => {
           </CustomText>
           <CustomButton
             variant="text"
-            onPress={onViewAll}
+            onPress={() => onViewAll && onViewAll()}
             style={styles.viewAllButton}
           >
             <CustomText variant="body" color={colors.primary}>

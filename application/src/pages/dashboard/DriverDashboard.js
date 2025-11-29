@@ -15,6 +15,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { logout } from '../../store/slices/authSlice';
 import { useLanguage } from '../../context/LanguageContext';
+import { useCurrency } from '../../hooks/useCurrency';
 import { colors, additionalColors, statusColors } from '../../constants/colors';
 import CustomText from '../../components/CustomText';
 import CustomButton from '../../components/CustomButton';
@@ -32,6 +33,7 @@ import DriverApplicationPage from '../DriverApplicationPage';
 
 const DriverDashboard = ({ onBack }) => {
   const { t, isRTL } = useLanguage();
+  const currency = useCurrency();
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.auth);
   const [activeTab, setActiveTab] = useState('overview');
@@ -190,7 +192,7 @@ const DriverDashboard = ({ onBack }) => {
             {order.items_count || order.order_items?.length || 0} {t('products')}
           </CustomText>
           <CustomText variant="h4" color={colors.primary}>
-            {(order.total_amount || 0).toFixed(0)} {t('currency')}
+            {(order.total_amount || 0).toFixed(0)} {currency}
           </CustomText>
         </View>
 

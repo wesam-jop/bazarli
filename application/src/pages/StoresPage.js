@@ -12,7 +12,6 @@ import CustomText from '../components/CustomText';
 import SearchBar from '../components/SearchBar';
 import FilterModal from '../components/FilterModal';
 import StoreCard from '../components/StoreCard';
-import Container from '../components/Container';
 
 const StoresPage = ({ onStorePress }) => {
   const { t, isRTL } = useLanguage();
@@ -86,12 +85,14 @@ const StoresPage = ({ onStorePress }) => {
     }
   };
 
-  const renderStore = ({ item }) => {
+  const renderStore = ({ item, index }) => {
     // Create fresh copy to avoid frozen object issues
     const store = { ...item };
     return (
       <StoreCard
         store={store}
+        index={index}
+        fullWidth={true}
         onPress={onStorePress ? () => onStorePress(store.id) : undefined}
       />
     );
@@ -118,7 +119,7 @@ const StoresPage = ({ onStorePress }) => {
 
   return (
     <View style={styles.container}>
-      <Container style={styles.container}>
+      <View style={styles.innerContainer}>
         <View style={[styles.header, { flexDirection: isRTL ? 'row-reverse' : 'row' }]}>
           <View style={styles.searchBarContainer}>
             <SearchBar
@@ -156,6 +157,7 @@ const StoresPage = ({ onStorePress }) => {
           contentContainerStyle={styles.listContent}
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={renderEmpty}
+          style={styles.list}
           refreshControl={
             <RefreshControl
               refreshing={isFetching && page === 1}
@@ -173,14 +175,13 @@ const StoresPage = ({ onStorePress }) => {
             ) : null
           }
         />
-      </Container>
+      </View>
 
       <FilterModal
         visible={isFilterModalVisible}
         onClose={() => setIsFilterModalVisible(false)}
         filters={filters}
-        onFilterChange={handleFilterChange}
-        onClearFilters={handleClearFilters}
+        onApplyFilters={handleFilterChange}
         categories={categories}
         governorates={governorates}
         cities={cities}
@@ -191,27 +192,28 @@ const StoresPage = ({ onStorePress }) => {
 
 const styles = StyleSheet.create({
   container: {
-    display: 'flex',
+    flex: 1,
     backgroundColor: colors.background,
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column',
-    gap: 16,
+  },
+  innerContainer: {
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingTop: 12,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 16,
     width: '100%',
-    display: 'flex',
-    alignContent: 'center',
-    alignItems: 'center',
     justifyContent: 'space-between',
     gap: 12,
   },
   searchBarContainer: {
     flex: 1,
-    minWidth: 0, // Important for flex to work properly
+    minWidth: 0,
+  },
+  list: {
+    flex: 1,
   },
   filterButton: {
     width: 44,
