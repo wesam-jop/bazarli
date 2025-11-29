@@ -12,6 +12,13 @@ use App\Http\Controllers\Api\FavoriteProductController;
 use App\Http\Controllers\Api\DeliveryLocationController;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\DriverOrderController;
+use App\Http\Controllers\Api\DriverApplicationController;
+use App\Http\Controllers\Api\StoreOrderController;
+use App\Http\Controllers\Api\StoreManagementController;
+use App\Http\Controllers\Api\HomeController;
+use App\Http\Controllers\Api\UserRoleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,31 +31,57 @@ use App\Http\Controllers\Api\ProfileController;
 |
 */
 
-// Public routes
+// =============================================================================
+// PUBLIC ROUTES (No Authentication Required)
+// =============================================================================
 Route::prefix('v1')->group(function () {
-    // Authentication routes
+    
+    // -------------------------------------------------------------------------
+    // Authentication Routes
+    // -------------------------------------------------------------------------
     Route::post('/register', [AuthController::class, 'register']);
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/verify-phone', [AuthController::class, 'verifyPhone']);
     Route::post('/resend-verification', [AuthController::class, 'resendVerification']);
     
-    // Public product and category routes
+    // -------------------------------------------------------------------------
+    // Home & App Settings
+    // -------------------------------------------------------------------------
+    Route::get('/home', [HomeController::class, 'index']);
+    Route::get('/search', [HomeController::class, 'search']);
+    Route::get('/nearby-stores', [HomeController::class, 'nearbyStores']);
+    Route::get('/settings', [HomeController::class, 'settings']);
+    
+    // -------------------------------------------------------------------------
+    // Categories
+    // -------------------------------------------------------------------------
     Route::get('/categories', [CategoryController::class, 'index']);
     Route::get('/categories/{id}', [CategoryController::class, 'show']);
+    
+    // -------------------------------------------------------------------------
+    // Products
+    // -------------------------------------------------------------------------
     Route::get('/products', [ProductController::class, 'index']);
     Route::get('/products/{id}', [ProductController::class, 'show']);
+    
+    // -------------------------------------------------------------------------
+    // Stores
+    // -------------------------------------------------------------------------
     Route::get('/stores', [StoreController::class, 'index']);
     Route::get('/stores/{id}', [StoreController::class, 'show']);
     Route::get('/stores/{id}/products', [StoreController::class, 'products']);
     
-    // Location routes
+    // -------------------------------------------------------------------------
+    // Location Data (Governorates, Cities, Areas)
+    // -------------------------------------------------------------------------
     Route::get('/governorates', function () {
         $governorates = \App\Models\Governorate::active()
             ->orderBy('display_order')
             ->get()
             ->map(fn ($gov) => [
                 'id' => $gov->id,
-                'name' => app()->getLocale() === 'ar' ? $gov->name_ar : $gov->name_en,
+                'name_ar' => $gov->name_ar,
+                'name_en' => $gov->name_en,
             ]);
         
         return response()->json([
@@ -67,7 +100,8 @@ Route::prefix('v1')->group(function () {
         $cities = $query->get()
             ->map(fn ($city) => [
                 'id' => $city->id,
-                'name' => app()->getLocale() === 'ar' ? $city->name_ar : $city->name_en,
+                'name_ar' => $city->name_ar,
+                'name_en' => $city->name_en,
                 'governorate_id' => $city->governorate_id,
             ]);
         
@@ -80,20 +114,16 @@ Route::prefix('v1')->group(function () {
     Route::get('/areas', function (Request $request) {
         $query = \App\Models\Area::active()->ordered();
         
-        // فلترة المناطق حسب المحافظة
         if ($governorateId = $request->get('governorate_id')) {
-            // جلب أسماء المدن في هذه المحافظة
             $cities = \App\Models\City::where('governorate_id', $governorateId)
                 ->active()
                 ->get();
             
             if ($cities->count() > 0) {
-                // جمع أسماء المدن بالعربي والإنجليزي (مع تنظيف الفضاءات)
                 $cityNamesAr = $cities->pluck('name_ar')->filter()->map(fn($name) => trim($name))->unique()->filter()->toArray();
                 $cityNamesEn = $cities->pluck('name_en')->filter()->map(fn($name) => trim($name))->unique()->filter()->toArray();
                 $allCityNames = array_unique(array_merge($cityNamesAr, $cityNamesEn));
                 
-                // فلترة المناطق التي تطابق أسماء المدن (مطابقة كاملة أو جزئية)
                 if (count($allCityNames) > 0) {
                     $query->where(function ($q) use ($allCityNames) {
                         $first = true;
@@ -119,11 +149,9 @@ Route::prefix('v1')->group(function () {
                         }
                     });
                 } else {
-                    // إذا لم تكن هناك أسماء مدن، لا تعرض أي مناطق
                     $query->whereRaw('1 = 0');
                 }
             } else {
-                // إذا لم تكن هناك مدن في المحافظة، لا تعرض أي مناطق
                 $query->whereRaw('1 = 0');
             }
         }
@@ -131,8 +159,10 @@ Route::prefix('v1')->group(function () {
         $areas = $query->get()
             ->map(fn ($area) => [
                 'id' => $area->id,
-                'name' => app()->getLocale() === 'ar' ? $area->name : ($area->name_en ?? $area->name),
-                'city' => app()->getLocale() === 'ar' ? $area->city : ($area->city_en ?? $area->city),
+                'name' => $area->name,
+                'name_en' => $area->name_en,
+                'city' => $area->city,
+                'city_en' => $area->city_en,
                 'latitude' => $area->latitude,
                 'longitude' => $area->longitude,
             ]);
@@ -143,7 +173,9 @@ Route::prefix('v1')->group(function () {
         ]);
     });
     
-    // Terms of Service
+    // -------------------------------------------------------------------------
+    // Terms & Privacy
+    // -------------------------------------------------------------------------
     Route::get('/terms', function (Request $request) {
         $locale = $request->header('Accept-Language', 'en');
         app()->setLocale($locale);
@@ -152,26 +184,14 @@ Route::prefix('v1')->group(function () {
             [
                 'title' => $locale === 'ar' ? 'الأهلية ومسؤوليات الحساب' : 'Eligibility & Account Responsibilities',
                 'content' => $locale === 'ar' 
-                    ? 'بإنشاء حساب، تؤكد أنك تبلغ من العمر 18 عاماً على الأقل، وتقدم معلومات دقيقة، وستحافظ على أمان بيانات تسجيل الدخول الخاصة بك. أنت مسؤول بالكامل عن جميع الأنشطة التي تتم تحت حسابك.'
-                    : 'By creating an account, you confirm that you are at least 18 years old, provide accurate information, and will keep your login credentials secure. You are fully responsible for all activity performed under your account.',
+                    ? 'بإنشاء حساب، تؤكد أنك تبلغ من العمر 18 عاماً على الأقل، وتقدم معلومات دقيقة، وستحافظ على أمان بيانات تسجيل الدخول الخاصة بك.'
+                    : 'By creating an account, you confirm that you are at least 18 years old, provide accurate information, and will keep your login credentials secure.',
             ],
             [
                 'title' => $locale === 'ar' ? 'الطلبات والمدفوعات والتوصيل' : 'Orders, Payments, and Delivery',
                 'content' => $locale === 'ar'
-                    ? 'جميع الطلبات المقدمة من خلال المنصة تخضع للتوفر واللوائح المحلية. أوقات التوصيل هي تقديرات وقد تختلف. قد تتغير الأسعار في أي وقت، لكن التغييرات لن تؤثر على الطلبات المؤكدة.'
-                    : 'All orders placed through the platform are subject to availability and local regulations. Delivery times are estimates and may vary. Prices may change at any time, but changes will not affect confirmed orders.',
-            ],
-            [
-                'title' => $locale === 'ar' ? 'الأنشطة المحظورة' : 'Prohibited Activities',
-                'content' => $locale === 'ar'
-                    ? 'لا يجوز لك إساءة استخدام المنصة، أو محاولة الوصول غير المصرح به، أو جمع البيانات، أو الانخراط في أي نشاط يعطل خدماتنا. قد تؤدي الانتهاكات إلى التعليق الفوري.'
-                    : 'You may not misuse the platform, attempt to gain unauthorized access, scrape data, or engage in any activity that disrupts our services. Violations may result in immediate suspension.',
-            ],
-            [
-                'title' => $locale === 'ar' ? 'المسؤولية والحدود' : 'Liability & Limitation',
-                'content' => $locale === 'ar'
-                    ? 'نسعى جاهدين لتوفير خدمة موثوقة ولكن لا يمكننا ضمان التوفر دون انقطاع. مسؤوليتنا محدودة إلى أقصى حد يسمح به القانون.'
-                    : 'We strive to provide reliable service but cannot guarantee uninterrupted availability. Our liability is limited to the maximum extent permitted by law.',
+                    ? 'جميع الطلبات المقدمة من خلال المنصة تخضع للتوفر واللوائح المحلية.'
+                    : 'All orders placed through the platform are subject to availability and local regulations.',
             ],
         ];
 
@@ -184,15 +204,14 @@ Route::prefix('v1')->group(function () {
             'success' => true,
             'data' => [
                 'intro' => \App\Models\Setting::get('terms_intro', $locale === 'ar' 
-                    ? 'باستخدام منصتنا، أنت توافق على الشروط والأحكام التالية التي تحكم جميع الطلبات والخدمات والتفاعلات.'
-                    : 'By using our platform you agree to the following terms and conditions that govern all orders, services, and interactions.'),
+                    ? 'باستخدام منصتنا، أنت توافق على الشروط والأحكام التالية.'
+                    : 'By using our platform you agree to the following terms and conditions.'),
                 'lastUpdated' => \App\Models\Setting::get('terms_last_updated', now()->format('F j, Y')),
                 'sections' => $sections,
             ]
         ]);
     });
     
-    // Privacy Policy
     Route::get('/privacy', function (Request $request) {
         $locale = $request->header('Accept-Language', 'en');
         app()->setLocale($locale);
@@ -201,26 +220,14 @@ Route::prefix('v1')->group(function () {
             [
                 'title' => $locale === 'ar' ? 'البيانات التي نجمعها' : 'Data We Collect',
                 'content' => $locale === 'ar'
-                    ? 'نجمع المعلومات التي تقدمها أثناء التسجيل والطلب ودعم العملاء. يتضمن ذلك تفاصيل الاتصال وعناوين التوصيل وتفضيلات الدفع ومعلومات الجهاز المستخدمة لتحسين الأمان وتخصيص تجربتك.'
-                    : 'We collect the information you provide during registration, ordering, and customer support. This includes contact details, delivery addresses, payment preferences, and device information used to improve security and personalize your experience.',
+                    ? 'نجمع المعلومات التي تقدمها أثناء التسجيل والطلب ودعم العملاء.'
+                    : 'We collect the information you provide during registration, ordering, and customer support.',
             ],
             [
                 'title' => $locale === 'ar' ? 'كيف نستخدم بياناتك' : 'How We Use Your Data',
                 'content' => $locale === 'ar'
-                    ? 'تسمح لنا بياناتك بمعالجة الطلبات وضمان التوصيل في الوقت المحدد وتخصيص توصيات المنتجات والتواصل مع التحديثات. تساعدنا المقاييس المجمعة والمجهولة الهوية على تحسين التوفر والخدمات اللوجستية والعروض الترويجية.'
-                    : 'Your data allows us to process orders, ensure on-time delivery, tailor product recommendations, and communicate updates. Aggregated, anonymized metrics help us improve availability, logistics, and promotions.',
-            ],
-            [
-                'title' => $locale === 'ar' ? 'المشاركة والأطراف الثالثة' : 'Sharing & Third Parties',
-                'content' => $locale === 'ar'
-                    ? 'نشارك البيانات الشخصية فقط مع الشركاء الموثوقين الذين يساعدوننا في تشغيل المنصة (معالجات الدفع وشركاء التوصيل والتحليلات). كل شريك ملزم تعاقدياً بحماية بياناتك واستخدامها فقط للخدمة المقصودة.'
-                    : 'We only share personal data with trusted partners who help us operate the platform (payment processors, delivery partners, analytics). Each partner is contractually obligated to protect your data and use it solely for the intended service.',
-            ],
-            [
-                'title' => $locale === 'ar' ? 'خياراتك وحقوقك' : 'Your Choices & Rights',
-                'content' => $locale === 'ar'
-                    ? 'يمكنك تحديث بيانات ملفك الشخصي أو طلب نسخة من معلوماتك أو طلب حذفها عن طريق الاتصال بالدعم. يمكن إدارة أذونات الموقع وإشعارات التسويق وتفضيلات التوطين داخل التطبيق.'
-                    : 'You can update your profile data, request a copy of your information, or ask us to delete it by contacting support. Location permissions, marketing notifications, and localization preferences can be managed inside the app.',
+                    ? 'تسمح لنا بياناتك بمعالجة الطلبات وضمان التوصيل في الوقت المحدد.'
+                    : 'Your data allows us to process orders, ensure on-time delivery.',
             ],
         ];
 
@@ -233,8 +240,8 @@ Route::prefix('v1')->group(function () {
             'success' => true,
             'data' => [
                 'intro' => \App\Models\Setting::get('privacy_intro', $locale === 'ar'
-                    ? 'نوضح ما هي البيانات التي نجمعها وكيف نحميها والخيارات المتاحة لك فيما يتعلق بخصوصيتك أثناء استخدام منصتنا.'
-                    : 'We explain what data we collect, how we protect it, and the choices you have over your privacy while using our platform.'),
+                    ? 'نوضح ما هي البيانات التي نجمعها وكيف نحميها.'
+                    : 'We explain what data we collect and how we protect it.'),
                 'lastUpdated' => \App\Models\Setting::get('privacy_last_updated', now()->format('F j, Y')),
                 'sections' => $sections,
             ]
@@ -242,62 +249,160 @@ Route::prefix('v1')->group(function () {
     });
 });
 
-// Protected routes
+// =============================================================================
+// PROTECTED ROUTES (Authentication Required)
+// =============================================================================
 Route::prefix('v1')->middleware('auth:sanctum')->group(function () {
-    // Auth routes
+    
+    // -------------------------------------------------------------------------
+    // User Authentication
+    // -------------------------------------------------------------------------
     Route::get('/user', [AuthController::class, 'me']);
     Route::post('/logout', [AuthController::class, 'logout']);
     
-    // Profile routes
+    // -------------------------------------------------------------------------
+    // User Profile
+    // -------------------------------------------------------------------------
     Route::get('/profile', [ProfileController::class, 'show']);
     Route::put('/profile', [ProfileController::class, 'update']);
     Route::post('/profile/change-password', [ProfileController::class, 'changePassword']);
+    Route::post('/profile/avatar', [ProfileController::class, 'updateAvatar']);
     
-    // Cart routes
-    Route::get('/cart', [CartController::class, 'index'])->name('api.cart.index');
-    Route::get('/cart/count', [CartController::class, 'count'])->name('api.cart.count');
-    Route::post('/cart/add', [CartController::class, 'add'])->name('api.cart.add');
-    Route::put('/cart/update', [CartController::class, 'update'])->name('api.cart.update');
-    Route::delete('/cart/remove/{product}', [CartController::class, 'remove'])->name('api.cart.remove');
-    Route::delete('/cart/clear', [CartController::class, 'clear'])->name('api.cart.clear');
+    // -------------------------------------------------------------------------
+    // User Role Management
+    // -------------------------------------------------------------------------
+    Route::get('/role', [UserRoleController::class, 'info']);
+    Route::post('/role/upgrade', [UserRoleController::class, 'upgrade']);
     
-    // Favorite routes
-    Route::get('/favorites', [FavoriteProductController::class, 'index'])->name('api.favorites.index');
-    Route::post('/favorites', [FavoriteProductController::class, 'store'])->name('api.favorites.store');
-    Route::delete('/favorites/{product}', [FavoriteProductController::class, 'destroy'])->name('api.favorites.destroy');
+    // -------------------------------------------------------------------------
+    // Cart
+    // -------------------------------------------------------------------------
+    Route::prefix('cart')->group(function () {
+        Route::get('/', [CartController::class, 'index']);
+        Route::get('/count', [CartController::class, 'count']);
+        Route::post('/add', [CartController::class, 'add']);
+        Route::put('/update', [CartController::class, 'update']);
+        Route::delete('/remove/{product}', [CartController::class, 'remove']);
+        Route::delete('/clear', [CartController::class, 'clear']);
+    });
     
-    // Delivery locations routes
-    Route::get('/delivery-locations', [DeliveryLocationController::class, 'index'])->name('api.delivery-locations.index');
-    Route::post('/delivery-locations', [DeliveryLocationController::class, 'store'])->name('api.delivery-locations.store');
-    Route::put('/delivery-locations/{deliveryLocation}', [DeliveryLocationController::class, 'update'])->name('api.delivery-locations.update');
-    Route::delete('/delivery-locations/{deliveryLocation}', [DeliveryLocationController::class, 'destroy'])->name('api.delivery-locations.destroy');
-    Route::post('/delivery-locations/{deliveryLocation}/default', [DeliveryLocationController::class, 'setDefault'])->name('api.delivery-locations.default');
+    // -------------------------------------------------------------------------
+    // Favorites
+    // -------------------------------------------------------------------------
+    Route::prefix('favorites')->group(function () {
+        Route::get('/', [FavoriteProductController::class, 'index']);
+        Route::post('/', [FavoriteProductController::class, 'store']);
+        Route::delete('/{product}', [FavoriteProductController::class, 'destroy']);
+    });
     
-    // Order routes
-    Route::get('/user/orders', [OrderController::class, 'userOrders'])->name('api.user.orders');
-    Route::apiResource('orders', OrderController::class)->names('api.orders');
-    Route::post('/orders/{order}/cancel', [OrderController::class, 'cancel'])->name('api.orders.cancel');
-    Route::get('/orders/{order}/track', [OrderController::class, 'track'])->name('api.orders.track');
+    // -------------------------------------------------------------------------
+    // Delivery Locations
+    // -------------------------------------------------------------------------
+    Route::prefix('delivery-locations')->group(function () {
+        Route::get('/', [DeliveryLocationController::class, 'index']);
+        Route::post('/', [DeliveryLocationController::class, 'store']);
+        Route::put('/{deliveryLocation}', [DeliveryLocationController::class, 'update']);
+        Route::delete('/{deliveryLocation}', [DeliveryLocationController::class, 'destroy']);
+        Route::post('/{deliveryLocation}/default', [DeliveryLocationController::class, 'setDefault']);
+    });
     
-    // Dashboard routes
-    Route::get('/dashboard/customer', [DashboardController::class, 'customerStats'])->name('api.dashboard.customer');
-    Route::get('/dashboard/store', [DashboardController::class, 'storeStats'])->name('api.dashboard.store');
-    Route::get('/dashboard/admin', [DashboardController::class, 'adminStats'])->name('api.dashboard.admin');
+    // -------------------------------------------------------------------------
+    // Orders (Customer)
+    // -------------------------------------------------------------------------
+    Route::prefix('orders')->group(function () {
+        Route::get('/', [OrderController::class, 'index']);
+        Route::get('/my-orders', [OrderController::class, 'userOrders']);
+        Route::post('/', [OrderController::class, 'store']);
+        Route::get('/{order}', [OrderController::class, 'show']);
+        Route::post('/{order}/cancel', [OrderController::class, 'cancel']);
+        Route::get('/{order}/track', [OrderController::class, 'track']);
+    });
     
+    // -------------------------------------------------------------------------
+    // Dashboard Statistics
+    // -------------------------------------------------------------------------
+    Route::prefix('dashboard')->group(function () {
+        Route::get('/customer', [DashboardController::class, 'customerStats']);
+        Route::get('/store', [DashboardController::class, 'storeStats']);
+        Route::get('/admin', [DashboardController::class, 'adminStats']);
+    });
+    
+    // -------------------------------------------------------------------------
     // Notifications
-    Route::get('/notifications', [NotificationController::class, 'index'])->name('api.notifications.index');
-    Route::get('/notifications/{id}', [NotificationController::class, 'show'])->name('api.notifications.show');
-    Route::post('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('api.notifications.read');
-    Route::post('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('api.notifications.read-all');
-    Route::delete('/notifications/{id}', [NotificationController::class, 'destroy'])->name('api.notifications.destroy');
-    Route::get('/notifications/unread-count', [NotificationController::class, 'getUnreadCount'])->name('api.notifications.unread-count');
+    // -------------------------------------------------------------------------
+    Route::prefix('notifications')->group(function () {
+        Route::get('/', [NotificationController::class, 'index']);
+        Route::get('/unread-count', [NotificationController::class, 'getUnreadCount']);
+        Route::get('/{id}', [NotificationController::class, 'show']);
+        Route::post('/{id}/read', [NotificationController::class, 'markAsRead']);
+        Route::post('/read-all', [NotificationController::class, 'markAllAsRead']);
+        Route::delete('/{id}', [NotificationController::class, 'destroy']);
+        Route::post('/subscribe', [NotificationController::class, 'subscribe']);
+        Route::post('/unsubscribe', [NotificationController::class, 'unsubscribe']);
+    });
     
-    // Push Notifications
-    Route::post('/notifications/subscribe', [NotificationController::class, 'subscribe'])->name('api.notifications.subscribe');
-    Route::post('/notifications/unsubscribe', [NotificationController::class, 'unsubscribe'])->name('api.notifications.unsubscribe');
+    // =========================================================================
+    // DRIVER ROUTES
+    // =========================================================================
+    Route::prefix('driver')->group(function () {
+        
+        // Driver Application
+        Route::get('/apply', [DriverApplicationController::class, 'create']);
+        Route::post('/apply', [DriverApplicationController::class, 'store']);
+        Route::get('/application-status', [DriverApplicationController::class, 'status']);
+        
+        // Driver Orders
+        Route::get('/orders', [DriverOrderController::class, 'index']);
+        Route::get('/orders/{order}', [DriverOrderController::class, 'show']);
+        Route::post('/orders/{order}/accept', [DriverOrderController::class, 'accept']);
+        Route::post('/orders/{order}/reject', [DriverOrderController::class, 'reject']);
+        Route::post('/orders/{order}/pick-up', [DriverOrderController::class, 'pickUp']);
+        Route::post('/orders/{order}/start-delivery', [DriverOrderController::class, 'startDelivery']);
+        Route::post('/orders/{order}/complete', [DriverOrderController::class, 'complete']);
+        
+        // Driver Location & Stats
+        Route::post('/location', [DriverOrderController::class, 'updateLocation']);
+        Route::get('/statistics', [DriverOrderController::class, 'statistics']);
+    });
+    
+    // =========================================================================
+    // STORE OWNER ROUTES
+    // =========================================================================
+    Route::prefix('store')->group(function () {
+        
+        // Store Setup & Management
+        Route::get('/setup', [StoreManagementController::class, 'setupForm']);
+        Route::post('/setup', [StoreManagementController::class, 'createStore']);
+        Route::get('/details', [StoreManagementController::class, 'show']);
+        Route::put('/details', [StoreManagementController::class, 'update']);
+        
+        // Working Hours
+        Route::get('/working-hours', [StoreManagementController::class, 'getWorkingHours']);
+        Route::put('/working-hours', [StoreManagementController::class, 'updateWorkingHours']);
+        
+        // Store Products
+        Route::get('/products', [StoreManagementController::class, 'products']);
+        Route::post('/products', [StoreManagementController::class, 'addProduct']);
+        Route::put('/products/{product}', [StoreManagementController::class, 'updateProduct']);
+        Route::delete('/products/{product}', [StoreManagementController::class, 'deleteProduct']);
+        Route::get('/categories', [StoreManagementController::class, 'getCategories']);
+        
+        // Store Orders
+        Route::get('/orders', [StoreOrderController::class, 'index']);
+        Route::get('/orders/{orderStore}', [StoreOrderController::class, 'show']);
+        Route::post('/orders/{orderStore}/approve', [StoreOrderController::class, 'approve']);
+        Route::post('/orders/{orderStore}/reject', [StoreOrderController::class, 'reject']);
+        Route::post('/orders/{orderStore}/start-preparing', [StoreOrderController::class, 'startPreparing']);
+        Route::post('/orders/{orderStore}/finish-preparing', [StoreOrderController::class, 'finishPreparing']);
+        
+        // Store Statistics
+        Route::get('/statistics', [StoreOrderController::class, 'statistics']);
+    });
 });
 
-// Admin routes
+// =============================================================================
+// ADMIN ROUTES
+// =============================================================================
 Route::prefix('v1/admin')->middleware('auth:sanctum')->group(function () {
     Route::apiResource('categories', CategoryController::class)
         ->except(['index', 'show'])

@@ -20,6 +20,7 @@ import RegisterPage from './src/pages/RegisterPage';
 import OTPVerificationPage from './src/pages/OTPVerificationPage';
 import CustomerDashboard from './src/pages/dashboard/CustomerDashboard';
 import DriverDashboard from './src/pages/dashboard/DriverDashboard';
+import StoreDashboard from './src/pages/dashboard/StoreDashboard';
 import AdminDashboard from './src/pages/dashboard/AdminDashboard';
 import CheckoutPage from './src/pages/CheckoutPage';
 import TermsPage from './src/pages/TermsPage';
@@ -126,11 +127,24 @@ const AppContent = () => {
 
   // Show dashboard based on user type
   if (activeTab === 'profile') {
-    if (user?.user_type === 'customer') {
-      return <CustomerDashboard onBack={() => setActiveTab('home')} />;
+    if (user?.user_type === 'customer' || !user?.user_type) {
+      return (
+        <CustomerDashboard 
+          onBack={() => setActiveTab('home')} 
+        />
+      );
     }
     if (user?.user_type === 'driver') {
       return <DriverDashboard onBack={() => setActiveTab('home')} />;
+    }
+    if (user?.user_type === 'store_owner') {
+      return (
+        <StoreDashboard 
+          onBack={() => setActiveTab('home')}
+          onSetupStore={() => {/* Navigate to store setup */}}
+          onManageProducts={() => {/* Navigate to products management */}}
+        />
+      );
     }
     if (user?.user_type === 'admin') {
       return <AdminDashboard onBack={() => setActiveTab('home')} />;

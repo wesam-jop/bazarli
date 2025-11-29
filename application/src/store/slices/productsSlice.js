@@ -23,6 +23,25 @@ export const productsApiSlice = apiSlice.injectEndpoints({
       query: (id) => `/categories/${id}`,
       providesTags: (result, error, id) => [{ type: 'Categories', id }],
     }),
+    // Favorites endpoints
+    getFavorites: builder.query({
+      query: () => '/favorites',
+      providesTags: ['Favorites'],
+    }),
+    addToFavorites: builder.mutation({
+      query: (productId) => ({
+        url: `/favorites/${productId}`,
+        method: 'POST',
+      }),
+      invalidatesTags: ['Favorites'],
+    }),
+    removeFromFavorites: builder.mutation({
+      query: (productId) => ({
+        url: `/favorites/${productId}`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Favorites'],
+    }),
   }),
 });
 
@@ -31,6 +50,9 @@ export const {
   useGetProductQuery,
   useGetCategoriesQuery,
   useGetCategoryQuery,
+  useGetFavoritesQuery,
+  useAddToFavoritesMutation,
+  useRemoveFromFavoritesMutation,
 } = productsApiSlice;
 
 // Products slice for local state

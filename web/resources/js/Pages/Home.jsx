@@ -103,7 +103,7 @@ export default function Home({ categories, featuredProducts, featuredStores = []
             </Head>
 
                 {/* Hero Section */}
-                <section className="relative overflow-hidden bg-gradient-to-br from-primary-900 via-primary-800 to-primary-950 text-white min-h-[500px] md:min-h-[600px]">
+                <section className="relative overflow-hidden bg-gradient-to-br from-primary-600 via-primary-800 to-primary-500 text-white min-h-[500px] md:min-h-[600px]">
                     <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
                         <div className="grid md:grid-cols-2 gap-16 items-center">
                             {/* Left Side - Content */}
@@ -114,7 +114,7 @@ export default function Home({ categories, featuredProducts, featuredStores = []
                                 <p className="text-xl md:text-2xl text-white/90">
                                     {t('welcome_subtitle')}
                                 </p>
-                                <div className={`flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4 justify-center ${isRTL ? 'md:justify-end' : 'md:justify-start'}`}>
+                                <div className={`flex flex-wrap gap-3 sm:gap-4 pt-4 justify-center ${isRTL ? 'md:justify-end' : 'md:justify-start'}`}>
                                     <Link 
                                         href="/products" 
                                         className="flex items-center justify-center gap-2 bg-white text-primary-600 px-6 sm:px-8 py-3 rounded-full font-semibold hover:bg-secondary-50 transition-all text-center shadow-xl shadow-primary-900/40 hover:scale-105"

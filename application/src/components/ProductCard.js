@@ -19,17 +19,19 @@ const ProductCard = ({ product, onPress, index = 0 }) => {
 
   // Create a safe copy of product data
   const productData = useMemo(() => {
+    const finalPrice = product?.final_price || product?.discount_price || product?.price || 0;
     return {
       id: product?.id || 0,
       name: product?.name || '',
-      price: product?.final_price || product?.price || '0',
+      price: product?.price || 0,
+      final_price: finalPrice,
       discount_price: product?.discount_price,
       category: product?.category || null,
       categoryLabel: product?.category?.name || product?.categoryLabel || '',
       governorate: product?.store?.governorate || null,
-      governorateLabel: product?.store?.governorate?.name || product?.governorateLabel || '',
+      governorateLabel: product?.store?.governorate?.name_ar || product?.store?.governorate?.name || product?.governorateLabel || '',
       city: product?.store?.city || null,
-      cityLabel: product?.store?.city?.name || product?.areaLabel || '',
+      cityLabel: product?.store?.city?.name_ar || product?.store?.city?.name || product?.areaLabel || '',
       image: product?.image || null,
     };
   }, [product]);

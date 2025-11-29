@@ -35,7 +35,7 @@ const CheckoutPage = ({ navigation, onSuccess }) => {
     customer_phone: user?.phone || '',
     payment_method: 'cash',
     notes: '',
-    store_id: null,
+    location_notes: '',
   });
 
   const cartItems = cartData?.data?.items || [];
@@ -55,15 +55,6 @@ const CheckoutPage = ({ navigation, onSuccess }) => {
     }
   }, [deliveryLocations]);
 
-  // Get store_id from first cart item
-  useEffect(() => {
-    if (cartItems.length > 0 && cartItems[0].product?.store?.id) {
-      setFormData((prev) => ({
-        ...prev,
-        store_id: cartItems[0].product.store.id,
-      }));
-    }
-  }, [cartItems]);
 
   const handleChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -81,31 +72,46 @@ const CheckoutPage = ({ navigation, onSuccess }) => {
       return;
     }
 
-    if (!formData.store_id) {
-      Alert.alert(t('error'), t('storeRequired'));
-      return;
-    }
-
     if (cartItems.length === 0) {
       Alert.alert(t('error'), t('cartEmpty'));
       return;
     }
 
-    // Prepare order items
-    const items = cartItems.map((item) => ({
-      product_id: item.product.id,
-      quantity: item.quantity,
+    // Group items by store
+    const storesMap = {};
+    cartItems.forEach((item) => {
+      const storeId = item.product?.store?.id;
+      if (storeId) {
+        if (!storesMap[storeId]) {
+          storesMap[storeId] = [];
+        }
+        storesMap[storeId].push({
+          product_id: item.product.id,
+          quantity: item.quantity,
+        });
+      }
+    });
+
+    // Convert to stores array format
+    const stores = Object.keys(storesMap).map((storeId) => ({
+      store_id: parseInt(storeId),
+      items: storesMap[storeId],
     }));
 
+    if (stores.length === 0) {
+      Alert.alert(t('error'), t('storeRequired'));
+      return;
+    }
+
     const orderData = {
-      store_id: formData.store_id,
+      stores,
       delivery_address: formData.delivery_address,
       delivery_latitude: formData.delivery_latitude || 0,
       delivery_longitude: formData.delivery_longitude || 0,
       customer_phone: formData.customer_phone,
       payment_method: formData.payment_method,
+      location_notes: formData.location_notes || '',
       notes: formData.notes,
-      items,
     };
 
     try {
@@ -254,6 +260,21 @@ const CheckoutPage = ({ navigation, onSuccess }) => {
               </TouchableOpacity>
             ))}
           </View>
+        </View>
+
+        {/* Location Notes */}
+        <View style={styles.section}>
+          <CustomText variant="h3" color={additionalColors.text} style={styles.sectionTitle}>
+            {t('location_notes')}
+          </CustomText>
+          <CustomInput
+            value={formData.location_notes}
+            onChangeText={(value) => handleChange('location_notes', value)}
+            placeholder={t('location_notes_placeholder')}
+            multiline
+            numberOfLines={2}
+            leftIcon={<Ionicons name="navigate-outline" size={20} color={additionalColors.textLight} />}
+          />
         </View>
 
         {/* Notes */}

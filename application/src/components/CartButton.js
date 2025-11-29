@@ -1,13 +1,15 @@
 import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useCart } from '../context/CartContext';
+import { useAppDispatch } from '../store/hooks';
+import { openCart, useGetCartCountQuery } from '../store/slices/cartSlice';
 import { colors, additionalColors } from '../constants/colors';
 import CustomText from './CustomText';
 
 const CartButton = () => {
-  const { getCartCount, setIsCartOpen } = useCart();
-  const count = getCartCount();
+  const dispatch = useAppDispatch();
+  const { data: countData } = useGetCartCountQuery();
+  const count = countData?.data?.count || 0;
   const scaleAnim = React.useRef(new Animated.Value(1)).current;
 
   React.useEffect(() => {
@@ -28,10 +30,14 @@ const CartButton = () => {
     }
   }, [count]);
 
+  const handleOpenCart = () => {
+    dispatch(openCart());
+  };
+
   return (
     <TouchableOpacity
       style={styles.button}
-      onPress={() => setIsCartOpen(true)}
+      onPress={handleOpenCart}
       activeOpacity={0.8}
     >
       <Animated.View style={[styles.iconContainer, { transform: [{ scale: scaleAnim }] }]}>
@@ -74,7 +80,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: -4,
     right: -4,
-    backgroundColor: colors.accent,
+    backgroundColor: additionalColors.error,
     borderRadius: 12,
     minWidth: 24,
     height: 24,
@@ -91,4 +97,3 @@ const styles = StyleSheet.create({
 });
 
 export default CartButton;
-

@@ -1,11 +1,19 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, TouchableOpacity, StyleSheet, Platform, StatusBar } from 'react-native';
 import { useLanguage } from '../context/LanguageContext';
 import { colors, additionalColors } from '../constants/colors';
 import CustomText from './CustomText';
+import { useAppSelector } from '../store/hooks';
+import { useGetSettingsQuery } from '../store/slices/settingsSlice';
 
 const Header = () => {
   const { language, changeLanguage, t, isRTL } = useLanguage();
+  
+  // Fetch settings from API
+  const { data: settingsData } = useGetSettingsQuery();
+  
+  // Get app name from Redux store (will be updated when API returns)
+  const appName = useAppSelector((state) => state.settings.appName);
 
   const toggleLanguage = () => {
     const newLanguage = language === 'ar' ? 'en' : 'ar';
@@ -24,7 +32,7 @@ const Header = () => {
     >
       <StatusBar barStyle="light-content" backgroundColor={colors.primary} />
       
-      {/* App Name */}
+      {/* App Name - From Backend Settings */}
       <View 
         style={[
           styles.appNameContainer, 
@@ -35,11 +43,11 @@ const Header = () => {
       >
         <CustomText 
           style={styles.appName}
-          translate={true}
-          translationKey="appName"
           color={colors.background}
           variant="h2"
-        />
+        >
+          {appName}
+        </CustomText>
       </View>
 
       {/* Language Switcher Button */}

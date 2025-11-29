@@ -7,6 +7,10 @@ import cartReducer from './slices/cartSlice';
 import ordersReducer from './slices/ordersSlice';
 import dashboardReducer from './slices/dashboardSlice';
 import locationReducer from './slices/locationSlice';
+import notificationsReducer from './slices/notificationsSlice';
+import settingsReducer from './slices/settingsSlice';
+import driverReducer from './slices/driverSlice';
+import storeOwnerReducer from './slices/storeOwnerSlice';
 
 export const store = configureStore({
   reducer: {
@@ -18,6 +22,10 @@ export const store = configureStore({
     orders: ordersReducer,
     dashboard: dashboardReducer,
     location: locationReducer,
+    notifications: notificationsReducer,
+    settings: settingsReducer,
+    driver: driverReducer,
+    storeOwner: storeOwnerReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

@@ -16,6 +16,19 @@ export const dashboardApiSlice = apiSlice.injectEndpoints({
       query: () => '/dashboard/admin',
       providesTags: ['Dashboard'],
     }),
+    // Profile endpoints
+    getProfile: builder.query({
+      query: () => '/profile',
+      providesTags: ['Profile'],
+    }),
+    updateProfile: builder.mutation({
+      query: (data) => ({
+        url: '/profile',
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['Profile', 'Dashboard'],
+    }),
   }),
 });
 
@@ -23,6 +36,8 @@ export const {
   useGetCustomerStatsQuery,
   useGetStoreStatsQuery,
   useGetAdminStatsQuery,
+  useGetProfileQuery,
+  useUpdateProfileMutation,
 } = dashboardApiSlice;
 
 // Dashboard slice for local state

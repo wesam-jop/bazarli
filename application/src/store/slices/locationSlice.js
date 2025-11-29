@@ -19,7 +19,7 @@ export const locationApiSlice = apiSlice.injectEndpoints({
       query: () => '/delivery-locations',
       providesTags: ['DeliveryLocations'],
     }),
-    createDeliveryLocation: builder.mutation({
+    addDeliveryLocation: builder.mutation({
       query: (data) => ({
         url: '/delivery-locations',
         method: 'POST',
@@ -42,7 +42,7 @@ export const locationApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: ['DeliveryLocations'],
     }),
-    setDefaultDeliveryLocation: builder.mutation({
+    setDefaultLocation: builder.mutation({
       query: (id) => ({
         url: `/delivery-locations/${id}/default`,
         method: 'POST',
@@ -56,10 +56,10 @@ export const {
   useGetGovernoratesQuery,
   useGetCitiesQuery,
   useGetDeliveryLocationsQuery,
-  useCreateDeliveryLocationMutation,
+  useAddDeliveryLocationMutation,
   useUpdateDeliveryLocationMutation,
   useDeleteDeliveryLocationMutation,
-  useSetDefaultDeliveryLocationMutation,
+  useSetDefaultLocationMutation,
 } = locationApiSlice;
 
 // Location slice for local state
@@ -88,4 +88,3 @@ const locationSlice = createSlice({
 
 export const { setSelectedGovernorate, setSelectedCity, clearSelection } = locationSlice.actions;
 export default locationSlice.reducer;
-
