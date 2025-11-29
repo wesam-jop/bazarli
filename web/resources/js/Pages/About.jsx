@@ -98,7 +98,7 @@ export default function About() {
                                     Our Story
                                 </h2>
                                 <p className="text-lg text-slate-600 mb-6">
-                                    Getir Clone was born from a simple idea: to make grocery shopping 
+                                    DeliGo was born from a simple idea: to make grocery shopping 
                                     as convenient as possible. We understand that time is precious, 
                                     and we believe that getting your daily essentials shouldn't 
                                     take up your valuable time.

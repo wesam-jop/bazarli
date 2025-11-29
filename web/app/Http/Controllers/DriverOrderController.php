@@ -100,7 +100,7 @@ class DriverOrderController extends Controller
 
             if ($order->status !== 'pending_driver_approval' || $order->delivery_driver_id !== null) {
                 DB::rollBack();
-                return back()->with('error', 'الطلب غير متاح للقبول أو تم قبوله من قبل عامل توصيل آخر');
+                return back()->with('error', __('order_not_available_or_taken'));
             }
 
             // تحديث الطلب بقبول عامل التوصيل
@@ -136,10 +136,10 @@ class DriverOrderController extends Controller
                 }
             }
 
-            return back()->with('success', 'تم قبول الطلب بنجاح. تم إرساله للمتاجر للتحضير.');
+            return back()->with('success', __('order_accepted_successfully'));
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'حدث خطأ أثناء قبول الطلب: ' . $e->getMessage());
+            return back()->with('error', __('error_accepting_order', ['error' => $e->getMessage()]));
         }
     }
 
@@ -195,7 +195,7 @@ class DriverOrderController extends Controller
                 ->map(fn ($os) => $os->store->name . ': ' . $os->status)
                 ->implode(', ');
             
-            return back()->with('error', 'يجب أن تقبل جميع المتاجر الطلب أولاً. الحالة الحالية: ' . $storesStatus);
+            return back()->with('error', __('all_stores_must_accept', ['status' => $storesStatus]));
         }
 
         // التحقق من أن على الأقل متجر واحد جاهز
@@ -204,7 +204,7 @@ class DriverOrderController extends Controller
             ->count();
 
         if ($readyStores === 0) {
-            return back()->with('error', 'لا يوجد متاجر جاهزة بعد. يرجى الانتظار حتى تقبل المتاجر الطلب.');
+            return back()->with('error', __('no_stores_ready_yet'));
         }
 
         // تحديث حالة الطلب - جاهز لأخذ الطلب من المتاجر
@@ -212,7 +212,7 @@ class DriverOrderController extends Controller
             'status' => 'driver_picked_up',
         ]);
 
-        return back()->with('success', 'تم أخذ الطلب من المتاجر بنجاح');
+        return back()->with('success', __('order_picked_from_stores'));
     }
 
     /**

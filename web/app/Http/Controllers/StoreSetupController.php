@@ -23,7 +23,7 @@ class StoreSetupController extends Controller
         }
 
         if ($user->stores()->exists()) {
-            return redirect()->route('dashboard.store')->with('success', __('store_setup_already_completed'));
+            return redirect()->route('dashboard.store')->with('success', __('app.store_setup_already_completed'));
         }
 
         $storeTypes = StoreType::active()
@@ -75,7 +75,7 @@ class StoreSetupController extends Controller
         }
 
         if ($user->stores()->exists()) {
-            return redirect()->route('dashboard.store')->with('success', __('store_setup_already_completed'));
+            return redirect()->route('dashboard.store')->with('success', __('app.store_setup_already_completed'));
         }
 
         $validated = $request->validate([
@@ -125,7 +125,7 @@ class StoreSetupController extends Controller
         $user->city_id = $validated['city_id'];
         $user->save();
 
-        return redirect()->route('dashboard.store')->with('success', __('store_setup_success'));
+        return redirect()->route('dashboard.store')->with('success', __('app.store_setup_success'));
     }
 
     private function generateStoreCode(string $name): string

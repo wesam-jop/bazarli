@@ -97,12 +97,12 @@ class StoreOrderController extends Controller
 
         // التحقق من أن عامل التوصيل قبل الطلب أولاً
         if ($order->status === 'pending_driver_approval' || !$order->delivery_driver_id) {
-            return back()->with('error', 'يجب أن يقبل عامل التوصيل الطلب أولاً قبل أن تتمكن من قبوله');
+            return back()->with('error', __('driver_must_accept_first'));
         }
 
         // يمكن قبول الطلب من حالة pending_store_approval أو store_preparing أو ready_for_delivery
         if (!in_array($orderStore->status, ['pending_store_approval', 'store_preparing', 'ready_for_delivery'])) {
-            return back()->with('error', 'لا يمكن قبول الطلب في الحالة الحالية: ' . $orderStore->status);
+            return back()->with('error', __('cannot_accept_order_current_status', ['status' => $orderStore->status]));
         }
 
         DB::beginTransaction();
@@ -123,10 +123,10 @@ class StoreOrderController extends Controller
             }
 
             DB::commit();
-            return back()->with('success', 'تم قبول الطلب بنجاح. يمكنك الآن بدء التحضير.');
+            return back()->with('success', __('store_order_accepted'));
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'حدث خطأ أثناء قبول الطلب: ' . $e->getMessage());
+            return back()->with('error', __('error_accepting_order', ['error' => $e->getMessage()]));
         }
     }
 
@@ -143,12 +143,12 @@ class StoreOrderController extends Controller
 
         // يمكن رفض الطلب في أي مرحلة قبل أن يأخذه عامل التوصيل
         if (in_array($order->status, ['driver_picked_up', 'out_for_delivery', 'on_delivery', 'delivered'])) {
-            return back()->with('error', 'لا يمكن رفض الطلب بعد أن أخذ عامل التوصيل الطلب');
+            return back()->with('error', __('cannot_reject_after_pickup'));
         }
 
         // لا يمكن رفض طلب تم رفضه مسبقاً
         if ($orderStore->status === 'store_rejected') {
-            return back()->with('error', 'تم رفض هذا الطلب مسبقاً');
+            return back()->with('error', __('order_already_rejected'));
         }
 
         DB::beginTransaction();
@@ -176,11 +176,11 @@ class StoreOrderController extends Controller
 
             DB::commit();
 
-            return back()->with('success', 'تم رفض الطلب وإرجاع المنتجات للمخزون');
+            return back()->with('success', __('order_rejected_stock_restored'));
 
         } catch (\Exception $e) {
             DB::rollBack();
-            return back()->with('error', 'حدث خطأ أثناء رفض الطلب: ' . $e->getMessage());
+            return back()->with('error', __('error_rejecting_order', ['error' => $e->getMessage()]));
         }
     }
 }

@@ -90,7 +90,7 @@ class OrderController extends Controller
             ]);
         }
 
-        return redirect()->back()->with('success', 'Order status updated successfully');
+        return redirect()->back()->with('success', __('order_status_updated'));
     }
 }
 

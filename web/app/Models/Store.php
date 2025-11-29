@@ -128,4 +128,32 @@ class Store extends Model
 
         return app()->getLocale() === 'ar' ? $storeType->name_ar : $storeType->name_en;
     }
+
+    /**
+     * Get the full logo URL
+     */
+    public function getLogoAttribute(): ?string
+    {
+        $logoPath = $this->logo_path;
+        
+        if (!$logoPath) {
+            return null;
+        }
+
+        // If it's already a full URL, return as is
+        if (str_starts_with($logoPath, 'http://') || str_starts_with($logoPath, 'https://')) {
+            return $logoPath;
+        }
+
+        // Otherwise, prepend storage path
+        return asset('storage/' . $logoPath);
+    }
+
+    /**
+     * Get the full logo URL (alias)
+     */
+    public function getLogoUrlAttribute(): ?string
+    {
+        return $this->logo;
+    }
 }

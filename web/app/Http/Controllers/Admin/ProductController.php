@@ -47,7 +47,7 @@ class ProductController extends Controller
             'is_available' => !$product->is_available,
         ]);
 
-        return redirect()->back()->with('success', 'Product availability updated successfully');
+        return redirect()->back()->with('success', __('product_availability_updated'));
     }
 
     public function toggleFeatured(Product $product)
@@ -56,7 +56,7 @@ class ProductController extends Controller
             'is_featured' => !$product->is_featured,
         ]);
 
-        return redirect()->back()->with('success', 'Product featured status updated successfully');
+        return redirect()->back()->with('success', __('product_featured_updated'));
     }
 }
 

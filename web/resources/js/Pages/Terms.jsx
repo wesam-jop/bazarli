@@ -39,7 +39,7 @@ export default function Terms({ intro, lastUpdated, sections = [] }) {
                             </div>
                             <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/10">
                                 <CheckCircle className="w-4 h-4" />
-                                <span>{t('terms_applicable')} {settings?.site_name || 'Getir Clone'}</span>
+                                <span>{t('terms_applicable')} {settings?.site_name || 'DeliGo'}</span>
                             </div>
                         </div>
                     </div>

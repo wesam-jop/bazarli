@@ -2,7 +2,7 @@
     use App\Models\Setting;
     $currentLocale = session('locale', Setting::get('default_language', app()->getLocale()));
     $isRTL = $currentLocale === 'ar';
-    $siteName = Setting::get('site_name', config('app.name', 'Getir Clone'));
+    $siteName = Setting::get('site_name', config('app.name', 'DeliGo'));
     $siteFavicon = Setting::get('site_favicon', '');
 @endphp
 

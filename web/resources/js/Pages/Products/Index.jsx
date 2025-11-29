@@ -31,6 +31,7 @@ import {
 
 export default function ProductsIndex({ products, categories, governorates, cities: initialCities, filters, userGovernorateId, userCityId }) {
     const { t, locale } = useTranslation();
+    const isRTL = locale === 'ar';
     
     // حماية من البيانات غير المحددة
     const safeFilters = filters || {};
@@ -233,9 +234,9 @@ export default function ProductsIndex({ products, categories, governorates, citi
                                             value={search}
                                             onChange={(e) => setSearch(e.target.value)}
                                             placeholder={t('search_products')}
-                                            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors text-sm"
+                                            className="w-full ps-10 pe-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors text-sm"
                                         />
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <div className={`absolute inset-y-0 ${isRTL ? 'right-0 pr-3' : 'left-0 pl-3'} flex items-center pointer-events-none`}>
                                             <Search className="h-5 w-5 text-gray-400" />
                                         </div>
                                     </div>
@@ -255,7 +256,7 @@ export default function ProductsIndex({ products, categories, governorates, citi
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
                     <div className="flex flex-col lg:flex-row gap-4 md:gap-6">
                         {/* Sidebar - Filters (Desktop Only) */}
-                        <div className="hidden lg:block lg:w-1/4">
+                        <div className={`hidden lg:block lg:w-1/4 ${isRTL ? 'lg:order-2' : 'lg:order-1'}`}>
                             <div className="bg-white rounded-lg shadow-sm p-4 md:p-6 sticky top-4">
                                 <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-4">{t('search_and_filter') || 'البحث والترتيب'}</h3>
                                 
@@ -267,9 +268,9 @@ export default function ProductsIndex({ products, categories, governorates, citi
                                             value={search}
                                             onChange={(e) => setSearch(e.target.value)}
                                             placeholder={t('search_products')}
-                                            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors text-sm md:text-base"
+                                            className="w-full ps-10 pe-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-colors text-sm md:text-base"
                                         />
-                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                        <div className={`absolute inset-y-0 ${isRTL ? 'right-0 pr-3' : 'left-0 pl-3'} flex items-center pointer-events-none`}>
                                             <Search className="h-5 w-5 text-gray-400" />
                                         </div>
                                     </div>
@@ -386,15 +387,15 @@ export default function ProductsIndex({ products, categories, governorates, citi
                                             <button
                                                 key={option.value}
                                                 onClick={() => handleSortChange(option.value)}
-                                                className={`w-full text-right px-3 py-2 rounded-lg text-sm transition-colors ${
+                                                className={`w-full text-start px-3 py-2 rounded-lg text-sm transition-colors flex items-center justify-between ${
                                                     sortBy === option.value 
                                                         ? 'bg-primary-100 text-primary-700 border border-primary-200' 
                                                         : 'text-gray-600 hover:bg-secondary-100 border border-transparent'
                                                 }`}
                                             >
-                                                {option.label}
+                                                <span>{option.label}</span>
                                                 {sortBy === option.value && (
-                                                    <span className="mr-2">
+                                                    <span className="text-primary-600">
                                                         {sortDirection === 'asc' ? '↑' : '↓'}
                                                     </span>
                                                 )}
@@ -406,7 +407,7 @@ export default function ProductsIndex({ products, categories, governorates, citi
                         </div>
 
                         {/* Products Grid */}
-                        <div className="lg:w-3/4 w-full">
+                        <div className={`lg:w-3/4 w-full ${isRTL ? 'lg:order-1' : 'lg:order-2'}`}>
                             <div className="mb-4 md:mb-6 flex items-center justify-between flex-wrap gap-2">
                                 <p className="text-gray-600 text-sm md:text-base">
                                     {t('showing_products') || 'عرض'} <span className="font-semibold text-gray-900">{safeProducts.data.length}</span> {t('of') || 'من'} <span className="font-semibold text-gray-900">{safeProducts.total}</span> {t('products') || 'منتج'}
@@ -430,7 +431,7 @@ export default function ProductsIndex({ products, categories, governorates, citi
                             {/* Pagination */}
                             {safeProducts.links && safeProducts.links.length > 3 && (
                                 <div className="mt-6 md:mt-8 flex justify-center overflow-x-auto">
-                                    <nav className="flex space-x-2">
+                                    <nav className="flex gap-2">
                                         {safeProducts.links.map((link, index) => (
                                             <Link
                                                 key={index}
@@ -593,7 +594,7 @@ export default function ProductsIndex({ products, categories, governorates, citi
                                                     handleSortChange(option.value);
                                                     setIsFilterModalOpen(false);
                                                 }}
-                                                className={`w-full text-right px-4 py-3 rounded-lg text-sm transition-colors ${
+                                                className={`w-full text-start px-4 py-3 rounded-lg text-sm transition-colors ${
                                                     sortBy === option.value 
                                                         ? 'bg-primary-100 text-primary-700 border-2 border-primary-500' 
                                                         : 'text-gray-600 hover:bg-secondary-100 border-2 border-transparent hover:border-gray-200'

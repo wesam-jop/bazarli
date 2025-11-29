@@ -47,10 +47,10 @@ class NotificationController extends Controller
         $success = $this->notificationService->markAsRead($id, $user->id);
 
         if ($success) {
-            return redirect()->back()->with('success', 'Notification marked as read');
+            return redirect()->back()->with('success', __('notification_marked_read'));
         }
 
-        return redirect()->back()->with('error', 'Notification not found');
+        return redirect()->back()->with('error', __('notification_not_found'));
     }
 
     public function markAllAsRead()
@@ -58,7 +58,7 @@ class NotificationController extends Controller
         $user = Auth::user();
         $count = $this->notificationService->markAllAsRead($user->id);
 
-        return redirect()->back()->with('success', "Marked {$count} notifications as read");
+        return redirect()->back()->with('success', __('notifications_marked_read', ['count' => $count]));
     }
 
     public function destroy(int $id)
@@ -67,10 +67,10 @@ class NotificationController extends Controller
         $success = $this->notificationService->delete($id, $user->id);
 
         if ($success) {
-            return redirect()->back()->with('success', 'Notification deleted');
+            return redirect()->back()->with('success', __('notification_deleted'));
         }
 
-        return redirect()->back()->with('error', 'Notification not found');
+        return redirect()->back()->with('error', __('notification_not_found'));
     }
 
     public function subscribe(Request $request)

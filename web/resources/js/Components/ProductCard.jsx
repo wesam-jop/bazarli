@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, router } from '@inertiajs/react';
 import { useTranslation } from '../hooks/useTranslation';
 import FavoriteToggleButton from './FavoriteToggleButton';
@@ -7,6 +7,7 @@ import { Package, Plus, DollarSign, Store, MapPin } from 'lucide-react';
 export default function ProductCard({ product, showAddToCart = true }) {
     const { t, locale } = useTranslation();
     const isRTL = locale === 'ar';
+    const [imageError, setImageError] = useState(false);
 
     const handleAddToCart = (e) => {
         e.preventDefault();
@@ -30,15 +31,24 @@ export default function ProductCard({ product, showAddToCart = true }) {
             </div>
             {/* Featured Badge */}
             {product.is_featured && (
-                <div className="absolute top-2 right-2 z-10">
+                <div className={`absolute top-2 z-10 ${isRTL ? 'left-2' : 'right-2'}`}>
                     <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-yellow-400 text-yellow-900 shadow-md">
                         ⭐ {t('featured')}
                     </span>
                 </div>
             )}
             <Link href={`/products/${product.id}`}>
-                <div className="aspect-square bg-secondary-50 flex items-center justify-center p-4">
-                    <Package className="w-16 h-16 text-primary-600 group-hover:scale-110 transition-transform duration-200" />
+                <div className="aspect-square bg-secondary-50 flex items-center justify-center overflow-hidden">
+                    {product.image && !imageError ? (
+                        <img 
+                            src={product.image} 
+                            alt={product.name}
+                            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-200"
+                            onError={() => setImageError(true)}
+                        />
+                    ) : (
+                        <Package className="w-16 h-16 text-primary-600 group-hover:scale-110 transition-transform duration-200" />
+                    )}
                 </div>
                 <div className="p-4">
                     <h3 className="font-semibold text-gray-900 mb-1 group-hover:text-primary-600 transition-colors">
@@ -70,7 +80,7 @@ export default function ProductCard({ product, showAddToCart = true }) {
                     )}
                     
                     <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-1">
+                        <div className="flex items-center gap-1">
                             <DollarSign className="w-4 h-4 text-success-600" />
                             <span className="text-lg font-bold text-gray-900">
                                 {product.price}
@@ -87,7 +97,7 @@ export default function ProductCard({ product, showAddToCart = true }) {
                 <div className="px-4 pb-4">
                     <button
                         onClick={handleAddToCart}
-                        className="w-full flex items-center justify-center space-x-2 bg-primary-600 text-white py-2 px-4 rounded-lg hover:bg-primary-700 transition-colors"
+                        className="w-full flex items-center justify-center gap-2 bg-primary-600 text-white py-2 px-4 rounded-lg hover:bg-primary-700 transition-colors"
                     >
                         <Plus className="w-4 h-4" />
                         <span>{t('add_to_cart')}</span>

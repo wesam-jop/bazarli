@@ -200,7 +200,7 @@ export default function StoreProfile({ profile }) {
                                         <div className="w-24 h-24 rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50 flex items-center justify-center overflow-hidden">
                                             {currentLogo ? (
                                                 <img
-                                                    src={currentLogo.startsWith('http') ? currentLogo : `/storage/${currentLogo}`}
+                                                    src={currentLogo}
                                                     alt="Store logo"
                                                     className="w-full h-full object-cover"
                                                 />

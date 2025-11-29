@@ -68,12 +68,26 @@ export default function CustomerLayout({ children, title }) {
     }, []);
 
     return (
-        <div className="min-h-screen bg-slate-50">
+        <div className="min-h-screen bg-slate-50" dir={isRTL ? 'rtl' : 'ltr'}>
             <Head title={title} />
 
+            {/* Mobile Overlay */}
+            {sidebarOpen && (
+                <div 
+                    className="fixed inset-0 z-30 bg-black/50 lg:hidden"
+                    onClick={() => setSidebarOpen(false)}
+                />
+            )}
+
             {/* Sidebar */}
-            <div className={`customer-sidebar fixed inset-y-0 ${isRTL ? 'right-0' : 'left-0'} z-40 w-64 ${isRTL ? 'border-l' : 'border-r'} border-slate-200 bg-white shadow-xl transition-transform duration-300 ${sidebarOpen ? 'translate-x-0' : (isRTL ? 'translate-x-full' : '-translate-x-full')} lg:translate-x-0`}>
-                <div className="flex items-center justify-between h-16 px-5 border-b border-slate-200">
+            <div 
+                className={`dashboard-sidebar fixed inset-y-0 z-40 w-64 bg-white shadow-xl transition-transform duration-300 ${
+                    isRTL 
+                        ? `border-l border-slate-200 ${sidebarOpen ? 'translate-x-0' : 'translate-x-full'} lg:translate-x-0` 
+                        : `border-r border-slate-200 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0`
+                }`}
+            >
+                <div className="flex items-center justify-between h-16 px-5 border-b border-slate-200 bg-secondary-200">
                     <Link href="/" className="flex items-center gap-3">
                         <DeliGoLogo height={28} />
                     </Link>
@@ -89,7 +103,7 @@ export default function CustomerLayout({ children, title }) {
                             href={href}
                             className={`flex items-center ${isRTL ? 'flex-row-reverse space-x-reverse' : ''} gap-3 rounded-xl px-3 py-3 text-sm font-medium transition-colors ${
                                 url === href
-                                    ? 'bg-purple-50 text-purple-700 border border-purple-100'
+                                    ? 'bg-primary-50 text-primary-700 border border-primary-100'
                                     : 'text-slate-600 hover:bg-slate-100'
                             }`}
                         >
@@ -102,7 +116,7 @@ export default function CustomerLayout({ children, title }) {
                 <div className="mt-auto p-4 border-t border-slate-200">
                     <div className={`flex items-center ${isRTL ? 'flex-row-reverse space-x-reverse' : ''} gap-3`}>
                         <UserAvatar user={user} size={44} />
-                        <div>
+                        <div className="text-start">
                             <p className="text-sm font-semibold text-slate-900">{user?.name}</p>
                             <p className="text-xs text-slate-500">{user?.phone}</p>
                         </div>
@@ -119,17 +133,17 @@ export default function CustomerLayout({ children, title }) {
             </div>
 
             {/* Main */}
-            <div className={`customer-main-content ${isRTL ? 'lg:pr-64' : 'lg:pl-64'}`}>
-                <header className="sticky top-0 z-30 bg-white border-b border-slate-200 shadow-sm">
-                    <div className={`flex items-center ${isRTL ? 'flex-row-reverse' : ''} justify-between h-16 px-4 sm:px-6 lg:px-8`}>
-                        <div className={`flex items-center ${isRTL ? 'flex-row-reverse space-x-reverse' : ''} gap-3`}>
+            <div className={isRTL ? 'lg:pr-64' : 'lg:pl-64'}>
+                <header className="dashboard-header sticky top-0 z-30 bg-white border-b border-slate-200 shadow-sm">
+                    <div className="flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
+                        <div className="flex items-center gap-3">
                             <button
                                 onClick={() => setSidebarOpen(true)}
                                 className="lg:hidden p-2 rounded-lg border border-slate-200 text-slate-600 hover:bg-slate-50"
                             >
                                 <Menu className="w-5 h-5" />
                             </button>
-                            <div>
+                            <div className="text-start">
                                 <p className="text-xs uppercase tracking-[0.3em] text-slate-400">{t('customer_dashboard')}</p>
                                 <h1 className="text-lg font-semibold text-slate-900">{title}</h1>
                             </div>
@@ -139,10 +153,11 @@ export default function CustomerLayout({ children, title }) {
                             <div className="hidden md:block">
                                 <div className="relative">
                                     <Search className={`absolute ${isRTL ? 'right-3' : 'left-3'} top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4`} />
+                                    <Search className={`absolute ${isRTL ? 'right-3' : 'left-3'} top-1/2 -translate-y-1/2 text-slate-400 w-4 h-4`} />
                                     <input
                                         type="text"
                                         placeholder={t('search')}
-                                        className={`w-64 ${isRTL ? 'pr-10 pl-4' : 'pl-10 pr-4'} py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm focus:ring-purple-500 focus:border-purple-500`}
+                                        className={`w-64 ${isRTL ? 'pr-10 pl-4' : 'pl-10 pr-4'} py-2 rounded-lg border border-slate-200 bg-slate-50 text-sm focus:ring-primary-500 focus:border-primary-500`}
                                     />
                                 </div>
                             </div>
@@ -155,18 +170,18 @@ export default function CustomerLayout({ children, title }) {
                             <div className="relative" ref={userMenuRef}>
                                 <button
                                     onClick={() => setUserMenuOpen(!userMenuOpen)}
-                                    className="flex items-center gap-2 rounded-lg border border-slate-200 px-2 py-1 text-left hover:bg-slate-50"
+                                    className="flex items-center gap-2 rounded-lg border border-slate-200 px-2 py-1 hover:bg-slate-50"
                                 >
                                     <UserAvatar user={user} size={36} />
-                                    <div className="hidden md:block">
+                                    <div className="hidden md:block text-start">
                                         <p className="text-sm font-semibold text-slate-900">{user?.name}</p>
                                         <p className="text-xs text-slate-500">{t('customer')}</p>
                                     </div>
                                     <ChevronDown className={`w-4 h-4 text-slate-500 transition-transform ${userMenuOpen ? 'rotate-180' : ''}`} />
                                 </button>
                                 {userMenuOpen && (
-                                    <div className={`absolute ${isRTL ? 'left-0' : 'right-0'} mt-2 w-56 bg-white rounded-xl border border-slate-200 shadow-lg`}>
-                                        <div className="px-4 py-3 border-b border-slate-100">
+                                    <div className={`dashboard-header absolute ${isRTL ? 'left-0' : 'right-0'} mt-2 w-56 bg-white rounded-xl border border-slate-200 shadow-lg z-50`}>
+                                        <div className="px-4 py-3 border-b border-slate-100 text-start">
                                             <p className="text-sm font-semibold text-slate-900">{user?.name}</p>
                                             <p className="text-xs text-slate-500">{user?.phone}</p>
                                         </div>
@@ -210,8 +225,8 @@ export default function CustomerLayout({ children, title }) {
                         </div>
                     </div>
                 </header>
-                 <main className="flex-1 bg-slate-50">
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                <main className="flex-1 bg-slate-50">
+                    <div className="dashboard-content max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                         {children}
                     </div>
                 </main>

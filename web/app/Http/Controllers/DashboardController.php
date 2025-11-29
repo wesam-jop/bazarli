@@ -165,7 +165,7 @@ class DashboardController extends Controller
 
         $user->update($data);
 
-        return redirect()->back()->with('success', __('Profile updated successfully!'));
+        return redirect()->back()->with('success', __('profile_updated'));
     }
 
     public function editStoreProfile()
@@ -260,7 +260,7 @@ class DashboardController extends Controller
         $user->update($userData);
         $store->update($storeData);
 
-        return redirect()->back()->with('success', __('Store profile updated successfully!'));
+        return redirect()->back()->with('success', __('store_profile_updated'));
     }
 
     public function store()
@@ -329,6 +329,18 @@ class DashboardController extends Controller
             ->limit(8)
             ->get();
 
+        // Product units
+        $productUnits = [
+            ['value' => 'piece', 'label' => __('app.unit_piece')],
+            ['value' => 'kg', 'label' => __('app.unit_kg')],
+            ['value' => 'pack', 'label' => __('app.unit_pack')],
+            ['value' => 'meal', 'label' => __('app.unit_meal')],
+            ['value' => 'sandwich', 'label' => __('app.unit_sandwich')],
+            ['value' => 'box', 'label' => __('app.unit_box')],
+            ['value' => 'bottle', 'label' => __('app.unit_bottle')],
+            ['value' => 'can', 'label' => __('app.unit_can')],
+        ];
+
         return Inertia::render('Dashboard/Store', [
             'store' => $store->append('store_type_label'),
             'stats' => $stats,
@@ -348,6 +360,7 @@ class DashboardController extends Controller
                     ];
                 }),
             'storeProducts' => $recentProducts,
+            'productUnits' => $productUnits,
         ]);
     }
 
@@ -386,13 +399,28 @@ class DashboardController extends Controller
                 return [
                     'id' => $product->id,
                     'name' => $product->name,
+                    'image' => $product->image,
                     'category' => $product->category?->display_name,
+                    'category_id' => $product->category_id,
+                    'description' => $product->description,
                     'price' => $product->price,
                     'unit' => $product->unit,
                     'is_available' => $product->is_available,
                     'created_at' => $product->created_at,
                 ];
             });
+
+        // Product units
+        $productUnits = [
+            ['value' => 'piece', 'label' => __('app.unit_piece')],
+            ['value' => 'kg', 'label' => __('app.unit_kg')],
+            ['value' => 'pack', 'label' => __('app.unit_pack')],
+            ['value' => 'meal', 'label' => __('app.unit_meal')],
+            ['value' => 'sandwich', 'label' => __('app.unit_sandwich')],
+            ['value' => 'box', 'label' => __('app.unit_box')],
+            ['value' => 'bottle', 'label' => __('app.unit_bottle')],
+            ['value' => 'can', 'label' => __('app.unit_can')],
+        ];
 
         return Inertia::render('Dashboard/StoreProducts', [
             'store' => [
@@ -402,6 +430,7 @@ class DashboardController extends Controller
             ],
             'productCategories' => $productCategories,
             'products' => $products,
+            'productUnits' => $productUnits,
         ]);
     }
 
@@ -884,6 +913,6 @@ class DashboardController extends Controller
 
         $user->update($data);
 
-        return redirect()->back()->with('success', __('Profile updated successfully!'));
+        return redirect()->back()->with('success', __('profile_updated'));
     }
 }

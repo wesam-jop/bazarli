@@ -90,6 +90,6 @@ class StoreWorkingHoursController extends Controller
             );
         }
 
-        return redirect()->back()->with('success', __('Working hours updated successfully!'));
+        return redirect()->back()->with('success', __('working_hours_updated'));
     }
 }

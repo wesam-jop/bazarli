@@ -63,7 +63,7 @@ class AdminAccessController extends Controller
         ]);
 
         return redirect()->route('admin.admin-access.index')
-            ->with('success', 'تم إضافة الصلاحية بنجاح');
+            ->with('success', __('admin_access_added'));
     }
 
     /**
@@ -115,7 +115,7 @@ class AdminAccessController extends Controller
         ]);
 
         return redirect()->route('admin.admin-access.index')
-            ->with('success', 'تم تحديث الصلاحية بنجاح');
+            ->with('success', __('admin_access_updated'));
     }
 
     /**
@@ -126,7 +126,7 @@ class AdminAccessController extends Controller
         $adminAccess->delete();
 
         return redirect()->route('admin.admin-access.index')
-            ->with('success', 'تم حذف الصلاحية بنجاح');
+            ->with('success', __('admin_access_deleted'));
     }
 
     /**
@@ -139,6 +139,6 @@ class AdminAccessController extends Controller
         ]);
 
         return redirect()->back()
-            ->with('success', 'تم تحديث حالة الصلاحية بنجاح');
+            ->with('success', __('admin_access_status_updated'));
     }
 }

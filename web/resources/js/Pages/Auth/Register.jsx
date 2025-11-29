@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { Head, Link, useForm, usePage } from '@inertiajs/react';
-import { ArrowRight, User, Sparkles, Store, Truck, MapPin } from 'lucide-react';
+import { ArrowRight, ArrowLeft, User, Store, Truck, MapPin, ChevronDown } from 'lucide-react';
 import PhoneInput from 'react-phone-input-2';
 import 'react-phone-input-2/lib/style.css';
 import Layout from '../Layout';
 import { useTranslation } from '../../hooks/useTranslation';
+import DeliGoLogo from '../../Components/DeliGoLogo';
 
 export default function Register({ governorates = [], areas: initialAreas = [] }) {
     const [isPhoneValid, setIsPhoneValid] = useState(false);
     const { t, locale } = useTranslation();
     const { props } = usePage();
+    const isRTL = locale === 'ar';
     
     // Get governorates from props if available
     const safeGovernorates = governorates || props?.governorates || [];
@@ -38,7 +40,7 @@ export default function Register({ governorates = [], areas: initialAreas = [] }
                 .catch(err => console.error('Error fetching cities:', err));
         } else {
             setAvailableAreas([]);
-            setData('city_id', ''); // Reset city when no governorate selected
+            setData('city_id', '');
         }
     }, [data.governorate_id]);
 
@@ -49,14 +51,11 @@ export default function Register({ governorates = [], areas: initialAreas = [] }
 
     const handlePhoneChange = (value, country) => {
         setData('phone', value);
-        // Basic validation - check if phone number is valid
-        // Remove country code from validation - just check if it's a reasonable length
         const phoneWithoutCode = value.replace(/\D/g, '');
         const isValid = phoneWithoutCode && phoneWithoutCode.length >= 9;
         setIsPhoneValid(isValid);
     };
     
-    // Validate phone when it changes via setData
     useEffect(() => {
         if (data.phone) {
             const phoneWithoutCode = data.phone.replace(/\D/g, '');
@@ -73,29 +72,43 @@ export default function Register({ governorates = [], areas: initialAreas = [] }
 
     return (
         <Layout>
-            <div className="relative min-h-screen bg-white py-14 px-4 sm:px-6 lg:px-8 overflow-hidden">
+            <div 
+                className="relative min-h-screen bg-gradient-to-br from-slate-50 via-white to-primary-50/30 py-8 sm:py-12 lg:py-16 px-4 sm:px-6 lg:px-8 overflow-hidden" 
+                dir={isRTL ? 'rtl' : 'ltr'}
+            >
                 <Head title={t('register_page_title')} />
-                {/* Background decoration with primary color */}
-                <div className="absolute inset-0 bg-gradient-to-br from-primary-900 via-primary-800 to-primary-950 opacity-5" />
-                <div className="absolute -top-32 -right-40 w-96 h-96 bg-primary-500/10 blur-[200px]" />
-                <div className="absolute -bottom-24 -left-32 w-96 h-96 bg-secondary-400/20 blur-[200px]" />
+                
+                {/* Background Elements */}
+                <div className="absolute inset-0 overflow-hidden pointer-events-none">
+                    <div className="absolute -top-40 -end-40 w-80 sm:w-96 h-80 sm:h-96 bg-primary-500/10 rounded-full blur-3xl" />
+                    <div className="absolute -bottom-40 -start-40 w-80 sm:w-96 h-80 sm:h-96 bg-secondary-400/15 rounded-full blur-3xl" />
+                    <div className="absolute top-1/2 start-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full max-w-4xl max-h-4xl bg-gradient-to-r from-primary-100/20 via-transparent to-secondary-100/20 rounded-full blur-3xl" />
+                </div>
 
-                <div className="relative z-10 max-w-md mx-auto space-y-8">
-                    <div className="text-center space-y-4">
-                        <div className="mx-auto h-20 w-20 rounded-2xl bg-gradient-to-br from-primary-600 to-primary-700 flex items-center justify-center shadow-xl shadow-primary-500/20">
-                            <Sparkles className="h-10 w-10" />
+                <div className="relative z-10 max-w-lg mx-auto">
+                    {/* Header Section */}
+                    <div className="text-center mb-8 sm:mb-10">
+                        {/* Logo with Site Name */}
+                        <div className="flex justify-center mb-6 ">
+                            <div className="p-4 sm:p-5 rounded-2xl sm:rounded-3xl shadow-xl shadow-primary-500/10 border border-slate-100 bg-secondary-200">
+                                <DeliGoLogo height={48} className="sm:hidden" />
+                                <DeliGoLogo height={56} className="hidden sm:flex" />
+                            </div>
                         </div>
-                        <div>
-                            <h2 className="text-3xl sm:text-4xl font-bold text-primary-900">{t('register_page_title')}</h2>
-                            <p className="text-base sm:text-lg text-secondary-600 mt-2">
-                                {t('register_page_subtitle')}
-                            </p>
-                        </div>
-                        <div className="flex flex-wrap justify-center gap-3 pt-2">
+                        
+                        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-900 mb-2 sm:mb-3">
+                            {t('register_page_title')}
+                        </h1>
+                        <p className="text-sm sm:text-base lg:text-lg text-slate-600 max-w-md mx-auto leading-relaxed px-2">
+                            {t('register_page_subtitle')}
+                        </p>
+                        
+                        {/* Badges */}
+                        <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mt-4 sm:mt-6">
                             {badges.map((badge) => (
                                 <span
                                     key={badge}
-                                    className="text-sm px-4 py-1.5 rounded-full border border-secondary-300 bg-secondary-50 text-primary-800 backdrop-blur"
+                                    className="text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-white border border-slate-200 text-slate-700 shadow-sm"
                                 >
                                     {badge}
                                 </span>
@@ -103,34 +116,39 @@ export default function Register({ governorates = [], areas: initialAreas = [] }
                         </div>
                     </div>
 
-                    <div className="bg-white rounded-3xl shadow-xl border border-secondary-200 p-6 sm:p-10">
-                        <div className="mb-6 rounded-2xl border border-primary-200 bg-gradient-to-r from-primary-50 to-secondary-50 p-5">
-                            <p className="text-primary-900 font-semibold mb-4">
+                    {/* Main Card */}
+                    <div className="bg-white rounded-2xl sm:rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden">
+                        {/* Info Banner */}
+                        <div className="bg-gradient-to-r from-primary-50 via-primary-50/80 to-secondary-50 p-4 sm:p-6 border-b border-slate-100">
+                            <p className="text-slate-800 font-medium text-sm sm:text-base mb-4 text-center sm:text-start">
                                 {t('register_info_banner')}
                             </p>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                <div className="flex items-start gap-3 rounded-2xl border border-primary-200 bg-white p-4 shadow-sm">
-                                    <div className="p-3 rounded-2xl bg-primary-100 text-primary-700">
-                                        <Store className="w-5 h-5" />
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                                {/* Store Owner Card */}
+                                <div className="flex items-start gap-3 rounded-xl sm:rounded-2xl bg-white p-3 sm:p-4 shadow-sm border border-slate-100 hover:shadow-md transition-shadow" style={{ flexDirection: 'row' }}>
+                                    <div className="p-2.5 sm:p-3 rounded-xl bg-primary-100 text-primary-600 flex-shrink-0">
+                                        <Store className="w-4 h-4 sm:w-5 sm:h-5" />
                                     </div>
-                                    <div>
-                                        <p className="font-semibold text-primary-900 text-sm sm:text-base">
+                                    <div className="min-w-0 flex-1 text-start">
+                                        <p className="font-semibold text-slate-900 text-sm sm:text-base">
                                             {t('register_upgrade_store_title')}
                                         </p>
-                                        <p className="text-xs sm:text-sm text-secondary-600">
+                                        <p className="text-xs sm:text-sm text-slate-500 mt-0.5 line-clamp-2">
                                             {t('register_upgrade_store_desc')}
                                         </p>
                                     </div>
                                 </div>
-                                <div className="flex items-start gap-3 rounded-2xl border border-accent-200 bg-white p-4 shadow-sm">
-                                    <div className="p-3 rounded-2xl bg-accent-100 text-accent-700">
-                                        <Truck className="w-5 h-5" />
+                                
+                                {/* Driver Card */}
+                                <div className="flex items-start gap-3 rounded-xl sm:rounded-2xl bg-white p-3 sm:p-4 shadow-sm border border-slate-100 hover:shadow-md transition-shadow" style={{ flexDirection: 'row' }}>
+                                    <div className="p-2.5 sm:p-3 rounded-xl bg-accent-100 text-accent-600 flex-shrink-0">
+                                        <Truck className="w-4 h-4 sm:w-5 sm:h-5" />
                                     </div>
-                                    <div>
-                                        <p className="font-semibold text-primary-900 text-sm sm:text-base">
+                                    <div className="min-w-0 flex-1 text-start">
+                                        <p className="font-semibold text-slate-900 text-sm sm:text-base">
                                             {t('register_upgrade_driver_title')}
                                         </p>
-                                        <p className="text-xs sm:text-sm text-secondary-600">
+                                        <p className="text-xs sm:text-sm text-slate-500 mt-0.5 line-clamp-2">
                                             {t('register_upgrade_driver_desc')}
                                         </p>
                                     </div>
@@ -138,186 +156,204 @@ export default function Register({ governorates = [], areas: initialAreas = [] }
                             </div>
                         </div>
 
-                        <form className="space-y-6" onSubmit={handleSubmit}>
+                        {/* Form */}
+                        <form className="p-4 sm:p-6 lg:p-8 space-y-4 sm:space-y-5" onSubmit={handleSubmit}>
+                            {/* Name Field */}
                             <div>
-                                <label className="block text-sm font-semibold text-primary-900 mb-2">
+                                <label className="block text-sm font-semibold text-slate-800 mb-2">
                                     {t('full_name')}
                                 </label>
                                 <div className="relative">
-                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <User className="h-5 w-5 text-secondary-400" />
+                                    <div className="absolute inset-y-0 start-0 ps-3.5 flex items-center pointer-events-none">
+                                        <User className="h-5 w-5 text-slate-400" />
                                     </div>
                                     <input
                                         type="text"
                                         value={data.name}
                                         onChange={(e) => setData('name', e.target.value)}
-                                        className="w-full pl-10 pr-3 py-3 rounded-2xl border border-secondary-300 text-primary-900 placeholder-secondary-400 focus:ring-2 focus:ring-primary-500 focus:border-primary-400 transition-all bg-white"
+                                        className="w-full ps-11 pe-4 py-3 sm:py-3.5 rounded-xl sm:rounded-2xl border border-slate-200 text-slate-900 placeholder-slate-400 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all bg-slate-50/50 focus:bg-white text-sm sm:text-base"
                                         placeholder={t('full_name_placeholder')}
                                         disabled={processing}
                                     />
                                 </div>
                                 {errors.name && (
-                                    <p className="mt-1 text-sm text-red-500">{errors.name}</p>
+                                    <p className="mt-1.5 text-sm text-red-500">{errors.name}</p>
                                 )}
                             </div>
 
+                            {/* Phone Field - Always LTR */}
                             <div>
-                                <label className="block text-sm font-semibold text-primary-900 mb-2">
+                                <label className="block text-sm font-semibold text-slate-800 mb-2 text-start">
                                     {t('phone_number')}
                                 </label>
-                                <div dir="ltr" className="relative">
+                                <div dir="ltr" className="relative phone-input-ltr" style={{ direction: 'ltr', textAlign: 'left' }}>
                                     <PhoneInput
                                         country={'sy'}
                                         value={data.phone}
                                         onChange={handlePhoneChange}
-                                        inputClass="!w-full !py-3 !pr-4 !pl-12 !rounded-2xl !border !border-secondary-300 !focus:outline-none !focus:ring-2 !focus:ring-primary-500 !focus:border-primary-400 !text-base !bg-white !text-primary-900"
-                                        buttonClass="!rounded-l-2xl !bg-secondary-50 !border-secondary-300 !focus:ring-2 !focus:ring-primary-500"
+                                        inputClass="!w-full !py-3 sm:!py-3.5 !pr-4 !pl-14 !rounded-xl sm:!rounded-2xl !border !border-slate-200 !focus:outline-none !focus:ring-2 !focus:ring-primary-500/20 !focus:border-primary-500 !text-sm sm:!text-base !bg-slate-50/50 focus:!bg-white !text-slate-900 !transition-all !text-left"
+                                        buttonClass="!rounded-l-xl sm:!rounded-l-2xl !bg-slate-100 !border-slate-200 !border-r-0"
                                         containerClass="!w-full"
+                                        containerStyle={{ direction: 'ltr', flexDirection: 'row' }}
                                         placeholder={t('phone_number_placeholder')}
                                         enableSearch
                                         inputProps={{
                                             maxLength: 17,
-                                        }}
-                                        style={{
-                                            fontFamily: locale === 'ar' ? 'Cairo, sans-serif' : 'Inter, sans-serif',
+                                            style: { direction: 'ltr', textAlign: 'left' }
                                         }}
                                     />
-                                </div>
+                                </div>  
                                 {errors.phone && (
-                                    <p className="mt-1 text-sm text-red-500">{errors.phone}</p>
+                                    <p className="mt-1.5 text-sm text-red-500 text-start">{errors.phone}</p>
                                 )}
                             </div>
 
-                            <div>
-                                <label className="block text-sm font-semibold text-primary-900 mb-2">
-                                    {t('governorate') || 'المحافظة'} *
-                                </label>
-                                <div className="relative">
-                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <MapPin className="h-5 w-5 text-secondary-400" />
+                            {/* Location Fields - Side by Side on Desktop */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                {/* Governorate Field */}
+                                <div>
+                                    <label className="block text-sm font-semibold text-slate-800 mb-2">
+                                        {t('governorate') || 'المحافظة'} <span className="text-red-500">*</span>
+                                    </label>
+                                    <div className="relative">
+                                        <div className="absolute inset-y-0 start-0 ps-3.5 flex items-center pointer-events-none">
+                                            <MapPin className="h-5 w-5 text-slate-400" />
+                                        </div>
+                                        <select
+                                            value={data.governorate_id}
+                                            onChange={(e) => {
+                                                const govId = e.target.value;
+                                                setData('governorate_id', govId);
+                                                setData('city_id', '');
+                                                setAvailableAreas([]);
+                                            }}
+                                            className="w-full ps-11 pe-9 py-3 sm:py-3.5 rounded-xl sm:rounded-2xl border border-slate-200 text-slate-900 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all bg-slate-50/50 focus:bg-white appearance-none cursor-pointer text-sm sm:text-base"
+                                            required
+                                            disabled={processing}
+                                        >
+                                            <option value="">{t('select_governorate') || 'اختر المحافظة'}</option>
+                                            {safeGovernorates.map((gov) => (
+                                                <option key={gov.id} value={gov.id}>
+                                                    {gov.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <div className="absolute inset-y-0 end-0 pe-3 flex items-center pointer-events-none">
+                                            <ChevronDown className="h-4 w-4 text-slate-400" />
+                                        </div>
                                     </div>
-                                    <select
-                                        value={data.governorate_id}
-                                        onChange={(e) => {
-                                            const govId = e.target.value;
-                                            setData('governorate_id', govId);
-                                            setData('city_id', ''); // Reset city when governorate changes
-                                            setAvailableAreas([]); // Clear cities until new ones are loaded
-                                        }}
-                                        className="w-full pl-10 pr-3 py-3 rounded-2xl border border-secondary-300 text-primary-900 focus:ring-2 focus:ring-primary-500 focus:border-primary-400 transition-all bg-white appearance-none"
-                                        required
-                                        disabled={processing}
-                                    >
-                                        <option value="">{t('select_governorate') || 'اختر المحافظة'}</option>
-                                        {safeGovernorates.map((gov) => (
-                                            <option key={gov.id} value={gov.id}>
-                                                {gov.name}
-                                            </option>
-                                        ))}
-                                    </select>
+                                    {errors.governorate_id && (
+                                        <p className="mt-1.5 text-sm text-red-500">{errors.governorate_id}</p>
+                                    )}
                                 </div>
-                                {errors.governorate_id && (
-                                    <p className="mt-1 text-sm text-red-500">{errors.governorate_id}</p>
-                                )}
-                            </div>
 
-                            <div>
-                                <label className="block text-sm font-semibold text-primary-900 mb-2">
-                                    {t('area') || 'المنطقة'} *
-                                </label>
-                                <div className="relative">
-                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <MapPin className="h-5 w-5 text-secondary-400" />
+                                {/* Area Field */}
+                                <div>
+                                    <label className="block text-sm font-semibold text-slate-800 mb-2">
+                                        {t('area') || 'المنطقة'} <span className="text-red-500">*</span>
+                                    </label>
+                                    <div className="relative">
+                                        <div className="absolute inset-y-0 start-0 ps-3.5 flex items-center pointer-events-none">
+                                            <MapPin className="h-5 w-5 text-slate-400" />
+                                        </div>
+                                        <select
+                                            value={data.city_id}
+                                            onChange={(e) => setData('city_id', e.target.value)}
+                                            className="w-full ps-11 pe-9 py-3 sm:py-3.5 rounded-xl sm:rounded-2xl border border-slate-200 text-slate-900 focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all bg-slate-50/50 focus:bg-white appearance-none cursor-pointer disabled:bg-slate-100 disabled:cursor-not-allowed disabled:text-slate-400 text-sm sm:text-base"
+                                            required
+                                            disabled={processing || !data.governorate_id || availableAreas.length === 0}
+                                        >
+                                            <option value="">{t('select_area') || 'اختر المنطقة'}</option>
+                                            {availableAreas.map((area) => (
+                                                <option key={area.id} value={area.id}>
+                                                    {area.name}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <div className="absolute inset-y-0 end-0 pe-3 flex items-center pointer-events-none">
+                                            <ChevronDown className="h-4 w-4 text-slate-400" />
+                                        </div>
                                     </div>
-                                    <select
-                                        value={data.city_id}
-                                        onChange={(e) => setData('city_id', e.target.value)}
-                                        className="w-full pl-10 pr-3 py-3 rounded-2xl border border-secondary-300 text-primary-900 focus:ring-2 focus:ring-primary-500 focus:border-primary-400 transition-all bg-white appearance-none disabled:bg-secondary-50 disabled:cursor-not-allowed"
-                                        required
-                                        disabled={processing || !data.governorate_id || availableAreas.length === 0}
-                                    >
-                                        <option value="">{t('select_area') || 'اختر المنطقة'}</option>
-                                        {availableAreas.map((area) => (
-                                            <option key={area.id} value={area.id}>
-                                                {area.name}
-                                            </option>
-                                        ))}
-                                    </select>
+                                    {!data.governorate_id && (
+                                        <p className="mt-1.5 text-xs text-slate-500">
+                                            {t('select_governorate_first') || 'يرجى اختيار المحافظة أولاً'}
+                                        </p>
+                                    )}
+                                    {data.governorate_id && availableAreas.length === 0 && (
+                                        <p className="mt-1.5 text-xs text-amber-600">
+                                            {t('no_areas_available') || 'لا توجد مناطق متاحة'}
+                                        </p>
+                                    )}
+                                    {errors.city_id && (
+                                        <p className="mt-1.5 text-sm text-red-500">{errors.city_id}</p>
+                                    )}
                                 </div>
-                                {!data.governorate_id && (
-                                    <p className="mt-1 text-xs text-secondary-500">{t('select_governorate_first') || 'يرجى اختيار المحافظة أولاً'}</p>
-                                )}
-                                {data.governorate_id && availableAreas.length === 0 && (
-                                    <p className="mt-1 text-xs text-amber-600">{t('no_areas_available') || 'لا توجد مناطق متاحة في هذه المحافظة'}</p>
-                                )}
-                                {errors.city_id && (
-                                    <p className="mt-1 text-sm text-red-500">{errors.city_id}</p>
-                                )}
                             </div>
 
-                            <div className="flex items-start">
-                                <div className="flex items-center h-5">
+                            {/* Terms Checkbox */}
+                            <div className="flex items-start gap-3" style={{ flexDirection: 'row' }}>
+                                <div className="flex items-center h-5 mt-0.5">
                                     <input
                                         id="agree_terms"
                                         name="agree_terms"
                                         type="checkbox"
                                         checked={data.agree_terms}
                                         onChange={(e) => setData('agree_terms', e.target.checked)}
-                                        className="h-4 w-4 rounded border-secondary-300 text-primary-600 focus:ring-primary-500"
+                                        className="h-4 w-4 sm:h-5 sm:w-5 rounded border-slate-300 text-primary-600 focus:ring-primary-500 cursor-pointer transition-colors"
                                         disabled={processing}
                                     />
                                 </div>
-                                <div className="ml-3 text-sm text-secondary-700">
-                                    <label htmlFor="agree_terms">
-                                        {t('terms_agree')}{' '}
-                                        <Link href="/terms" className="text-primary-600 hover:text-primary-700 underline">
-                                            {t('terms_of_service')}
-                                        </Link>{' '}
-                                        {t('terms_and')}{' '}
-                                        <Link href="/privacy" className="text-primary-600 hover:text-primary-700 underline">
-                                            {t('privacy_policy')}
-                                        </Link>
-                                    </label>
-                                    {errors.agree_terms && (
-                                        <p className="mt-1 text-sm text-red-500">{errors.agree_terms}</p>
-                                    )}
-                                </div>
+                                <label htmlFor="agree_terms" className="text-sm text-slate-600 cursor-pointer leading-relaxed">
+                                    {t('terms_agree')}{' '}
+                                    <Link href="/terms" className="text-primary-600 hover:text-primary-700 font-medium hover:underline">
+                                        {t('terms_of_service')}
+                                    </Link>{' '}
+                                    {t('terms_and')}{' '}
+                                    <Link href="/privacy" className="text-primary-600 hover:text-primary-700 font-medium hover:underline">
+                                        {t('privacy_policy')}
+                                    </Link>
+                                </label>
                             </div>
+                            {errors.agree_terms && (
+                                <p className="text-sm text-red-500 -mt-2">{errors.agree_terms}</p>
+                            )}
 
-                            <div>
-                                <button
-                                    type="submit"
-                                    disabled={processing || !data.agree_terms || !isPhoneValid || !data.governorate_id || !data.city_id}
-                                    className="group relative w-full flex justify-center items-center gap-2 rounded-2xl bg-primary-600 hover:bg-primary-700 py-3 text-sm font-semibold text-white shadow-lg shadow-primary-500/30 hover:shadow-primary-500/50 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                                >
-                                    {processing ? (
-                                        <>
-                                            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                                            {t('sending_otp')}
-                                        </>
-                                    ) : (
-                                        <>
-                                            {t('send_otp')}
-                                            <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                                        </>
-                                    )}
-                                </button>
-                            </div>
+                            {/* Submit Button */}
+                            <button
+                                type="submit"
+                                disabled={processing || !data.agree_terms || !isPhoneValid || !data.governorate_id || !data.city_id}
+                                className="group relative w-full flex justify-center items-center gap-2 rounded-xl sm:rounded-2xl bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 py-3.5 sm:py-4 text-sm sm:text-base font-semibold text-white shadow-lg shadow-primary-500/25 hover:shadow-primary-500/40 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-primary-500/25"
+                            >
+                                {processing ? (
+                                    <>
+                                        <div className="animate-spin rounded-full h-5 w-5 border-2 border-white/30 border-t-white"></div>
+                                        <span>{t('sending_otp')}</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        {isRTL && <ArrowLeft className="h-4 w-4 sm:h-5 sm:w-5 transition-transform duration-300 rotate-180 group-hover:-translate-x-1" />}
+                                        <span>{t('send_otp')}</span>
+                                        {!isRTL && <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5 transition-transform duration-300 group-hover:translate-x-1" />}
+                                    </>
+                                )}
+                            </button>
 
+                            {/* Error Message */}
                             {errors.message && (
-                                <div className="rounded-2xl border border-red-100 bg-red-50 p-4 text-sm text-red-700">
+                                <div className="rounded-xl sm:rounded-2xl border border-red-200 bg-red-50 p-4 text-sm text-red-700">
                                     {errors.message}
                                 </div>
                             )}
                         </form>
                     </div>
 
-                    <div className="text-center">
-                        <p className="text-primary-800">
+                    {/* Login Link */}
+                    <div className="text-center mt-6 sm:mt-8">
+                        <p className="text-sm sm:text-base text-slate-600">
                             {t('already_have_account')}{' '}
                             <Link
                                 href="/login"
-                                className="font-semibold text-primary-600 hover:text-primary-700 transition-colors underline decoration-2 underline-offset-4"
+                                className="font-semibold text-primary-600 hover:text-primary-700 transition-colors underline decoration-2 underline-offset-4 decoration-primary-300 hover:decoration-primary-500"
                             >
                                 {t('sign_in_here')}
                             </Link>

@@ -102,7 +102,7 @@ class AdminController extends Controller
 
         // Get or create default general settings
         $defaultSettings = [
-            'site_name' => 'Getir Clone',
+            'site_name' => 'DeliGo',
             'site_description' => 'Fast grocery delivery in 10 minutes',
             'site_logo' => '',
             'site_favicon' => '',
@@ -164,7 +164,7 @@ class AdminController extends Controller
         // Clear all settings cache to ensure changes are reflected immediately
         Setting::clearCache();
 
-        return redirect()->back()->with('success', 'General settings updated successfully!');
+        return redirect()->back()->with('success', __('general_settings_updated'));
     }
 
     public function appDownloadSettings()
@@ -218,7 +218,7 @@ class AdminController extends Controller
 
         Setting::clearCache();
 
-        return redirect()->back()->with('success', 'App download settings updated successfully!');
+        return redirect()->back()->with('success', __('app_download_settings_updated'));
     }
 
     /**
@@ -350,7 +350,7 @@ class AdminController extends Controller
 
         Setting::clearCache();
 
-        return redirect()->back()->with('success', 'Terms content updated successfully!');
+        return redirect()->back()->with('success', __('terms_content_updated'));
     }
 
     public function privacySettings()
@@ -378,7 +378,7 @@ class AdminController extends Controller
 
         return Inertia::render('Admin/Settings/Privacy', [
             'settings' => [
-                'privacy_intro' => Setting::get('privacy_intro', 'We explain what data we collect, how we protect it, and the choices you have over your privacy while using Getir Clone.'),
+                'privacy_intro' => Setting::get('privacy_intro', 'We explain what data we collect, how we protect it, and the choices you have over your privacy while using DeliGo.'),
                 'privacy_last_updated' => Setting::get('privacy_last_updated', now()->toDateString()),
                 'privacy_sections' => $sectionsJson,
             ],
@@ -399,7 +399,7 @@ class AdminController extends Controller
 
         Setting::clearCache();
 
-        return redirect()->back()->with('success', 'Privacy policy updated successfully!');
+        return redirect()->back()->with('success', __('privacy_policy_updated'));
     }
 
     public function paymentSettings()
@@ -493,7 +493,7 @@ class AdminController extends Controller
         // Clear all settings cache
         Setting::clearCache();
 
-        return redirect()->back()->with('success', 'Payment settings updated successfully!');
+        return redirect()->back()->with('success', __('payment_settings_updated'));
     }
 
     public function areaSettings()
@@ -526,7 +526,7 @@ class AdminController extends Controller
 
         Area::create($request->all());
 
-        return redirect()->back()->with('success', 'Area created successfully!');
+        return redirect()->back()->with('success', __('area_created'));
     }
 
     public function updateArea(Request $request, $id)
@@ -552,7 +552,7 @@ class AdminController extends Controller
 
         $area->update($request->all());
 
-        return redirect()->back()->with('success', 'Area updated successfully!');
+        return redirect()->back()->with('success', __('area_updated'));
     }
 
     public function deleteArea($id)
@@ -560,7 +560,7 @@ class AdminController extends Controller
         $area = Area::findOrFail($id);
         $area->delete();
 
-        return redirect()->back()->with('success', 'Area deleted successfully!');
+        return redirect()->back()->with('success', __('area_deleted'));
     }
 
     public function backups()
@@ -664,9 +664,9 @@ class AdminController extends Controller
                 }
             }
             
-            return redirect()->back()->with('success', 'Backup created successfully!');
+            return redirect()->back()->with('success', __('backup_created'));
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Failed to create backup: ' . $e->getMessage());
+            return redirect()->back()->with('error', __('backup_create_failed', ['error' => $e->getMessage()]));
         }
     }
 
@@ -764,12 +764,12 @@ class AdminController extends Controller
         $filePath = "{$backupsPath}/{$filename}";
         
         if (!File::exists($filePath)) {
-            return redirect()->back()->with('error', 'Backup file not found');
+            return redirect()->back()->with('error', __('backup_not_found'));
         }
         
         File::delete($filePath);
         
-        return redirect()->back()->with('success', 'Backup deleted successfully!');
+        return redirect()->back()->with('success', __('backup_deleted'));
     }
 
     public function restoreBackup(Request $request, $filename)
@@ -781,7 +781,7 @@ class AdminController extends Controller
         $filePath = "{$backupsPath}/{$filename}";
         
         if (!File::exists($filePath)) {
-            return redirect()->back()->with('error', 'Backup file not found');
+            return redirect()->back()->with('error', __('backup_not_found'));
         }
         
         try {
@@ -829,9 +829,9 @@ class AdminController extends Controller
                 }
             }
             
-            return redirect()->back()->with('success', 'Backup restored successfully!');
+            return redirect()->back()->with('success', __('backup_restored'));
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Failed to restore backup: ' . $e->getMessage());
+            return redirect()->back()->with('error', __('backup_restore_failed', ['error' => $e->getMessage()]));
         }
     }
 
@@ -969,10 +969,10 @@ class AdminController extends Controller
         
         if (File::exists($filePath)) {
             File::put($filePath, '');
-            return redirect()->back()->with('success', 'Log file cleared successfully!');
+            return redirect()->back()->with('success', __('log_file_cleared'));
         }
         
-        return redirect()->back()->with('error', 'Log file not found!');
+        return redirect()->back()->with('error', __('log_file_not_found'));
     }
 
     public function deleteLogFile($filename)
@@ -984,10 +984,10 @@ class AdminController extends Controller
         
         if (File::exists($filePath)) {
             File::delete($filePath);
-            return redirect()->back()->with('success', 'Log file deleted successfully!');
+            return redirect()->back()->with('success', __('log_file_deleted'));
         }
         
-        return redirect()->back()->with('error', 'Log file not found!');
+        return redirect()->back()->with('error', __('log_file_not_found'));
     }
 
     public function downloadLog($filename)
@@ -1065,6 +1065,6 @@ class AdminController extends Controller
 
         $user->update($updateData);
 
-        return redirect()->back()->with('success', 'Profile updated successfully!');
+        return redirect()->back()->with('success', __('profile_updated'));
     }
 }

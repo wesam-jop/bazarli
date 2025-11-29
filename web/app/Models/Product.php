@@ -84,4 +84,40 @@ class Product extends Model
         
         return round((($this->price - $this->discount_price) / $this->price) * 100);
     }
+
+    /**
+     * Get the full image URL
+     */
+    public function getImageUrlAttribute(): ?string
+    {
+        if (!$this->image) {
+            return null;
+        }
+
+        // If it's already a full URL, return as is
+        if (str_starts_with($this->image, 'http://') || str_starts_with($this->image, 'https://')) {
+            return $this->image;
+        }
+
+        // Otherwise, prepend storage path
+        return asset('storage/' . $this->image);
+    }
+
+    /**
+     * Override the image attribute to always return full URL
+     */
+    public function getImageAttribute($value): ?string
+    {
+        if (!$value) {
+            return null;
+        }
+
+        // If it's already a full URL, return as is
+        if (str_starts_with($value, 'http://') || str_starts_with($value, 'https://')) {
+            return $value;
+        }
+
+        // Otherwise, prepend storage path
+        return asset('storage/' . $value);
+    }
 }

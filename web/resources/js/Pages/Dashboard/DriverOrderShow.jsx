@@ -278,7 +278,7 @@ export default function DriverOrderShow({ order }) {
                                         >
                                             {item.product?.image && (
                                                 <img
-                                                    src={item.product.image.startsWith('http') ? item.product.image : `/storage/${item.product.image}`}
+                                                    src={item.product.image}
                                                     alt={item.product_name}
                                                     className="w-16 h-16 rounded-lg object-cover"
                                                     onError={(e) => {

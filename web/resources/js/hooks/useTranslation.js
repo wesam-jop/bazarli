@@ -19,7 +19,7 @@ export function useTranslation() {
         if (!translation) {
             const fallbackTranslations = {
                 ar: {
-                    'home_meta_title': 'Getir Clone - توصيل سريع',
+                    'home_meta_title': 'DeliGo - توصيل سريع',
                     'home_meta_description': 'اطلب منتجاتك المفضلة مع توصيل فائق السرعة وتجربة تسوق سلسة باللغتين.',
                     'home': 'الرئيسية',
                     'categories': 'الفئات',
@@ -33,7 +33,7 @@ export function useTranslation() {
                     'welcome_subtitle': 'منصة تسوّق وتوصيل سريعة ومرنة - طلبك واصل!',
                     'start_shopping': 'ابدأ التسوق',
                     'download_app': 'حمل التطبيق',
-                    'why_choose_us': 'لماذا تختار Getir Clone؟',
+                    'why_choose_us': 'لماذا تختار DeliGo؟',
                     'why_choose_subtitle': 'خدمة مبنية لتقدم لك أسرع وأوثق تجربة تسوق يومية.',
                     'fast_delivery': 'توصيل في 10 دقائق',
                     'fast_delivery_desc': 'شبكة واسعة من السائقين المدربين تضمن وصول طلبك في دقائق قليلة.',
@@ -116,7 +116,7 @@ export function useTranslation() {
                     'browse_all_products': 'تصفح جميع المنتجات',
                 },
                 en: {
-                    'home_meta_title': 'Getir Clone - Ultra Fast Delivery',
+                    'home_meta_title': 'DeliGo - Ultra Fast Delivery',
                     'home_meta_description': 'Order your favorite essentials with lightning-fast delivery and a bilingual experience.',
                     'home': 'Home',
                     'categories': 'Categories',
@@ -156,7 +156,7 @@ export function useTranslation() {
                     'phone': 'Phone',
                     'working_hours': 'Working Hours',
                     'browse_all_products': 'Browse All Products',
-                    'why_choose_us': 'Why Choose Getir Clone?',
+                    'why_choose_us': 'Why Choose DeliGo?',
                     'why_choose_subtitle': 'A service crafted to bring you the fastest, most reliable daily shopping experience.',
                     'fast_delivery': '10 Minute Delivery',
                     'fast_delivery_desc': 'An extensive courier network ensures your basket arrives in just minutes.',

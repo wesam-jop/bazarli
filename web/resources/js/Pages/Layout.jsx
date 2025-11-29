@@ -73,9 +73,10 @@ export default function Layout({ children }) {
             <Link
                 key={href}
                 href={href}
-                className={`flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-primary-600 transition-colors ${isRTL ? 'flex-row-reverse text-right' : ''} ${
+                className={`flex items-center gap-2 text-sm font-medium text-gray-700 hover:text-primary-600 transition-colors ${
                     variant === 'mobile' ? 'py-2' : ''
                 }`}
+                style={{ flexDirection: 'row' }}
             >
                 <Icon className="w-5 h-5" />
                 <span>{label}</span>
@@ -86,8 +87,11 @@ export default function Layout({ children }) {
     const renderAuthSection = (variant = 'desktop') => {
         if (user) {
             return (
-                <div className={`flex ${variant === 'mobile' ? 'flex-col gap-3' : 'items-center gap-3'} ${isRTL && variant !== 'mobile' ? 'flex-row-reverse' : ''}`}>
-                    <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse text-right' : ''}`}>
+                <div 
+                    className={`flex ${variant === 'mobile' ? 'flex-col gap-3' : 'items-center gap-3'}`}
+                    style={variant !== 'mobile' ? { flexDirection: 'row' } : undefined}
+                >
+                    <div className="flex items-center gap-2" style={{ flexDirection: 'row' }}>
                         <UserAvatar user={user} size={36} className="flex-shrink-0" />
                         <span className="text-sm text-gray-700 font-medium">{user.name}</span>
                     </div>
@@ -95,7 +99,8 @@ export default function Layout({ children }) {
                         href={user.user_type === 'admin' ? '/admin/dashboard' : 
                               user.user_type === 'store_owner' ? '/dashboard/store' :
                               user.user_type === 'driver' ? '/dashboard/driver' : '/dashboard/customer'}
-                        className={`flex items-center justify-center gap-2 bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors text-sm font-medium ${isRTL ? 'flex-row-reverse' : ''}`}
+                        className="flex items-center justify-center gap-2 bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors text-sm font-medium"
+                        style={{ flexDirection: 'row' }}
                     >
                         <User className="w-4 h-4" />
                         <span>{t('dashboard')}</span>
@@ -103,7 +108,8 @@ export default function Layout({ children }) {
                     <Link
                         href="/logout"
                         method="post"
-                        className={`flex items-center justify-center gap-2 bg-secondary-300 text-primary-800 px-4 py-2 rounded-lg hover:bg-secondary-400 transition-colors text-sm font-medium ${isRTL ? 'flex-row-reverse' : ''}`}
+                        className="flex items-center justify-center gap-2 bg-secondary-300 text-primary-800 px-4 py-2 rounded-lg hover:bg-secondary-400 transition-colors text-sm font-medium"
+                        style={{ flexDirection: 'row' }}
                     >
                         <LogOut className="w-4 h-4" />
                         <span>{t('logout')}</span>
@@ -115,7 +121,8 @@ export default function Layout({ children }) {
         return (
             <Link
                 href="/login"
-                className={`flex items-center justify-center gap-2 bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors text-sm font-medium ${variant === 'mobile' ? 'w-full' : ''} ${isRTL ? 'flex-row-reverse' : ''}`}
+                className={`flex items-center justify-center gap-2 bg-primary-600 text-white px-4 py-2 rounded-lg hover:bg-primary-700 transition-colors text-sm font-medium ${variant === 'mobile' ? 'w-full' : ''}`}
+                style={{ flexDirection: 'row' }}
             >
                 <LogIn className="w-4 h-4" />
                 <span>{t('login')}</span>
@@ -128,8 +135,8 @@ export default function Layout({ children }) {
             {/* Header */}
             <header className="bg-secondary-200 shadow-sm border-b border-secondary-300 sticky top-0 z-40" dir={isRTL ? 'rtl' : 'ltr'}>
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <div className={`flex justify-between items-center py-4 gap-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                        <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <div className="flex justify-between items-center py-4 gap-4" style={{ flexDirection: 'row' }}>
+                        <div className="flex items-center gap-3" style={{ flexDirection: 'row' }}>
                             <button
                                 type="button"
                                 className="md:hidden inline-flex items-center justify-center rounded-md border border-secondary-200 p-2 text-primary-800 hover:bg-secondary-50 focus:outline-none focus:ring-2 focus:ring-primary-500"
@@ -139,28 +146,28 @@ export default function Layout({ children }) {
                             >
                                 {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
                             </button>
-                            <Link href="/" className="flex items-center gap-2">
+                            <Link href="/" className="flex items-center gap-2" style={{ flexDirection: 'row' }}>
                                 <DeliGoLogo height={32} />
                             </Link>
                         </div>
                         
-                        <nav className={`hidden md:flex items-center gap-6 ${isRTL ? 'flex-row-reverse text-right' : ''}`}>
+                        <nav className="hidden md:flex items-center gap-6" style={{ flexDirection: 'row' }}>
                             {renderNavLinks()}
                         </nav>
                         
-                        <div className={`flex items-center gap-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                        <div className="flex items-center gap-4" style={{ flexDirection: 'row' }}>
                             <div className="hidden md:block">
                                 <LanguageSwitcher currentLocale={locale} />
                             </div>
                             <Link href="/cart" className="relative p-2 text-gray-700 hover:text-primary-600 transition-colors">
                                 <ShoppingCart className="w-6 h-6" />
                                 {cartCount > 0 && (
-                                    <span className="absolute -top-1 -right-1 bg-primary-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                                    <span className={`absolute -top-1 ${isRTL ? '-left-1' : '-right-1'} bg-primary-600 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center`}>
                                         {cartCount}
                                     </span>
                                 )}
                             </Link>
-                            <div className={`hidden md:flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                            <div className="hidden md:flex items-center gap-3" style={{ flexDirection: 'row' }}>
                                 {renderAuthSection()}
                             </div>
                         </div>

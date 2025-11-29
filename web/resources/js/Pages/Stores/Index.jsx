@@ -17,6 +17,7 @@ import {
 
 export default function StoresIndex({ stores, storeTypes, governorates, cities: initialCities, filters, userGovernorateId, userCityId }) {
     const { t, locale } = useTranslation();
+    const isRTL = locale === 'ar';
     
     // حماية من البيانات غير المحددة
     const safeFilters = filters || {};
@@ -166,7 +167,7 @@ export default function StoresIndex({ stores, storeTypes, governorates, cities: 
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
                     <div className="flex flex-col lg:flex-row gap-4 md:gap-6">
                         {/* Sidebar - Filters (Desktop Only) */}
-                        <div className="hidden lg:block lg:w-1/4">
+                        <div className={`hidden lg:block lg:w-1/4 ${isRTL ? 'lg:order-2' : 'lg:order-1'}`}>
                             <div className="bg-white rounded-lg shadow-sm p-4 md:p-6 sticky top-4">
                                 <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-4">{t('search_and_filter') || 'البحث والترتيب'}</h3>
                                 
@@ -274,7 +275,7 @@ export default function StoresIndex({ stores, storeTypes, governorates, cities: 
                         </div>
 
                         {/* Stores Grid */}
-                        <div className="lg:w-3/4 w-full">
+                        <div className={`lg:w-3/4 w-full ${isRTL ? 'lg:order-1' : 'lg:order-2'}`}>
                             <div className="mb-4 md:mb-6 flex items-center justify-between flex-wrap gap-2">
                                 <p className="text-gray-600 text-sm md:text-base">
                                     {t('showing_products') || 'عرض'} <span className="font-semibold text-gray-900">{safeStores.data.length}</span> {t('of') || 'من'} <span className="font-semibold text-gray-900">{safeStores.total}</span> {t('stores') || 'متجر'}

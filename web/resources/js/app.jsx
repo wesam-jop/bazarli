@@ -8,7 +8,7 @@ import { initializePushNotifications } from './utils/pushNotifications'
 
 syncDirectionWithStoredLocale()
 
-const appName = import.meta.env.VITE_APP_NAME || 'Getir Clone'
+const appName = import.meta.env.VITE_APP_NAME || 'DeliGo'
 
 createInertiaApp({
   title: (title) => `${title} - ${appName}`,

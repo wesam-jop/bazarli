@@ -140,7 +140,7 @@ Route::get('/privacy', function () {
     }
 
     return Inertia::render('PrivacyPolicy', [
-        'intro' => Setting::get('privacy_intro', 'We explain what data we collect, how we protect it, and the choices you have over your privacy while using Getir Clone.'),
+        'intro' => Setting::get('privacy_intro', 'We explain what data we collect, how we protect it, and the choices you have over your privacy while using DeliGo.'),
         'lastUpdated' => Setting::get('privacy_last_updated', now()->format('F j, Y')),
         'sections' => $sections,
     ]);
@@ -488,6 +488,8 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard/store/setup', [StoreSetupController::class, 'create'])->name('dashboard.store.setup');
     Route::post('/dashboard/store/setup', [StoreSetupController::class, 'store'])->name('dashboard.store.setup.store');
     Route::post('/dashboard/store/products', [StoreProductController::class, 'store'])->name('dashboard.store.products.store');
+    Route::put('/dashboard/store/products/{product}', [StoreProductController::class, 'update'])->name('dashboard.store.products.update');
+    Route::delete('/dashboard/store/products/{product}', [StoreProductController::class, 'destroy'])->name('dashboard.store.products.destroy');
     Route::post('/store-orders/{orderStore}/start-preparing', [StoreOrderController::class, 'startPreparing'])->name('store-orders.start-preparing');
     Route::post('/store-orders/{orderStore}/finish-preparing', [StoreOrderController::class, 'finishPreparing'])->name('store-orders.finish-preparing');
     Route::post('/store-orders/{orderStore}/approve', [StoreOrderController::class, 'approve'])->name('store-orders.approve');

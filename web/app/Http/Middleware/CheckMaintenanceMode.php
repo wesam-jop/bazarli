@@ -36,7 +36,7 @@ class CheckMaintenanceMode
             
             return response()->view('maintenance', [
                 'message' => $maintenanceMessage,
-                'siteName' => Setting::get('site_name', 'Getir Clone'),
+                'siteName' => Setting::get('site_name', 'DeliGo'),
             ], 503);
         }
 

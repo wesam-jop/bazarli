@@ -152,7 +152,7 @@ class HandleInertiaRequests extends Middleware
     private function getGeneralSettings(): array
     {
         return [
-            'site_name' => Setting::get('site_name', 'Getir Clone'),
+            'site_name' => Setting::get('site_name', 'DeliGo'),
             'site_description' => Setting::get('site_description', 'Fast grocery delivery in 10 minutes'),
             'site_logo' => Setting::get('site_logo', ''),
             'site_favicon' => Setting::get('site_favicon', ''),

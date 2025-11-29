@@ -47,7 +47,7 @@ class InventoryController extends Controller
             'stock_quantity' => $request->stock_quantity,
         ]);
 
-        return redirect()->back()->with('success', 'Stock quantity updated successfully');
+        return redirect()->back()->with('success', __('stock_quantity_updated'));
     }
 }
 

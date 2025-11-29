@@ -82,7 +82,7 @@ class StoreController extends Controller
             'is_active' => !$store->is_active,
         ]);
 
-        return redirect()->back()->with('success', 'Store status updated successfully');
+        return redirect()->back()->with('success', __('store_status_updated'));
     }
 }
 

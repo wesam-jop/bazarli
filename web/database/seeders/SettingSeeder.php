@@ -57,7 +57,7 @@ class SettingSeeder extends Seeder
         Setting::set('careers_jobs', '[]', 'json', 'careers', 'Job Openings', 'Available job positions in JSON format', true);
 
         // SEO Settings
-        Setting::set('seo_title', 'Getir Clone - Fast Delivery Service', 'text', 'seo', 'SEO Title', 'Default SEO title', true);
+        Setting::set('seo_title', 'DeliGo - Fast Delivery Service', 'text', 'seo', 'SEO Title', 'Default SEO title', true);
         Setting::set('seo_description', 'Fast delivery service for groceries, food, pharmacy and pet supplies', 'textarea', 'seo', 'SEO Description', 'Default SEO description', true);
         Setting::set('seo_keywords', 'delivery, groceries, food, pharmacy, pet supplies', 'text', 'seo', 'SEO Keywords', 'Default SEO keywords', true);
         Setting::set('seo_og_image', '/images/og-image.jpg', 'image', 'seo', 'Open Graph Image', 'Default social media sharing image', true);
