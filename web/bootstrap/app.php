@@ -20,6 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(prepend: [
             \App\Http\Middleware\SetLocale::class,
             \App\Http\Middleware\CheckMaintenanceMode::class,
+            \App\Http\Middleware\IncreasePostSize::class,
         ]);
         $middleware->web(append: [
             \App\Http\Middleware\HandleInertiaRequests::class,
@@ -31,5 +32,17 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        //
+        // Handle PostTooLargeException
+        $exceptions->render(function (\Illuminate\Http\Exceptions\PostTooLargeException $e, $request) {
+            if ($request->expectsJson()) {
+                return response()->json([
+                    'message' => 'The POST data is too large. Please reduce the file size or contact the administrator.',
+                    'error' => 'PostTooLargeException'
+                ], 413);
+            }
+            
+            return redirect()->back()
+                ->withInput()
+                ->withErrors(['file' => 'The file is too large. Maximum size is 50MB.']);
+        });
     })->create();

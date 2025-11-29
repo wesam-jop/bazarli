@@ -14,8 +14,8 @@ return [
     'dashboard' => 'لوحة التحكم',
 
     // Home Page
-    'welcome_title' => 'توصيل سريع في 10 دقائق',
-    'welcome_subtitle' => 'احصل على البقالة والضروريات في باب منزلك في وقت قياسي',
+    'welcome_title' => 'ديلي غُو… كل المحلات بإيدك',
+    'welcome_subtitle' => 'منصة تسوّق وتوصيل سريعة ومرنة - طلبك واصل!',
     'start_shopping' => 'ابدأ التسوق',
     'download_app' => 'حمل التطبيق',
     'why_choose_us' => 'لماذا تختار DeliGo؟',

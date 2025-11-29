@@ -23,7 +23,8 @@ import {
 } from 'lucide-react';
 
 export default function Products({ products, stats }) {
-    const { t } = useTranslation();
+    const { t, locale } = useTranslation();
+    const isRTL = locale === 'ar';
     const [searchTerm, setSearchTerm] = useState('');
     const [filterStatus, setFilterStatus] = useState('all');
 
@@ -151,7 +152,7 @@ export default function Products({ products, stats }) {
                 <div className="bg-white rounded-xl shadow-sm border border-slate-200 p-6">
                     <div className="flex flex-col md:flex-row gap-4">
                         <div className="flex-1 relative">
-                            <div className="absolute left-3 top-1/2 transform -translate-y-1/2">
+                            <div className={`absolute ${isRTL ? 'right-3' : 'left-3'} top-1/2 transform -translate-y-1/2`}>
                                 <Search className="w-5 h-5 text-slate-400" />
                             </div>
                             <input
@@ -159,7 +160,7 @@ export default function Products({ products, stats }) {
                                 value={searchTerm}
                                 onChange={(e) => setSearchTerm(e.target.value)}
                                 placeholder={t('search_products') || 'Search by name, description, barcode, category, or store...'}
-                                className="w-full pl-11 pr-4 py-3 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all text-sm"
+                                className={`w-full ${isRTL ? 'pr-11 pl-4' : 'pl-11 pr-4'} py-3 rounded-xl border border-slate-300 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all text-sm`}
                             />
                         </div>
                         <div className="flex items-center gap-3">
@@ -187,25 +188,25 @@ export default function Products({ products, stats }) {
                         <table className="w-full">
                             <thead className="bg-gradient-to-r from-slate-50 to-slate-100 border-b border-slate-200">
                                 <tr>
-                                    <th className="px-6 py-4 text-right text-xs font-semibold text-slate-700 uppercase tracking-wider">
+                                    <th className={`px-6 py-4 ${isRTL ? 'text-right' : 'text-left'} text-xs font-semibold text-slate-700 uppercase tracking-wider`}>
                                         {t('product') || 'Product'}
                                     </th>
-                                    <th className="px-6 py-4 text-right text-xs font-semibold text-slate-700 uppercase tracking-wider">
+                                    <th className={`px-6 py-4 ${isRTL ? 'text-right' : 'text-left'} text-xs font-semibold text-slate-700 uppercase tracking-wider`}>
                                         {t('category') || 'Category'}
                                     </th>
-                                    <th className="px-6 py-4 text-right text-xs font-semibold text-slate-700 uppercase tracking-wider">
+                                    <th className={`px-6 py-4 ${isRTL ? 'text-right' : 'text-left'} text-xs font-semibold text-slate-700 uppercase tracking-wider`}>
                                         {t('store') || 'Store'}
                                     </th>
-                                    <th className="px-6 py-4 text-right text-xs font-semibold text-slate-700 uppercase tracking-wider">
+                                    <th className={`px-6 py-4 ${isRTL ? 'text-right' : 'text-left'} text-xs font-semibold text-slate-700 uppercase tracking-wider`}>
                                         {t('price') || 'Price'}
                                     </th>
-                                    <th className="px-6 py-4 text-right text-xs font-semibold text-slate-700 uppercase tracking-wider">
+                                    <th className={`px-6 py-4 ${isRTL ? 'text-right' : 'text-left'} text-xs font-semibold text-slate-700 uppercase tracking-wider`}>
                                         {t('stock') || 'Stock'}
                                     </th>
-                                    <th className="px-6 py-4 text-right text-xs font-semibold text-slate-700 uppercase tracking-wider">
+                                    <th className={`px-6 py-4 ${isRTL ? 'text-right' : 'text-left'} text-xs font-semibold text-slate-700 uppercase tracking-wider`}>
                                         {t('status') || 'Status'}
                                     </th>
-                                    <th className="px-6 py-4 text-right text-xs font-semibold text-slate-700 uppercase tracking-wider">
+                                    <th className={`px-6 py-4 ${isRTL ? 'text-right' : 'text-left'} text-xs font-semibold text-slate-700 uppercase tracking-wider`}>
                                         {t('actions') || 'Actions'}
                                     </th>
                                 </tr>
@@ -215,7 +216,7 @@ export default function Products({ products, stats }) {
                                     filteredProducts.map((product) => (
                                         <tr key={product.id} className="hover:bg-slate-50/50 transition-all duration-150 group">
                                             <td className="px-6 py-4">
-                                                <div className="flex items-center gap-3">
+                                                <div className={`flex items-center ${isRTL ? 'flex-row-reverse space-x-reverse' : ''} gap-3`}>
                                                     {product.image ? (
                                                         <img 
                                                             src={product.image} 
@@ -228,7 +229,7 @@ export default function Products({ products, stats }) {
                                                         </div>
                                                     )}
                                                     <div className="flex-1 min-w-0">
-                                                        <div className="flex items-center gap-2">
+                                                        <div className={`flex items-center ${isRTL ? 'flex-row-reverse space-x-reverse' : ''} gap-2`}>
                                                             <div className="text-sm font-bold text-slate-900 truncate">
                                                                 {product.name || '-'}
                                                             </div>
@@ -251,7 +252,7 @@ export default function Products({ products, stats }) {
                                             </td>
                                             <td className="px-6 py-4">
                                                 {product.category ? (
-                                                    <div className="flex items-center gap-2">
+                                                    <div className={`flex items-center ${isRTL ? 'flex-row-reverse space-x-reverse' : ''} gap-2`}>
                                                         <div className="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center">
                                                             <Tag className="w-4 h-4 text-blue-600" />
                                                         </div>
@@ -263,7 +264,7 @@ export default function Products({ products, stats }) {
                                             </td>
                                             <td className="px-6 py-4">
                                                 {product.store ? (
-                                                    <div className="flex items-center gap-2">
+                                                    <div className={`flex items-center ${isRTL ? 'flex-row-reverse space-x-reverse' : ''} gap-2`}>
                                                         <div className="w-8 h-8 bg-green-50 rounded-lg flex items-center justify-center">
                                                             <Store className="w-4 h-4 text-green-600" />
                                                         </div>
@@ -274,7 +275,7 @@ export default function Products({ products, stats }) {
                                                 )}
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="flex items-center gap-2">
+                                                <div className={`flex items-center ${isRTL ? 'flex-row-reverse space-x-reverse' : ''} gap-2`}>
                                                     <div className="w-9 h-9 bg-emerald-50 rounded-lg flex items-center justify-center">
                                                         <DollarSign className="w-4 h-4 text-emerald-600" />
                                                     </div>
@@ -332,7 +333,7 @@ export default function Products({ products, stats }) {
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="flex items-center gap-1">
+                                                <div className={`flex items-center ${isRTL ? 'flex-row-reverse space-x-reverse' : ''} gap-1`}>
                                                     <Link
                                                         href={`/admin/products/${product.id}`}
                                                         className="p-2 text-blue-600 hover:text-blue-700 hover:bg-blue-50 rounded-lg transition-all duration-200 group/action"
