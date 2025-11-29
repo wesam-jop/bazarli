@@ -14,8 +14,8 @@ return [
     'dashboard' => 'Dashboard',
 
     // Home Page
-    'welcome_title' => 'Fast Delivery in 10 Minutes',
-    'welcome_subtitle' => 'Get your groceries and essentials delivered to your doorstep in record time',
+    'welcome_title' => 'DeliGo… All Stores in Your Hand',
+    'welcome_subtitle' => 'Fast and flexible shopping & delivery platform - Your order is on the way!',
     'start_shopping' => 'Start Shopping',
     'download_app' => 'Download App',
     'why_choose_us' => 'Why Choose Getir Clone?',
