@@ -1,2 +1,2 @@
-# bazarli
-bazarli
+# DeliGo
+DeliGo
