@@ -85,14 +85,14 @@ export default function Home({ categories, featuredProducts, featuredStores = []
             description: t('fast_delivery_desc')
         },
         {
-            icon: Shield,
-            title: t('quality_guaranteed'),
-            description: t('quality_guaranteed_desc')
-        },
-        {
             icon: Package,
             title: t('wide_selection'),
             description: t('wide_selection_desc')
+        },
+        {
+            icon: Shield,
+            title: t('quality_guaranteed'),
+            description: t('quality_guaranteed_desc')
         }
     ];
 
@@ -146,33 +146,85 @@ export default function Home({ categories, featuredProducts, featuredStores = []
                 </section>
 
                 {/* Features Section */}
-                <section className="py-16 bg-white">
+                <section className="relative py-24 bg-white">
                     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                        <div className="text-center mb-12 max-w-3xl mx-auto">
-                            <span className="inline-flex items-center rounded-full border border-primary-200 bg-primary-50 px-4 py-1 text-sm font-semibold text-primary-700 mb-4">
-                                {t('why_choose_us')}
-                            </span>
-                            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                                {t('why_choose_us')}
-                            </h2>
-                            <p className="text-lg text-gray-600">
-                                {t('why_choose_subtitle')}
-                            </p>
+                        {/* Header */}
+                        <div className={`flex flex-col ${isRTL ? 'md:flex-row-reverse' : 'md:flex-row'} items-center justify-between mb-16 gap-8`}>
+                            <div className="flex-1 text-center md:text-start">
+                                <div className="inline-block mb-4">
+                                    <span className="inline-flex items-center rounded-full border border-primary-200 bg-primary-50 px-4 py-1 text-sm font-semibold text-primary-700 mb-4">
+                                        {t('why_choose_us')}
+                                    </span>
+                                </div>
+                                <h2 className="text-5xl md:text-6xl font-black text-gray-900 mb-4 leading-tight">
+                                    {t('why_choose_us')}
+                                </h2>
+                                <p className="text-xl text-gray-600 max-w-2xl">
+                                    {t('why_choose_subtitle')}
+                                </p>
+                            </div>
                         </div>
                         
-                        <div className="grid gap-6 md:grid-cols-3">
-                            {coreFeatures.map(({ icon: Icon, title, description }) => (
-                                <div 
-                                    key={title} 
-                                    className="rounded-2xl border border-secondary-200 bg-white p-8 text-center shadow-lg shadow-secondary-200/20 transition hover:-translate-y-1 hover:border-primary-300 hover:shadow-primary-200/30"
-                                >
-                                    <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-primary-100 text-primary-700">
-                                        <Icon className="w-7 h-7" />
+                        {/* Features Grid - Asymmetric Layout */}
+                        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            {coreFeatures.map(({ icon: Icon, title, description }, index) => {
+                                const isMiddle = index === 1;
+                                return (
+                                    <div 
+                                        key={title}
+                                        className={`group relative ${isMiddle ? 'lg:row-span-2 lg:-mt-6' : ''}`}
+                                    >
+                                        <div className={`relative h-full bg-gradient-to-br ${
+                                            isMiddle 
+                                                ? 'from-primary-600 to-primary-800 text-white' 
+                                                : 'from-white to-secondary-50 text-gray-900'
+                                        } rounded-2xl p-8 md:p-10 border-2 ${
+                                            isMiddle 
+                                                ? 'border-primary-700 shadow-2xl shadow-primary-900/30' 
+                                                : 'border-gray-200 shadow-lg hover:border-primary-300 hover:shadow-xl'
+                                        } transition-all duration-300 hover:-translate-y-1 overflow-hidden`}>
+                                            
+                                            {/* Background Pattern */}
+                                            <div className={`absolute inset-0 opacity-5 ${
+                                                isMiddle ? 'bg-white' : 'bg-primary-600'
+                                            }`} style={{
+                                                backgroundImage: 'radial-gradient(circle, currentColor 1px, transparent 1px)',
+                                                backgroundSize: '20px 20px'
+                                            }}></div>
+                                            
+                                            {/* Icon */}
+                                            <div className={`relative mb-6 inline-flex items-center justify-center w-16 h-16 rounded-xl ${
+                                                isMiddle 
+                                                    ? 'bg-white/20 backdrop-blur-sm text-white' 
+                                                    : 'bg-primary-100 text-primary-700'
+                                            } group-hover:scale-110 transition-transform duration-300`}>
+                                                <Icon className="w-8 h-8" />
+                                            </div>
+                                            
+                                            {/* Content */}
+                                            <div className="relative">
+                                                <h3 className={`text-2xl font-bold mb-3 ${
+                                                    isMiddle ? 'text-white' : 'text-gray-900'
+                                                }`}>
+                                                    {title}
+                                                </h3>
+                                                <p className={`leading-relaxed ${
+                                                    isMiddle ? 'text-white/90' : 'text-gray-600'
+                                                }`}>
+                                                    {description}
+                                                </p>
+                                            </div>
+                                            
+                                            {/* Accent Line */}
+                                            <div className={`absolute bottom-0 left-0 right-0 h-1 ${
+                                                isMiddle 
+                                                    ? 'bg-white/30' 
+                                                    : 'bg-primary-600'
+                                            } transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left`}></div>
+                                        </div>
                                     </div>
-                                    <h3 className="text-xl font-semibold text-gray-900 mb-2">{title}</h3>
-                                    <p className="text-gray-600 text-sm">{description}</p>
-                                </div>
-                            ))}
+                                );
+                            })}
                         </div>
                     </div>
                 </section>

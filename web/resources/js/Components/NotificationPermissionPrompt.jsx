@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Bell, X, Check } from 'lucide-react';
 import { requestNotificationPermission, subscribeToPushNotifications } from '../utils/pushNotifications';
+import { useTranslation } from '../hooks/useTranslation';
 
 export default function NotificationPermissionPrompt({ vapidPublicKey, onDismiss }) {
+    const { t, locale } = useTranslation();
+    const isRTL = locale === 'ar';
     const [show, setShow] = useState(false);
     const [isRequesting, setIsRequesting] = useState(false);
     const [status, setStatus] = useState(null); // 'granted', 'denied', 'default'
@@ -72,47 +75,44 @@ export default function NotificationPermissionPrompt({ vapidPublicKey, onDismiss
         return null;
     }
 
-    // Check if RTL
-    const isRTL = document.documentElement.dir === 'rtl' || document.documentElement.getAttribute('lang') === 'ar';
-
     return (
         <div className={`fixed bottom-4 z-50 max-w-sm animate-slide-up ${isRTL ? 'left-4' : 'right-4'}`}>
             <div className="bg-white rounded-xl shadow-2xl border border-slate-200 p-6">
-                <div className="flex items-start gap-4">
+                <div className={`flex items-start ${isRTL ? 'flex-row-reverse space-x-reverse' : ''} gap-4`}>
                     <div className="flex-shrink-0">
-                        <div className="w-12 h-12 bg-accent-600 rounded-xl flex items-center justify-center">
+                        <div className="w-12 h-12 bg-primary-600 rounded-xl flex items-center justify-center shadow-lg">
                             <Bell className="w-6 h-6 text-white" />
                         </div>
                     </div>
                     <div className="flex-1">
                         <h3 className="text-lg font-semibold text-slate-900 mb-1">
-                            تفعيل الإشعارات
+                            {t('enable_notifications') || 'تفعيل الإشعارات'}
                         </h3>
                         <p className="text-sm text-slate-600 mb-4">
-                            احصل على إشعارات فورية حول طلباتك، العروض الخاصة، والتحديثات المهمة
+                            {t('enable_notifications_desc') || 'احصل على إشعارات فورية حول طلباتك، العروض الخاصة، والتحديثات المهمة'}
                         </p>
-                        <div className="flex items-center gap-2">
+                        <div className={`flex items-center ${isRTL ? 'flex-row-reverse space-x-reverse' : ''} gap-2`}>
                             <button
                                 onClick={handleEnable}
                                 disabled={isRequesting}
-                                className="flex-1 bg-accent-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-accent-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                className="flex-1 bg-primary-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-sm"
                             >
                                 {isRequesting ? (
                                     <>
                                         <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                                        <span>جاري التفعيل...</span>
+                                        <span>{t('enabling') || 'جاري التفعيل...'}</span>
                                     </>
                                 ) : (
                                     <>
                                         <Check className="w-4 h-4" />
-                                        <span>تفعيل الإشعارات</span>
+                                        <span>{t('enable_notifications') || 'تفعيل الإشعارات'}</span>
                                     </>
                                 )}
                             </button>
                             <button
                                 onClick={handleDismiss}
                                 className="p-2 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors"
-                                title="إغلاق"
+                                title={t('close') || 'إغلاق'}
                             >
                                 <X className="w-5 h-5" />
                             </button>

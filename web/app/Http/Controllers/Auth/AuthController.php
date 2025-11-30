@@ -44,7 +44,7 @@ class AuthController extends Controller
         if (!$user) {
             \Log::error('User not found for phone:', ['phone' => $request->phone]);
             return back()->withErrors([
-                'phone' => 'Phone number not found. Please register first.',
+                'phone' => __('app.phone_not_found'),
             ]);
         }
         
@@ -92,7 +92,7 @@ class AuthController extends Controller
         if ($existingUser) {
             \Log::info('User already exists:', ['user_id' => $existingUser->id, 'phone' => $existingUser->phone]);
             return back()->withErrors([
-                'phone' => 'Phone number already registered. Please login instead.',
+                'phone' => __('app.phone_already_registered'),
             ]);
         }
 
@@ -146,7 +146,7 @@ class AuthController extends Controller
         
         if (!$cachedCode || $cachedCode !== $request->code) {
             return back()->withErrors([
-                'code' => 'Invalid verification code.',
+                'code' => __('app.invalid_verification_code'),
             ]);
         }
 
@@ -163,7 +163,7 @@ class AuthController extends Controller
         if (!$user) {
             \Log::error('User not found during verification:', ['phone' => $request->phone]);
             return back()->withErrors([
-                'code' => 'User not found.',
+                'code' => __('app.user_not_found'),
             ]);
         }
         

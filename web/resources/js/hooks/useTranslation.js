@@ -114,6 +114,9 @@ export function useTranslation() {
                     'phone': 'الهاتف',
                     'working_hours': 'ساعات العمل',
                     'browse_all_products': 'تصفح جميع المنتجات',
+                    'enable_notifications': 'تفعيل الإشعارات',
+                    'enable_notifications_desc': 'احصل على إشعارات فورية حول طلباتك، العروض الخاصة، والتحديثات المهمة',
+                    'enabling': 'جاري التفعيل...',
                 },
                 en: {
                     'home_meta_title': 'DeliGo - Ultra Fast Delivery',
@@ -211,6 +214,9 @@ export function useTranslation() {
                     'send_otp': 'Send verification code',
                     'sending_otp': 'Sending code...',
                     'phone_number_placeholder': 'Enter your phone number',
+                    'enable_notifications': 'Enable Notifications',
+                    'enable_notifications_desc': 'Get instant notifications about your orders, special offers, and important updates',
+                    'enabling': 'Enabling...',
                 }
             };
             translation = fallbackTranslations[locale]?.[key] || key;

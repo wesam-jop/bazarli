@@ -343,16 +343,24 @@
 }
 
 /* RTL Text Alignment - فقط للعناصر النصية، ليس للعناصر التي تحتوي flex أو grid */
+/* Force text-center to always be centered, even in RTL */
+[dir="rtl"] .text-center,
+[dir="ltr"] .text-center,
+.text-center {
+    text-align: center !important;
+}
+
 /* RTL Text Alignment - only for text elements, not for flex or grid containers */
-[dir="rtl"] p,
-[dir="rtl"] span:not([class*="flex"]):not([class*="grid"]),
-[dir="rtl"] div:not([class*="flex"]):not([class*="grid"]):not([class*="table"]),
-[dir="rtl"] h1,
-[dir="rtl"] h2,
-[dir="rtl"] h3,
-[dir="rtl"] h4,
-[dir="rtl"] h5,
-[dir="rtl"] h6 {
+/* Exclude elements with text-center class */
+[dir="rtl"] p:not([class*="text-center"]):not([class*="text-left"]),
+[dir="rtl"] span:not([class*="flex"]):not([class*="grid"]):not([class*="text-center"]):not([class*="text-left"]),
+[dir="rtl"] div:not([class*="flex"]):not([class*="grid"]):not([class*="table"]):not([class*="text-center"]):not([class*="text-left"]),
+[dir="rtl"] h1:not([class*="text-center"]):not([class*="text-left"]),
+[dir="rtl"] h2:not([class*="text-center"]):not([class*="text-left"]),
+[dir="rtl"] h3:not([class*="text-center"]):not([class*="text-left"]),
+[dir="rtl"] h4:not([class*="text-center"]):not([class*="text-left"]),
+[dir="rtl"] h5:not([class*="text-center"]):not([class*="text-left"]),
+[dir="rtl"] h6:not([class*="text-center"]):not([class*="text-left"]) {
     text-align: right;
 }
 
@@ -844,6 +852,22 @@ div[ontouchend] {
 
 .cursor-grabbing {
     cursor: grabbing !important;
+}
+
+/* Floating Animation for Auth Pages */
+@keyframes float {
+    0%, 100% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.8;
+    }
+    33% {
+        transform: translate(30px, -30px) scale(1.1);
+        opacity: 1;
+    }
+    66% {
+        transform: translate(-30px, 30px) scale(0.9);
+        opacity: 0.9;
+    }
 }
 
 /* Ensure all buttons and links have proper cursor */
