@@ -263,7 +263,7 @@ export default function AdminLayout({ children, title = "Admin Dashboard" }) {
             )}
 
             {/* Sidebar */}
-            <div className={`admin-sidebar fixed inset-y-0 left-0 z-50 transform transition-all duration-300 ease-in-out lg:translate-x-0  ${
+            <div dir="ltr" className={`admin-sidebar fixed inset-y-0 left-0 z-50 transform transition-all duration-300 ease-in-out lg:translate-x-0  ${
                 sidebarOpen ? 'translate-x-0' : '-translate-x-full'
             } ${sidebarCollapsed ? 'w-16' : 'w-64'} ${isDarkMode ? 'bg-slate-800 border-slate-700' : 'bg-white border-slate-200'} shadow-xl border-r`}>
                 
@@ -303,13 +303,13 @@ export default function AdminLayout({ children, title = "Admin Dashboard" }) {
                                         className={`w-full flex items-center justify-between px-3 py-3 rounded-lg transition-all duration-200 group ${
                                             activeGroup === item.group 
                                                 ? 'bg-gradient-to-r from-purple-50 to-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 shadow-sm' 
-                                                : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'
+                                                : 'text-slate-900 hover:bg-slate-100 dark:text-slate-100 dark:hover:bg-slate-700'
                                         }`}
                                     >
                                         <div className="flex items-center space-x-3">
                                             <item.icon className={`w-5 h-5 ${activeGroup === item.group ? 'text-purple-600' : item.color}`} />
                                             {!sidebarCollapsed && (
-                                                <span className={`font-medium text-sm ${activeGroup === item.group ? 'font-semibold' : ''}`}>{item.label}</span>
+                                                <span dir="rtl" className={`font-medium text-sm ${activeGroup === item.group ? 'font-semibold' : ''}`}>{item.label}</span>
                                             )}
                                         </div>
                                         {!sidebarCollapsed && (
@@ -331,11 +331,11 @@ export default function AdminLayout({ children, title = "Admin Dashboard" }) {
                                                         className={`flex items-center space-x-3 px-3 py-2 rounded-lg text-sm transition-all duration-200 ${
                                                             isActive
                                                                 ? 'bg-gradient-to-r from-purple-50 to-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 font-semibold shadow-sm border-r-2 border-purple-500'
-                                                                : 'text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-slate-700'
+                                                                : 'text-slate-900 hover:bg-slate-100 dark:text-slate-100 dark:hover:bg-slate-700'
                                                         }`}
                                                     >
                                                         <subItem.icon className={`w-4 h-4 ${isActive ? 'text-purple-600' : ''}`} />
-                                                        <span>{subItem.label}</span>
+                                                        <span dir="rtl">{subItem.label}</span>
                                                     </Link>
                                                 );
                                             })}
@@ -348,12 +348,12 @@ export default function AdminLayout({ children, title = "Admin Dashboard" }) {
                                     className={`flex items-center space-x-3 px-3 py-3 rounded-lg transition-all duration-200 ${
                                         activeGroup === item.group 
                                             ? 'bg-gradient-to-r from-purple-50 to-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300 shadow-sm font-semibold' 
-                                            : 'text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700'
+                                            : 'text-slate-900 hover:bg-slate-100 dark:text-slate-100 dark:hover:bg-slate-700'
                                     }`}
                                 >
                                     <item.icon className={`w-5 h-5 ${activeGroup === item.group ? 'text-purple-600' : item.color}`} />
                                     {!sidebarCollapsed && (
-                                        <span className="font-medium text-sm">{item.label}</span>
+                                        <span dir="rtl" className="font-medium text-sm">{item.label}</span>
                                     )}
                                 </Link>
                             )}
@@ -367,10 +367,10 @@ export default function AdminLayout({ children, title = "Admin Dashboard" }) {
                         <UserAvatar user={user} size={40} className="flex-shrink-0" />
                         {!sidebarCollapsed && (
                             <div className="flex-1 min-w-0">
-                                <p className={`text-sm font-medium truncate ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
+                                <p dir="rtl" className={`text-sm font-medium truncate ${isDarkMode ? 'text-white' : 'text-slate-900'}`}>
                                     {user?.name || 'Admin User'}
                                 </p>
-                                <p className={`text-xs truncate ${isDarkMode ? 'text-slate-400' : 'text-slate-500'}`}>
+                                <p dir="rtl" className={`text-xs truncate ${isDarkMode ? 'text-slate-300' : 'text-slate-600'}`}>
                                     {user?.user_type || 'admin'}
                                 </p>
                             </div>
@@ -381,17 +381,17 @@ export default function AdminLayout({ children, title = "Admin Dashboard" }) {
                         <div className="mt-3 space-y-1">
                             <Link
                                 href="/admin/profile"
-                                className={`flex items-center space-x-3 px-3 py-2 rounded-lg text-sm transition-colors ${isDarkMode ? 'text-slate-300 hover:bg-slate-700' : 'text-slate-600 hover:bg-slate-100'}`}
+                                className={`flex items-center space-x-3 px-3 py-2 rounded-lg text-sm transition-colors ${isDarkMode ? 'text-slate-100 hover:bg-slate-700' : 'text-slate-900 hover:bg-slate-100'}`}
                             >
                                 <User className="w-4 h-4" />
-                                <span>{t('profile')}</span>
+                                <span dir="rtl">{t('profile')}</span>
                             </Link>
                             <Link
                                 href="/admin/settings"
-                                className={`flex items-center space-x-3 px-3 py-2 rounded-lg text-sm transition-colors ${isDarkMode ? 'text-slate-300 hover:bg-slate-700' : 'text-slate-600 hover:bg-slate-100'}`}
+                                className={`flex items-center space-x-3 px-3 py-2 rounded-lg text-sm transition-colors ${isDarkMode ? 'text-slate-100 hover:bg-slate-700' : 'text-slate-900 hover:bg-slate-100'}`}
                             >
                                 <Settings className="w-4 h-4" />
-                                <span>{t('settings')}</span>
+                                <span dir="rtl">{t('settings')}</span>
                             </Link>
                             <Link
                                 href="/logout"
@@ -399,7 +399,7 @@ export default function AdminLayout({ children, title = "Admin Dashboard" }) {
                                 className={`flex items-center space-x-3 px-3 py-2 rounded-lg text-sm transition-colors ${isDarkMode ? 'text-red-400 hover:bg-red-900/20' : 'text-red-600 hover:bg-red-50'}`}
                             >
                                 <LogOut className="w-4 h-4" />
-                                <span>{t('logout')}</span>
+                                <span dir="rtl">{t('logout')}</span>
                             </Link>
                         </div>
                     )}
