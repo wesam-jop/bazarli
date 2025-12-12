@@ -402,6 +402,8 @@
 /* Admin Layout - Preserve flex direction for proper layout */
 [dir="rtl"] .admin-sidebar .flex,
 [dir="rtl"] .admin-sidebar nav .flex,
+[dir="rtl"] .admin-sidebar button,
+[dir="rtl"] .admin-sidebar a,
 [dir="rtl"] .admin-main-content .flex,
 [dir="rtl"] .admin-main-content header .flex,
 [dir="rtl"] .admin-main-content main .flex {
@@ -410,10 +412,33 @@
 
 [dir="ltr"] .admin-sidebar .flex,
 [dir="ltr"] .admin-sidebar nav .flex,
+[dir="ltr"] .admin-sidebar button,
+[dir="ltr"] .admin-sidebar a,
 [dir="ltr"] .admin-main-content .flex,
 [dir="ltr"] .admin-main-content header .flex,
 [dir="ltr"] .admin-main-content main .flex {
     flex-direction: row !important;
+}
+
+/* Admin Sidebar - Force LTR layout but keep RTL text readable */
+.admin-sidebar[dir="ltr"] {
+    direction: ltr !important;
+}
+
+.admin-sidebar[dir="ltr"] .flex,
+.admin-sidebar[dir="ltr"] nav,
+.admin-sidebar[dir="ltr"] button,
+.admin-sidebar[dir="ltr"] a,
+.admin-sidebar[dir="ltr"] div:not(span):not(p) {
+    direction: ltr !important;
+}
+
+/* Ensure RTL text in sidebar is readable */
+.admin-sidebar span[dir="rtl"],
+.admin-sidebar p[dir="rtl"] {
+    direction: rtl !important;
+    text-align: right !important;
+    unicode-bidi: embed;
 }
 
 /* Dashboard RTL specific fixes */
